@@ -22,4 +22,23 @@ Simply clone this repository and place in any folder on your computer.
 <a name="quick-start"></a>
 # Quick Start
 
-## Upload
+## Run simulation
+The following is the minimum needed code to initiate a regular simulation with the [helpers/simulationJob](https://github.com/weilix88/buildsimhub_python_api/tree/master/BuildSimHubAPI/helpers)
+
+### With SimulationJob Class
+```python
+from BuildSimHubAPI import buildsimhub
+bsh = buildsimhub.BuildSimHubAPIClient()
+#this key can be found under your project folder
+folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+#absolute directory to the energyplus model
+file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
+newSJ = bsh.newSimulationJob(folder_key)
+response = newSj.createModel(file_dir)
+
+#print success means the simulation job has successfully
+#started a simulation, if there is an error, then
+#you will receive the correspondent error message
+print (response)
+```
+
