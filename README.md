@@ -8,7 +8,7 @@ We appreciate your continued support, thank you!
 # Table of Contents
 * [Installation](#installation)
 * [Quick Start](#quick-start)
-* [Functions](#functions)
+* [Objects and Functions](#functions)
 
 
 <a name="installation"></a>
@@ -107,4 +107,22 @@ if(response == 'success'):
 If the Job is completed, you can get results by calling `getSimulationResults(type)` function.
 
 <a name="functions"></a>
+#Object and Functions
+## SimulationJob
+The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `newSimulationJob()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
+Nevertheless, you have to provide a `folder_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
+
+The `folder_key` can be found under each folder of your project
+![picture alt](https://imgur.com/jNrghIZ.png)
+
+## simulationType
+[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`.
+
+
+## createdModel
+The `createModel()` function has in total 4 parameters.
+1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
+2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
+3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. Default is `regular` simulation which uses 1 agent to do the cloud simulation.
+4. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
 
