@@ -116,8 +116,14 @@ The `folder_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
 ## simulationType
-[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`.
+[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`. Also, ou can increase the number of agent by calling the `increaseAgents()` function.
+```python
 
+simulationType = bsh.getSimulationType()
+numOfAgents = simulationType.increaseAgents();
+print (numOfAgents)
+```
+It should be noted that the maximum number of agents working on one simulation job is limited to 12. You can also call `resetAgent()` function to reset the number of agent to 2.
 
 ## createdModel
 The `createModel()` function has in total 4 parameters.
