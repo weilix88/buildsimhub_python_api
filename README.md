@@ -17,7 +17,13 @@ We appreciate your continued support, thank you!
 - Python version 2.6, 2.7, 3.4, 3.5 or 3.6
 
 ## Install Package
-Simply clone this repository and place in any folder on your computer.
+Simply clone this repository and place in any folder you wish to build your application on.
+
+## Setup environment
+After you downloaded the whole package, the first you need to do is to reconfigure your user API in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
+You can find the API key associate with your account under the profile page:
+![alt text][userapi]
+[userapi](https://imgur.com/gHehDiN)
 
 <a name="quick-start"></a>
 # Quick Start
@@ -41,4 +47,7 @@ response = newSj.createModel(file_dir)
 #you will receive the correspondent error message
 print (response)
 ```
+The `BuildSimHubAPIClient` creates a portal [object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
+From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation.
+
 
