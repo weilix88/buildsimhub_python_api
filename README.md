@@ -23,7 +23,7 @@ Simply clone this repository and place in any folder you wish to build your appl
 After you downloaded the whole package, the first you need to do is to reconfigure your user API in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
 You can find the API key associate with your account under the profile page:
 
-![picture alt](https://imgur.com/gHehDiN)
+![picture alt](https://imgur.com/gHehDiN.png)
 
 <a name="quick-start"></a>
 # Quick Start
