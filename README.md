@@ -118,17 +118,41 @@ The `folder_key` can be found under each folder of your project
 ## simulationType
 [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`. Also, ou can increase the number of agent by calling the `increaseAgents()` function.
 ```python
-
 simulationType = bsh.getSimulationType()
 numOfAgents = simulationType.increaseAgents();
 print (numOfAgents)
 ```
-It should be noted that the maximum number of agents working on one simulation job is limited to 12. You can also call `resetAgent()` function to reset the number of agent to 2.
+It should be noted that the maximum number of agents working on one simulation job is limited to 12, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `resetAgent()` function to reset the number of agent to 2.
 
-## createdModel
+## SimulationJob
+A simulation job manages one type of cloud simulation. It contains three main functions which are listed below:
+
+### createdModel
 The `createModel()` function has in total 4 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
 2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
 3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. Default is `regular` simulation which uses 1 agent to do the cloud simulation.
 4. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
+
+This method returns two types of information:
+If sucess: `success`
+or error message states what was wrong in your request.
+
+### trackSimulation
+The `trackSimulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
+`No simulation is running or completed in this Job - please start simulation using createModel method.`
+If there is a simulation running on the cloud for this simulationJob, then, this function will return `true` and you can retrieve the simulation status by get the class parameter `trackStatus`. Example code is below:
+```python
+if(newSimulationJob.trackSimulation()):
+  print(newSimulationJob.trackStatus)
+```
+### getSimulationResults
+The `getSimulationResults(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation.
+
+```python
+response = newSimulationJob.getSimulationResults('err')
+print (response)
+```
+
+
 
