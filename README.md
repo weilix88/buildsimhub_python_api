@@ -9,11 +9,17 @@ We appreciate your continued support, thank you!
 * [Installation](#installation)
 * [Quick Start](#quick-start)
 
-
 <a name="installation"></a>
 # Installation
 
 ## Prerequisites
-- The SendGrid service, starting at the [free level](https://sendgrid.com/free?source=sendgrid-python)
-
+- The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
 - Python version 2.6, 2.7, 3.4, 3.5 or 3.6
+
+## Install Package
+Simply clone this repository and place in any folder on your computer.
+
+<a name="quick-start"></a>
+# Quick Start
+
+## Upload
