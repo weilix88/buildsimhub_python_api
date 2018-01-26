@@ -8,6 +8,8 @@ We appreciate your continued support, thank you!
 # Table of Contents
 * [Installation](#installation)
 * [Quick Start](#quick-start)
+* [Functions](#functions)
+
 
 <a name="installation"></a>
 # Installation
@@ -56,4 +58,53 @@ print (response)
 ```
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
 From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `createModel()` method with parameters can start the cloud simulation.
+
+### Track Cloud simulation progress
+```python
+from BuildSimHubAPI import buildsimhub
+bsh = buildsimhub.BuildSimHubAPIClient()
+
+#this key can be found under your project folder
+folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+
+#absolute directory to the energyplus model
+file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
+
+newSJ = bsh.newSimulationJob(folder_key)
+response = newSj.createModel(file_dir)
+
+######BELOW ARE THE CODE TO TRACK SIMULATION#########
+if(response == 'success'):
+  while newSJ.trackSimulation():
+    print (newSJ.trackStatus)
+    time.sleep(5)
+```
+As mentioned previously, [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) manages the entire workflow of the simulation. So once a cloud simulation is successfully started by the [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class, you can simply call `trackSimulation()` function to receive the simulation progress.
+
+### Retrieve Cloud simulation results
+```python
+from BuildSimHubAPI import buildsimhub
+bsh = buildsimhub.BuildSimHubAPIClient()
+
+#this key can be found under your project folder
+folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+
+#absolute directory to the energyplus model
+file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
+
+newSJ = bsh.newSimulationJob(folder_key)
+response = newSj.createModel(file_dir)
+
+if(response == 'success'):
+  while newSJ.trackSimulation():
+    print (newSJ.trackStatus)
+    time.sleep(5)
+  
+  ######BELOW ARE THE CODE TO RETRIEVE SIMULATION RESULTS#########
+  response = newSJ.getSimulationResults('html')
+  print(response)
+```
+If the Job is completed, you can get results by calling `getSimulationResults(type)` function.
+
+<a name="functions"></a>
 
