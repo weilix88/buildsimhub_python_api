@@ -9,9 +9,12 @@ We appreciate your continued support, thank you!
 * [Installation](#installation)
 * [Quick Start](#quick-start)
 * [Objects and Functions](#functions)
-
+* [Roadmap](#roadmap)
+* [About](#about)
+* [License](#license)
 
 <a name="installation"></a>
+
 # Installation
 
 ## Prerequisites
@@ -32,6 +35,7 @@ Simple edit the [info.config](https://github.com/weilix88/buildsimhub_python_api
 `user_api_key:[YOUR_API_KEY]`
 
 <a name="quick-start"></a>
+
 # Quick Start
 
 ## Run simulation
@@ -107,6 +111,7 @@ if(response == 'success'):
 If the Job is completed, you can get results by calling `getSimulationResults(type)` function.
 
 <a name="functions"></a>
+
 #Object and Functions
 ## SimulationJob
 The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `newSimulationJob()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
@@ -153,6 +158,21 @@ The `getSimulationResults(type)` function requires 1 parameter, the result type.
 response = newSimulationJob.getSimulationResults('err')
 print (response)
 ```
+<a name="roadmap"></a>
+# Roadmap
+1. Certainly, the first thing is to get the project into Pip to enable `pip install` command.
+2. We are also working on an HTML compiler, which let users to retrieve any values from the html output
+3. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
+<a name="about"></a>
+# About
+
+buildsimhub-python is guided and supported by the BuildSimHub [Developer Experience Team](mailto:haopeng.wang@buildsimhub.net).
+
+buildsimhub-python is maintained and funded by the BuildSimHub, Inc. The names and logos for buildsimhub-python are trademarks of BuildSimHub, Inc.
+
+<a name="license"></a>
+# License
+[The MIT License (MIT)](LICENSE.txt)
 
