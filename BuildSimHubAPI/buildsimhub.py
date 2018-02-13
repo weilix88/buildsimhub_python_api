@@ -26,8 +26,8 @@ class BuildSimHubAPIClient():
     def userAPI(self):
         return self._userAPI
 
-    def newSimulationJob(self, folder_key):
-        sj = simulationJob.SimulationJob(self._userAPI, folder_key)
+    def newSimulationJob(self, model_key):
+        sj = simulationJob.SimulationJob(self._userAPI, model_key)
         return sj
 
     def getSimulationType(self):
