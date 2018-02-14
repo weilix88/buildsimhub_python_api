@@ -105,9 +105,9 @@ class Model():
         resp_json = r.json()
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
-            value = float(data['value'])
-            if(unit=='ip'):
-                value = value * 10.7639
+            value = data['value']
+            #if(unit=='ip'):
+            #    value = value * 10.7639
             return value
         else:
             return -1
