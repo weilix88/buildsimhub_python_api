@@ -1,6 +1,6 @@
 import requests
 import json
-
+from .energyModel import Model
 
 class SimulationJob():
     #every call will connect to this base URL
@@ -11,12 +11,21 @@ class SimulationJob():
         self._folderKey = folderkey
         self._trackToken = ""
         self._trackStatus = "No simulation is running or completed in this Job - please start simulation using createModel method."
+        self._model = None
 
     @property
     def trackStatus(self):
         return self._trackStatus
 
-    def getSimulationResults(self, resultType="html"):
+    @property
+    def trackToken(self):
+        return self._trackToken
+
+    @property
+    def model(self):
+        return self._model
+
+    def get_simulation_results(self, resultType="html"):
         if(self._trackToken == ""):
             return self._trackStatus
 
@@ -34,7 +43,7 @@ class SimulationJob():
             f = r.text
         return f
 
-    def trackSimulation(self):
+    def track_simulation(self):
         if(self._trackToken == ""):
             return self._trackStatus
 
@@ -46,15 +55,35 @@ class SimulationJob():
         r = requests.get(url, params=payload)
         resp_json = r.json()
 
-        if(resp_json['has_more'] == True):
-            self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
-        else:
-            self._trackStatus = "No simulation is running or completed in this Job - please start simulation using createModel method."
+        if(resp_json['status'] == 'success'):
 
+            if(resp_json['has_more'] == True):
+                self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
+            else:
+                self._trackStatus = "No simulation is running or completed in this Job - please start simulation using createModel method."
+        else:
+            self._trackStatus = resp_json['error_msg']
+        
         return resp_json['has_more']
 
+    def run_simulation(self, simulationType = "regular", agent=2):
+        url = SimulationJob.BASE_URL + 'RunSimulation_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._trackToken,
+            'simulation_type': simulationType,
+            'agents':agent
+        }
 
-    def createModel(self, file_dir, comment = "Upload through Python API", simulationType = "regular", agent = 2):
+        r = requests.post(url, data=payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            return resp_json['status']
+        else:
+            return resp_json['error_msg']
+
+
+    def create_model(self, file_dir, comment = "Upload through Python API", simulationType ="", agent = 0):
         url = SimulationJob.BASE_URL + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
@@ -74,6 +103,8 @@ class SimulationJob():
 
         if(resp_json['status'] == 'success'):
             self._trackToken = resp_json['tracking']
+            self._model = Model(self._userKey, self._trackToken)
+
             return resp_json['status']
         else:
             return resp_json['error_msg']
