@@ -15,7 +15,23 @@ class Model():
         self._userKey = userKey
         self._modelKey = modelKey
 
-    def numberOfAboveGroundFloors(self):
+    def bldg_orientation(self):
+        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'Orientation'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def num_above_ground_floor(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -30,7 +46,7 @@ class Model():
         else:
             return resp_json['error_msg']
 
-    def numberOfTotalFloors(self):
+    def num_total_floor(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -45,7 +61,7 @@ class Model():
         else:
             return resp_json['error_msg']
 
-    def numberOfZones(self):
+    def num_zones(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -60,7 +76,7 @@ class Model():
         else:
             return resp_json['error_msg']
 
-    def numberOfConditionedZones(self):
+    def num_condition_zones(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -76,7 +92,7 @@ class Model():
             return resp_json['error_msg']
 
 
-    def conditionedFloorArea(self, unit):
+    def condition_floor_area(self, unit):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -94,7 +110,7 @@ class Model():
         else:
             return -1
 
-    def grossFloorArea(self, unit):
+    def gross_floor_area(self, unit):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -112,7 +128,7 @@ class Model():
         else:
             return -1
 
-    def windowToWallRatio(self):
+    def window_wall_ratio(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
         payload = {
             'user_api_key': self._userKey,
@@ -128,12 +144,173 @@ class Model():
         else:
             return -1
 
-    def weatherFileName(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+    #Below are the methods use for retrieving results
+    def net_site_eui(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
         payload = {
             'user_api_key': self._userKey,
             'track_token': self._modelKey,
-            'request_data': 'WeatherFileName'
+            'request_data': 'NetSiteEUI'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def total_site_eui(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'TotalSiteEUI'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def not_met_hour_cooling(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'NotMetHoursCooling'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def not_met_hour_heating(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'NotMetHoursHeating'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def not_met_hour_total(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'NotMetHoursTotal'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def total_end_use_electricity(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'TotalEndUseElectricity'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def total_end_use_naturalgas(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'TotalEndUseNaturalGas'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def cooling_electricity(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'CoolingElectricity'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def cooling_naturalgas(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'CoolingNaturalGas'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def domestic_hotwater_electricity(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'DomesticHotWaterElectricity'
+        }
+        r = requests.get(url, params = payload)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            data = resp_json['data']
+            value = data['value']
+            return value
+        else:
+            return -1
+
+    def domestic_hotwater_naturalgas(self):
+        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'track_token': self._modelKey,
+            'request_data': 'DomesticHotWaterNaturalGas'
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
