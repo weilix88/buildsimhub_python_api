@@ -136,12 +136,17 @@ A simulation job manages one type of cloud simulation. It contains three main fu
 The `create_model()` function has in total 4 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
 2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
-3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. Default is `regular` simulation which uses 1 agent to do the cloud simulation.
+3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. **It should be noted that if this parameter is not used, then create_model method will not run simulation**
 4. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
 
 This method returns two types of information:
 If sucess: `success`
 or error message states what was wrong in your request.
+
+### run_simulation
+The `run_simulation()` function can be called inside a simulation job if the simulation is not conducted. The function has two parameters:
+1. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. **It should be noted that if this parameter is not used, then create_model method will not run simulation**
+2. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
 
 ### track_simulaiton
 The `track_simulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
@@ -158,6 +163,30 @@ The `get_simulation_results(type)` function requires 1 parameter, the result typ
 response = newSimulationJob.get_simulation_results('err')
 print (response)
 ```
+## Model
+The model class contains a set of methods that provides the model information and results (after simulation)
+### Pre-simulation methods
+1. num_total_floor: can be called before simulation is completed. It returns the number of floors, or -1 if there is an error.
+2. num_zones(): can be called before simulation is completed. It returns the total number of thermal zones, or -1 if there is an error.
+3. num_condition_zones(): can be called before simulation is completed. It returns the total number of conditioned zones, or -1 if there is an error.
+4. conditioned_floor_area (unit): can be called before simulation is completed. It returns the floor areas of conditioned spaces, or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
+`  m.condition_floor_area("ip")
+`
+5. gross_floor_area(unit): can be called before simulation is completed. It returns the total floor areas (including plenum spaces), or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
+`  m.gross_floor_area("ip")
+`
+6. window_wall_ratio(): can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
+
+### Post-simulation methods
+1. new_site_eui(): It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2)
+2. total_site_eui(): It returns the total site eui of the simulation. The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
+3. not_met_hour_cooling(): returns the time sepoint not met hours during cooling condition period. unit: hour
+4 not_met_hour_heating(): returns the time sepoint not met hours during heating condition period. unit: hour
+5 not_met_hour_total(): returns the time sepoint not met hours during heating and cooling condition period. unit: hour
+6 total_end_use_electricity(): returns the total electricity consumption of the design. unit: kWh or GJ, IP is kBtu
+7 total_end_use_naturalgas(): returns the total natural gas consumption of the design. unit: kWh or GJ, IP is kBtu
+
+
 <a name="roadmap"></a>
 # Roadmap
 1. Certainly, the first thing is to get the project into Pip to enable `pip install` command.
