@@ -19,25 +19,25 @@ newSj = bsh.new_simulation_job(folder_key)
 response = newSj.create_model(file_dir, comment)
 if(response == 'success'):
   m = newSj.model
-  print (m.num_total_floor())
-  print (m.num_zones())
-  print (m.num_condition_zones())
-  print (m.condition_floor_area(""))
-  print (m.gross_floor_area("ip"))
-  print (m.window_wall_ratio())
+  print (str(m.num_total_floor()) + " " + m.lastParameterUnit)
+  print (str(m.num_zones()) + " " + m.lastParameterUnit)
+  print (str(m.num_condition_zones()) + " " + m.lastParameterUnit)
+  print (str(m.condition_floor_area("")) + " " + m.lastParameterUnit)
+  print (str(m.gross_floor_area("ip")) + " " + m.lastParameterUnit)
+  print (str(m.window_wall_ratio()) + " " + m.lastParameterUnit)
 
   newSj.run_simulation()
   while newSj.track_simulation():
     print (newSj.trackStatus)
     time.sleep(5)
   
-  print(m.net_site_eui())
-  print(m.total_site_eui())
-  print(m.not_met_hour_cooling())
-  print(m.not_met_hour_heating())
-  print(m.not_met_hour_total())
-  print(m.total_end_use_electricity())
-  print(m.total_end_use_naturalgas())
+  print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
+  print(str(m.total_site_eui())+ " " + m.lastParameterUnit)
+  print(str(m.not_met_hour_cooling())+ " " + m.lastParameterUnit)
+  print(str(m.not_met_hour_heating())+ " " + m.lastParameterUnit)
+  #print(str(m.not_met_hour_total()) + " " + m.lastParameterUnit)
+  print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
+  print(str(m.total_end_use_naturalgas())+ " " + m.lastParameterUnit)
 
 else:
   print(response)
