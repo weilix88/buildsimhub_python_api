@@ -166,25 +166,25 @@ print (response)
 ## Model
 The model class contains a set of methods that provides the model information and results (after simulation)
 ### Pre-simulation methods
-1. num_total_floor: can be called before simulation is completed. It returns the number of floors, or -1 if there is an error.
-2. num_zones(): can be called before simulation is completed. It returns the total number of thermal zones, or -1 if there is an error.
-3. num_condition_zones(): can be called before simulation is completed. It returns the total number of conditioned zones, or -1 if there is an error.
-4. conditioned_floor_area (unit): can be called before simulation is completed. It returns the floor areas of conditioned spaces, or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
+1. *num_total_floor()*: can be called before simulation is completed. It returns the number of floors, or -1 if there is an error.
+2. *num_zones()*: can be called before simulation is completed. It returns the total number of thermal zones, or -1 if there is an error.
+3. *num_condition_zones()*: can be called before simulation is completed. It returns the total number of conditioned zones, or -1 if there is an error.
+4. *conditioned_floor_area (unit)*: can be called before simulation is completed. It returns the floor areas of conditioned spaces, or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
 `  m.condition_floor_area("ip")
 `
-5. gross_floor_area(unit): can be called before simulation is completed. It returns the total floor areas (including plenum spaces), or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
+5. *gross_floor_area(unit)*: can be called before simulation is completed. It returns the total floor areas (including plenum spaces), or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
 `  m.gross_floor_area("ip")
 `
-6. window_wall_ratio(): can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
+6. *window_wall_ratio()*: can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
 
 ### Post-simulation methods
-1. new_site_eui(): It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2)
-2. total_site_eui(): It returns the total site eui of the simulation. The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
-3. not_met_hour_cooling(): returns the time sepoint not met hours during cooling condition period. unit: hour
-4 not_met_hour_heating(): returns the time sepoint not met hours during heating condition period. unit: hour
-5 not_met_hour_total(): returns the time sepoint not met hours during heating and cooling condition period. unit: hour
-6 total_end_use_electricity(): returns the total electricity consumption of the design. unit: kWh or GJ, IP is kBtu
-7 total_end_use_naturalgas(): returns the total natural gas consumption of the design. unit: kWh or GJ, IP is kBtu
+1. *new_site_eui()*: It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
+2. *total_site_eui()*: It returns the total site eui of the simulation. The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
+3. *not_met_hour_cooling()*: returns the time sepoint not met hours during cooling condition period. unit: hour
+4. *not_met_hour_heating()*: returns the time sepoint not met hours during heating condition period. unit: hour
+5. *not_met_hour_total()*: returns the time sepoint not met hours during heating and cooling condition period. unit: hour
+6. *total_end_use_electricity()*: returns the total electricity consumption of the design. unit: kWh or GJ, IP is kBtu
+7. *total_end_use_naturalgas()*: returns the total natural gas consumption of the design. unit: kWh or GJ, IP is kBtu
 
 
 <a name="roadmap"></a>
