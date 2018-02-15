@@ -21,6 +21,10 @@ class SimulationJob():
     def trackToken(self):
         return self._trackToken
 
+    @trackToken.setter
+    def trackToken(self, value):
+        self._trackToken = value
+
     @property
     def model(self):
         return self._model
@@ -55,16 +59,21 @@ class SimulationJob():
         r = requests.get(url, params=payload)
         resp_json = r.json()
 
-        if(resp_json['status'] == 'success'):
 
-            if(resp_json['has_more'] == True):
-                self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
+        if('has_more' not in resp_json):
+            if('error_msg' in resp_json):
+                self._trackStatus = resp_json['error_msg']
+                return False
             else:
-                self._trackStatus = "No simulation is running or completed in this Job - please start simulation using createModel method."
+                self._trackStatus = 'Finished'
+                return False
+
+        if(resp_json['has_more'] == True):
+            self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
+            return resp_json['has_more']
         else:
-            self._trackStatus = resp_json['error_msg']
-        
-        return resp_json['has_more']
+            self._trackStatus = resp_json['error_msg']        
+            return resp_json['has_more']
 
     def run_simulation(self, simulationType = "regular", agent=2):
         url = SimulationJob.BASE_URL + 'RunSimulation_API'

@@ -14,6 +14,11 @@ class Model():
     def __init__(self, userKey, modelKey):
         self._userKey = userKey
         self._modelKey = modelKey
+        self._lastParameterUnit = ""
+
+    @property
+    def lastParameterUnit(self):
+        return self._lastParameterUnit
 
     def bldg_orientation(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
@@ -27,6 +32,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            self._lastParameterUnit = 'deg'
+
             return value
         else:
             return -1
@@ -42,6 +49,7 @@ class Model():
         resp_json = r.json()
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
+            self._lastParameterUnit = 'floor'
             return data['total_cond_floor']
         else:
             return resp_json['error_msg']
@@ -57,6 +65,7 @@ class Model():
         resp_json = r.json()
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
+            self._lastParameterUnit = 'floor'
             return data['total_floor']
         else:
             return resp_json['error_msg']
@@ -72,6 +81,7 @@ class Model():
         resp_json = r.json()
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
+            self._lastParameterUnit = 'zones'
             return data['value']
         else:
             return resp_json['error_msg']
@@ -87,6 +97,7 @@ class Model():
         resp_json = r.json()
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
+            self._lastParameterUnit = 'zones'
             return data['value']
         else:
             return resp_json['error_msg']
@@ -104,8 +115,11 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = float(data['value'])
+            self._lastParameterUnit = 'm2'
+
             if(unit=='ip'):
                 value = value * 10.7639
+                self._lastParameterUnit = 'ft2'
             return value
         else:
             return -1
@@ -122,7 +136,10 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = float(data['value'])
+            self._lastParameterUnit = 'm2'
+
             if(unit=='ip'):
+                self._lastParameterUnit="ft2"
                 value = value * 10.7639
             return value
         else:
@@ -140,6 +157,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            self._lastParameterUnit = ""
+
             return value
         else:
             return -1
@@ -157,6 +176,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -173,6 +194,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -189,6 +212,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -205,6 +230,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -221,6 +248,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -237,6 +266,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -253,6 +284,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -269,6 +302,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -285,6 +320,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -301,6 +338,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
@@ -317,6 +356,8 @@ class Model():
         if(resp_json['status'] == 'success'):
             data = resp_json['data']
             value = data['value']
+            if('unit' in data):
+                self._lastParameterUnit = data['unit']
             return value
         else:
             return -1
