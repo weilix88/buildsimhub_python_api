@@ -75,7 +75,7 @@ class SimulationJob():
             self._trackStatus = resp_json['error_msg']        
             return resp_json['has_more']
 
-    def run_simulation(self, simulationType = "regular", agent=2):
+    def run_simulation(self, simulationType = "regular", agent=1):
         url = SimulationJob.BASE_URL + 'RunSimulation_API'
         payload = {
             'user_api_key': self._userKey,
