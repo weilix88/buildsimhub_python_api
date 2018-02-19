@@ -2,7 +2,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/sendgrid.svg?style=social&label=Follow)](https://twitter.com/buildsimhub)
 
 **This library allows you to quickly and easily use the BuildSimHub Web API v1 via Python.**
-This library represents the beginning of the Cloud Simulation function on BuildSimHub. Please browse the rest of this README for further detail.
+This library represents the beginning of the Cloud Simulation function on BuildSimHub. We want this library to be community driven and BuildSimHub led. We need your help to realize this goal. To help, make sure we are building the right things in the right order, we ask that you create [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls) or simply upvote or comment on existing issues or pull requests.
 We appreciate your continued support, thank you!
 
 # Table of Contents
@@ -44,20 +44,22 @@ The following is the minimum needed code to initiate a regular simulation with t
 ### With SimulationJob Class
 ```python
 from BuildSimHubAPI import buildsimhub
-bsh = buildsimhub.BuildSimHubAPIClient()
-
-#this key can be found under your project folder
-folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+#this key can be found under an energy model
+model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
-newSJ = bsh.newSimulationJob(folder_key)
-response = newSj.createModel(file_dir)
+###############NOW, START THE CODE########################
 
-#print success means the simulation job has successfully
-#started a simulation, if there is an error, then
-#you will receive the correspondent error message
+bsh = buildsimhub.BuildSimHubAPIClient()
+newSJ = bsh.new_simulation_job(model_key)
+response = newSj.create_model(file_dir)
+
+############### WE DONE! #################################
+
+#You can print the responses to verify whether the simulation
+#is success or not.
 print (response)
 ```
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
@@ -69,17 +71,17 @@ from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #this key can be found under your project folder
-folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
-newSJ = bsh.newSimulationJob(folder_key)
-response = newSj.createModel(file_dir)
+newSJ = bsh.new_simulation_job(model_key)
+response = newSj.create_model(file_dir)
 
 ######BELOW ARE THE CODE TO TRACK SIMULATION#########
 if(response == 'success'):
-  while newSJ.trackSimulation():
+  while newSJ.track_simulation():
     print (newSJ.trackStatus)
     time.sleep(5)
 ```
@@ -91,24 +93,24 @@ from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #this key can be found under your project folder
-folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
-newSJ = bsh.newSimulationJob(folder_key)
-response = newSj.createModel(file_dir)
+newSJ = bsh.new_simulation_job(model_key)
+response = newSj.create_model(file_dir)
 
 if(response == 'success'):
-  while newSJ.trackSimulation():
+  while newSJ.track_simulation():
     print (newSJ.trackStatus)
     time.sleep(5)
   
   ######BELOW ARE THE CODE TO RETRIEVE SIMULATION RESULTS#########
-  response = newSJ.getSimulationResults('html')
+  response = newSJ.get_simulation_results('html')
   print(response)
 ```
-If the Job is completed, you can get results by calling `getSimulationResults(type)` function.
+If the Job is completed, you can get results by calling `get_simulation_results(type)` function.
 
 <a name="functions"></a>
 
@@ -123,7 +125,7 @@ The `folder_key` can be found under each folder of your project
 ## simulationType
 [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`. Also, ou can increase the number of agent by calling the `increaseAgents()` function.
 ```python
-simulationType = bsh.getSimulationType()
+simulationType = bsh.get_simulation_type()
 numOfAgents = simulationType.increaseAgents();
 print (numOfAgents)
 ```
@@ -132,37 +134,65 @@ It should be noted that the maximum number of agents working on one simulation j
 ## SimulationJob
 A simulation job manages one type of cloud simulation. It contains three main functions which are listed below:
 
-### createdModel
-The `createModel()` function has in total 4 parameters.
+### create_model
+The `create_model()` function has in total 4 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
 2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
-3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. Default is `regular` simulation which uses 1 agent to do the cloud simulation.
+3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. **It should be noted that if this parameter is not used, then create_model method will not run simulation**
 4. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
 
 This method returns two types of information:
 If sucess: `success`
 or error message states what was wrong in your request.
 
-### trackSimulation
-The `trackSimulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
+### run_simulation
+The `run_simulation()` function can be called inside a simulation job if the simulation is not conducted. The function has two parameters:
+1. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. **It should be noted that if this parameter is not used, then create_model method will not run simulation**
+2. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
+
+### track_simulaiton
+The `track_simulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
 `No simulation is running or completed in this Job - please start simulation using createModel method.`
 If there is a simulation running on the cloud for this simulationJob, then, this function will return `true` and you can retrieve the simulation status by get the class parameter `trackStatus`. Example code is below:
 ```python
-if(newSimulationJob.trackSimulation()):
+if(newSimulationJob.track_simulation()):
   print(newSimulationJob.trackStatus)
 ```
-### getSimulationResults
-The `getSimulationResults(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation.
+### get_simulation_results
+The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation.
 
 ```python
-response = newSimulationJob.getSimulationResults('err')
+response = newSimulationJob.get_simulation_results('err')
 print (response)
 ```
+## Model
+The model class contains a set of methods that provides the model information and results (after simulation)
+### Pre-simulation methods
+1. *num_total_floor()*: can be called before simulation is completed. It returns the number of floors, or -1 if there is an error.
+2. *num_zones()*: can be called before simulation is completed. It returns the total number of thermal zones, or -1 if there is an error.
+3. *num_condition_zones()*: can be called before simulation is completed. It returns the total number of conditioned zones, or -1 if there is an error.
+4. *conditioned_floor_area (unit)*: can be called before simulation is completed. It returns the floor areas of conditioned spaces, or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
+`  m.condition_floor_area("ip")
+`
+5. *gross_floor_area(unit)*: can be called before simulation is completed. It returns the total floor areas (including plenum spaces), or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
+`  m.gross_floor_area("ip")
+`
+6. *window_wall_ratio()*: can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
+
+### Post-simulation methods
+1. *new_site_eui()*: It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
+2. *total_site_eui()*: It returns the total site eui of the simulation. The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
+3. *not_met_hour_cooling()*: returns the time sepoint not met hours during cooling condition period. unit: hour
+4. *not_met_hour_heating()*: returns the time sepoint not met hours during heating condition period. unit: hour
+5. *not_met_hour_total()*: returns the time sepoint not met hours during heating and cooling condition period. unit: hour
+6. *total_end_use_electricity()*: returns the total electricity consumption of the design. unit: kWh or GJ, IP is kBtu
+7. *total_end_use_naturalgas()*: returns the total natural gas consumption of the design. unit: kWh or GJ, IP is kBtu
+
+
 <a name="roadmap"></a>
 # Roadmap
-1. Certainly, the first thing is to get the project into Pip to enable `pip install` command.
-2. We are also working on an HTML compiler, which let users to retrieve any values from the html output
-3. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
+1. We are also working on APIs for results retrieving, which let users to get simulation results for post-processing.
+2. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
 <a name="about"></a>
