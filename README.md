@@ -44,20 +44,22 @@ The following is the minimum needed code to initiate a regular simulation with t
 ### With SimulationJob Class
 ```python
 from BuildSimHubAPI import buildsimhub
-bsh = buildsimhub.BuildSimHubAPIClient()
-
 #this key can be found under an energy model
 model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
+###############NOW, START THE CODE########################
+
+bsh = buildsimhub.BuildSimHubAPIClient()
 newSJ = bsh.new_simulation_job(model_key)
 response = newSj.create_model(file_dir)
 
-#print success means the simulation job has successfully
-#started a simulation, if there is an error, then
-#you will receive the correspondent error message
+############### WE DONE! #################################
+
+#You can print the responses to verify whether the simulation
+#is success or not.
 print (response)
 ```
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
