@@ -189,6 +189,16 @@ The model class contains a set of methods that provides the model information an
 7. *total_end_use_naturalgas()*: returns the total natural gas consumption of the design. unit: kWh or GJ, IP is kBtu
 
 
+### Misc. methods and variables
+1. lastParameterUnit: You can check the value of the variable requested by the most recent API call.
+`
+m = newSj.model
+print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
+#Output: 242.98 MJ/m2
+print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
+#Output: 156.67 GJ
+`
+
 <a name="roadmap"></a>
 # Roadmap
 1. We are also working on APIs for results retrieving, which let users to get simulation results for post-processing.
