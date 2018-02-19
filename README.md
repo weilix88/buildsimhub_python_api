@@ -46,13 +46,13 @@ The following is the minimum needed code to initiate a regular simulation with t
 from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
-#this key can be found under your project folder
-folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+#this key can be found under an energy model
+model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
-newSJ = bsh.new_simulation_job(folder_key)
+newSJ = bsh.new_simulation_job(model_key)
 response = newSj.create_model(file_dir)
 
 #print success means the simulation job has successfully
@@ -69,12 +69,12 @@ from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #this key can be found under your project folder
-folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
-newSJ = bsh.new_simulation_job(folder_key)
+newSJ = bsh.new_simulation_job(model_key)
 response = newSj.create_model(file_dir)
 
 ######BELOW ARE THE CODE TO TRACK SIMULATION#########
@@ -91,12 +91,12 @@ from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #this key can be found under your project folder
-folder_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
-newSJ = bsh.new_simulation_job(folder_key)
+newSJ = bsh.new_simulation_job(model_key)
 response = newSj.create_model(file_dir)
 
 if(response == 'success'):
@@ -189,9 +189,8 @@ The model class contains a set of methods that provides the model information an
 
 <a name="roadmap"></a>
 # Roadmap
-1. Certainly, the first thing is to get the project into Pip to enable `pip install` command.
-2. We are also working on an HTML compiler, which let users to retrieve any values from the html output
-3. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
+1. We are also working on APIs for results retrieving, which let users to get simulation results for post-processing.
+2. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
 <a name="about"></a>
