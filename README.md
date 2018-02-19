@@ -2,7 +2,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/sendgrid.svg?style=social&label=Follow)](https://twitter.com/buildsimhub)
 
 **This library allows you to quickly and easily use the BuildSimHub Web API v1 via Python.**
-This library represents the beginning of the Cloud Simulation function on BuildSimHub. Please browse the rest of this README for further detail.
+This library represents the beginning of the Cloud Simulation function on BuildSimHub. We want this library to be community driven and BuildSimHub led. We need your help to realize this goal. To help, make sure we are building the right things in the right order, we ask that you create [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls) or simply upvote or comment on existing issues or pull requests.
 We appreciate your continued support, thank you!
 
 # Table of Contents
