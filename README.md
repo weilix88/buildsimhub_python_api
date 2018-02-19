@@ -191,13 +191,13 @@ The model class contains a set of methods that provides the model information an
 
 ### Misc. methods and variables
 1. lastParameterUnit: You can check the value of the variable requested by the most recent API call.
-`
+```python
 m = newSj.model
 print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
 #Output: 242.98 MJ/m2
 print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
 #Output: 156.67 GJ
-`
+```
 
 <a name="roadmap"></a>
 # Roadmap
