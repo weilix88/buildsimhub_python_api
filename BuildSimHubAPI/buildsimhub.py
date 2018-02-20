@@ -1,6 +1,8 @@
 from BuildSimHubAPI.helpers import bldgsim_info
 from BuildSimHubAPI.helpers import simulationJob
 from BuildSimHubAPI.helpers import simulationType
+from BuildSimHubAPI.helpers import energyModel
+from BuildSimHubAPI.helpers import htmlResults
 
 class BuildSimHubAPIClient():
     """
@@ -33,3 +35,11 @@ class BuildSimHubAPIClient():
     def get_simulation_type(self):
         st = simulationType.SimulationType()
         return st
+
+    def get_model(self, simulationJob):
+        modelKey = vars(simulationJob)['_trackToken']
+        model = energyModel.Model(self._userAPI,modelKey)
+        return model
+
+    def get_html(self, simulationJob):
+        html = htmlResults.HTMLResults(self._userAPI,simulaitonJob)

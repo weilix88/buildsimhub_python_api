@@ -19,7 +19,7 @@ newSj = bsh.new_simulation_job(model_key)
 # note if fast simulation, call increaseAgents to increase the agent numbers
 response = newSj.create_model(file_dir, comment)
 if(response == 'success'):
-  m = newSj.model
+  m = bsh.get_model(newSj)
   print (str(m.num_total_floor()) + " " + m.lastParameterUnit)
   print (str(m.num_zones()) + " " + m.lastParameterUnit)
   print (str(m.num_condition_zones()) + " " + m.lastParameterUnit)
@@ -27,7 +27,7 @@ if(response == 'success'):
   print (str(m.gross_floor_area("ip")) + " " + m.lastParameterUnit)
   print (str(m.window_wall_ratio()) + " " + m.lastParameterUnit)
 
-  newSj.run_simulation()
+  newSj.run_simulation(st.type, st.agent)
   while newSj.track_simulation():
     print (newSj.trackStatus)
     time.sleep(5)
