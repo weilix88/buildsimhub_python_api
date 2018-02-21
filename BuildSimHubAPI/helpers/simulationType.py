@@ -18,7 +18,7 @@ class SimulationType():
     def set_regular(self):
         self._type = "regular"
 
-    def increaseAgents(self):
+    def increase_agents(self):
         if(self._agent == 1):
             self._agent = 1
             return self._agent
@@ -28,6 +28,6 @@ class SimulationType():
         else:
             return self._agent
 
-    def resetAgent(self):
+    def reset_agent(self):
         self._agent = 1
         return self._agent

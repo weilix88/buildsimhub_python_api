@@ -9,7 +9,7 @@ class SimulationJob():
         self._userKey = userKey
         self._modelKey = mk
         self._trackToken = ""
-        self._trackStatus = "No simulation is running or completed in this Job - please start simulation using createModel method."
+        self._trackStatus = "No simulation is running or completed in this Job - please start simulation using create_run_model method."
 
     @property
     def trackStatus(self):

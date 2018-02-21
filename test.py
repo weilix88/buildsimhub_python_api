@@ -24,6 +24,5 @@ if(response == 'success'):
     'Site and Source Energy', 'Energy Per Total Building Area', 'Net Site Energy')
 
   print(value_dict['value'] + " " + value_dict['unit'])
-
 else:
   print(response)
