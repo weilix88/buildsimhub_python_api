@@ -32,11 +32,11 @@ You can find the API key associate with your account under the profile page:
 
 ![picture alt](https://imgur.com/gHehDiN.png)
 
-Simple edit the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
+Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `user_api_key:[YOUR_API_KEY]`
 
 ## Model key
-The model key can be found under your buildsimhub project. After you created a project on the platform, simply create an energy model on the platform. You will then find the model key under the energy model tab (highlighted in the figure below)
+The model key can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
 ![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
@@ -68,7 +68,7 @@ response = newSj.create_run_model(file_dir)
 print (response)
 ```
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
-From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `createModel()` method with parameters can start the cloud simulation.
+From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `create_run_model()` method with parameters can start the cloud simulation.
 
 ### Track Cloud simulation progress
 ```python
@@ -82,7 +82,7 @@ model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
 newSJ = bsh.new_simulation_job(model_key)
-response = newSj.create_model(file_dir)
+response = newSj.create_run_model(file_dir)
 
 ######BELOW ARE THE CODE TO TRACK SIMULATION#########
 if(response == 'success'):
@@ -104,7 +104,7 @@ model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
 newSJ = bsh.new_simulation_job(model_key)
-response = newSj.create_model(file_dir)
+response = newSj.create_run_model(file_dir)
 
 if(response == 'success'):
   while newSJ.track_simulation():
@@ -121,20 +121,20 @@ If the Job is completed, you can get results by calling `get_simulation_results(
 
 #Object and Functions
 ## SimulationJob
-The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `newSimulationJob()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
+The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
 Nevertheless, you have to provide a `model_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
 
 The `model_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
 ## simulationType
-[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`. Also, you can increase the number of agent by calling the `increaseAgents()` function.
+[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. Currently, there are only one simulation type available, which is `regular`. You can increase the number of agent by calling the `increase_agents()` function.
 ```python
 simulationType = bsh.get_simulation_type()
-numOfAgents = simulationType.increaseAgents();
-print (numOfAgents)
+num_of_agents = simulationType.increase_agents();
+print (num_of_agents)
 ```
-It should be noted that the maximum number of agents working on one simulation job is limited to 4, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `resetAgent()` function to reset the number of agent to 1.
+It should be noted that the maximum number of agents working on one simulation job is limited to 4, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `reset_agent()` function to reset the number of agent to 1.
 
 ## SimulationJob
 A simulation job manages one type of cloud simulation. It contains five main functions which are listed below:
@@ -163,12 +163,12 @@ or error message states what was wrong in your request.
 
 ### run_simulation
 The `run_simulation()` function can be called inside a simulation job if the simulation is not conducted. The function has two parameters:
-1. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. **It should be noted that if this parameter is not used, then create_model method will not run simulation**
-2. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
+1. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. The default is `regular`
+2. `agent` (optional): he agent numbeer should be selected among 1, 2 or 4 agents. You can also use the [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class to help decide the agent number. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
 
 ### track_simulaiton
 The `track_simulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
-`No simulation is running or completed in this Job - please start simulation using createModel method.`
+`No simulation is running or completed in this Job - please start simulation using create_run_Model method.`
 If there is a simulation running on the cloud for this simulationJob, then, this function will return `true` and you can retrieve the simulation status by get the class parameter `trackStatus`. Example code is below:
 ```python
 if(newSimulationJob.track_simulation()):
@@ -182,7 +182,14 @@ response = newSimulationJob.get_simulation_results('err')
 print (response)
 ```
 ## Model
-The model class contains a set of methods that provides the model information and results (after simulation)
+The model class contains a set of methods that provides the model information and results (after simulation). It can be generated from the `BuildSimHubAPIClient` with your specific simulation job. Here is an example to generate a model.
+
+```python
+bsh = buildsimhub.BuildSimHubAPIClient()
+newSj = bsh.new_simulation_job(model_key)
+model = bsh.get_model(newSj)
+```
+
 ### Pre-simulation methods
 1. *num_total_floor()*: can be called before simulation is completed. It returns the number of floors, or -1 if there is an error.
 2. *num_zones()*: can be called before simulation is completed. It returns the total number of thermal zones, or -1 if there is an error.
