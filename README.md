@@ -35,6 +35,9 @@ You can find the API key associate with your account under the profile page:
 Simple edit the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `user_api_key:[YOUR_API_KEY]`
 
+## Model key
+The model key can be found under your buildsimhub project.
+
 <a name="quick-start"></a>
 
 # Quick Start
