@@ -36,7 +36,8 @@ Simple edit the [info.config](https://github.com/weilix88/buildsimhub_python_api
 `user_api_key:[YOUR_API_KEY]`
 
 ## Model key
-The model key can be found under your buildsimhub project.
+The model key can be found under your buildsimhub project. After you created a project on the platform, simply create an energy model on the platform. You will then find the model key under the energy model tab (highlighted in the figure below)
+![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
 
