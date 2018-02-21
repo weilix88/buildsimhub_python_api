@@ -89,8 +89,7 @@ class SimulationJob():
         else:
             return resp_json['error_msg']
 
-
-    def create_model(self, file_dir, comment = "Upload through Python API", simulationType ="", agent = 0):
+    def create_run_model(self, file_dir, comment = "Upload through Python API", simulationType ="regular", agent = 1):
         url = SimulationJob.BASE_URL + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
@@ -98,6 +97,28 @@ class SimulationJob():
             'comment': comment,
             'simulation_type': simulationType,
             'agents' : agent
+        }
+        files = {
+            'file': open(file_dir, 'rb')
+        }
+
+        r= requests.post(url, data=payload, files = files)
+        resp_json = r.json()
+
+        if(resp_json['status'] == 'success'):
+            self._trackToken = resp_json['tracking']
+            return resp_json['status']
+        else:
+            return resp_json['error_msg']
+
+    def create_model(self, file_dir, comment = "Upload through Python API"):
+        url = SimulationJob.BASE_URL + 'CreateModel_API'
+        payload = {
+            'user_api_key': self._userKey,
+            'folder_api_key': self._modelKey,
+            'comment': comment,
+            'simulation_type': '',
+            'agents' : 1
         }
 
         files={
