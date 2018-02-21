@@ -201,6 +201,7 @@ model = bsh.get_model(newSj)
 `  m.gross_floor_area("ip")
 `
 6. *window_wall_ratio()*: can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
+7. *bldg_orientation()*: can be called before simulation is completed. It returns the orientation of the building.
 
 ### Post-simulation methods
 1. *new_site_eui()*: It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
@@ -210,7 +211,24 @@ model = bsh.get_model(newSj)
 5. *not_met_hour_total()*: returns the time sepoint not met hours during heating and cooling condition period. unit: hour
 6. *total_end_use_electricity()*: returns the total electricity consumption of the design. unit: kWh or GJ, IP is kBtu
 7. *total_end_use_naturalgas()*: returns the total natural gas consumption of the design. unit: kWh or GJ, IP is kBtu
-
+8. *cooling_electricity()*: returns the total electricity consumption of cooling energy. unit: kWh or GJ, Ip is kBtu
+9. *domestic_hotwater_electricity()*: returns the total electricity consumption of the service water system. unit: kWh or GJ, IP is kBtu
+10. *domestic_hotwater_naturalgas()*: returns the total natural gas consumption of the service water system. unit: kWh or GJ, IP is kBtu
+11. *exterior_equipment_electricity()*: returns the total electricity consumption of the exterior equipment. unit: kWh or GJ, IP is kBtu
+12. *exterior_equipment_naturalgas()*: returns the total natural gas consumption of the exteiror equipment. unit: kWh or GJ, IP is kBtu
+13. *exterior_lighting_electricity()*: returns the total electricity consumption of the exterior lighting system. unit: kWh or GJ, IP is kBtu
+14. *exterior_lighting_naturalgas()*: returns the total natural gas consumption of the exterior lighting system. unit: kWh or GJ, IP is kBtu
+15. *fan_electricity()*: returns the total electricity consumption of the fan system. unit: kWh or GJ, IP is kBtu
+16. *heating_electricity()*: returns the total electricity consumption of the heating system. unit: kWh or GJ, IP is kBtu
+17. *heating_naturalgas()*: returns the total natural gas consumption of the heating system. unit: kWh or GJ, IP is kBtu
+18. *heat_rejection_electricity()*: returns the electricity consumption of the heat rejection. unit: kWh or GJ, IP is kBtu
+19. *heat_rejection_naturalgas()*: returns the natural gas consumption of the heat rejection. unit: kWh or GJ, IP is kBtu
+20. *interior_equipment_electricity()*: returns the electricity consumption of the interior equipment. unit: kWh or GJ, IP is kBtu
+21. *interior_equipment_naturalgas()*: returns the natural gas consumption of the interior equipment. unit: kWh or GJ, IP is kBtu
+22. *interior_lighting_electricity()*: returns the electricity consumption of the interior lighting. unit: kWh or GJ, IP is kBtu
+23. *interior_lighting_naturalgas()*: returns the natural gas consumption of the interior lighting. unit: kWh or GJ, IP is kBtu
+24. *pumps_electricity()*: returns the electricity consumption of the pumps. unit: kWh or GJ, IP is kBtu
+25. *pumps_naturalgas()*: returns the natural gas consumption of the pumps. unit: kWh or GJ, IP is kBtu
 
 ### Misc. methods and variables
 1. lastParameterUnit: You can check the value of the variable requested by the most recent API call.
@@ -221,6 +239,31 @@ print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
 print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
 #Output: 156.67 GJ
 ```
+
+## eplusHTMLParser
+The eplusHTMLParser provides a set of methods to help users finding data in the EnergyPlus HTML output file. To use this HTML parser, user has to retrieve the processed HTML file from BuildSimHub service. An example code is illustrated below.
+```python
+from BuildSimHubAPI import eplusHTMLParser
+...
+  response = newSj.get_simulation_results('html')
+  value_dict = eplusHTMLParser.extract_a_value_from_table(response, 'Annual Building Utility Performance Summary',
+    'Site and Source Energy', 'Energy Per Total Building Area', 'Net Site Energy')
+  print(value_dict['value] + " " + value_dict['unit'])
+  
+  #Output: 241.7 MJ/m2
+```
+### extract_a_value_from_table(report, table, column_name, row_name, reportFor)
+This method allows users to extract a specifc cell value from HTML file. It has four required parameters and one optional parameter.
+1. `report`: the name of the report in the HTML file. You can find the list of available reports under the Table of Content section in the HTML file.
+![picture alt](https://imgur.com/QEB5XXF.png)
+2. `table`: the name of the table in the HTML file. You can find the table name under each report. Figure below shows an example of the table name:
+![picture alt](https://imgur.com/MYRODca.png)
+3. `column_name`: the header of a column which the cell is located in. The header may contains unit, but you do not need to include the unit for this parameter.
+![picture alt](https://imgur.com/PTcgcC5.png)
+4. `row_name`: the name of the row, typically starts at the first column of a table. The row name may contains unit, but you do not need to include the unit for this parameter.
+![picture alt](https://imgur.com/UY3CHPR.png)
+5. `reportFor`: This is an optional parameter. The default is set to 'Entire Facility'. Usually, all the report is for entire facility. However, there are some cases where the report is generated for a specific zone, e.g., zone load component reports. Below is the example of finding this parameter in the HTML file.
+![picture alt](https://imgur.com/ZiCyT68.png)
 
 <a name="roadmap"></a>
 # Roadmap
