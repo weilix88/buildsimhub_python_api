@@ -9,6 +9,10 @@ We appreciate your continued support, thank you!
 # Table of Contents
 * [Installation](#installation)
 * [Quick Start](#quick-start)
+  * [SimulationType](#simultion_type)
+  * [SimulationJob](#simulation_job)
+  * [Model](#energy_model)
+  * [HTML Parser](#eplus_html_parser)
 * [Objects and Functions](#functions)
 * [Roadmap](#roadmap)
 * [About](#about)
@@ -120,13 +124,7 @@ If the Job is completed, you can get results by calling `get_simulation_results(
 <a name="functions"></a>
 
 #Object and Functions
-## SimulationJob
-The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
-Nevertheless, you have to provide a `model_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
-
-The `model_key` can be found under each folder of your project
-![picture alt](https://imgur.com/jNrghIZ.png)
-
+<a name="simultion_type"></a>
 ## simulationType
 [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. Currently, there are only one simulation type available, which is `regular`. You can increase the number of agent by calling the `increase_agents()` function.
 ```python
@@ -136,7 +134,14 @@ print (num_of_agents)
 ```
 It should be noted that the maximum number of agents working on one simulation job is limited to 4, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `reset_agent()` function to reset the number of agent to 1.
 
+<a name="simulation_job"></a>
 ## SimulationJob
+The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
+Nevertheless, you have to provide a `model_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
+
+The `model_key` can be found under each folder of your project
+![picture alt](https://imgur.com/jNrghIZ.png)
+
 A simulation job manages one type of cloud simulation. It contains five main functions which are listed below:
 
 ### create_model
@@ -181,6 +186,7 @@ The `get_simulation_results(type)` function requires 1 parameter, the result typ
 response = newSimulationJob.get_simulation_results('err')
 print (response)
 ```
+<a name="energy_model"></a>
 ## Model
 The model class contains a set of methods that provides the model information and results (after simulation). It can be generated from the `BuildSimHubAPIClient` with your specific simulation job. Here is an example to generate a model.
 
@@ -239,7 +245,7 @@ print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
 print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
 #Output: 156.67 GJ
 ```
-
+<a name = "eplus_html_parser"></a>
 ## eplusHTMLParser
 The eplusHTMLParser provides a set of methods to help users finding data in the EnergyPlus HTML output file. To use this HTML parser, user has to retrieve the processed HTML file from BuildSimHub service. An example code is illustrated below.
 ```python
