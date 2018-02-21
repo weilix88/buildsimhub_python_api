@@ -57,8 +57,8 @@ file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 ###############NOW, START THE CODE########################
 
 bsh = buildsimhub.BuildSimHubAPIClient()
-newSJ = bsh.new_simulation_job(model_key,'my first cloud simulation', 'regular',1)
-response = newSj.create_model(file_dir)
+newSJ = bsh.new_simulation_job(model_key)
+response = newSj.create_run_model(file_dir)
 
 ############### WE DONE! #################################
 
