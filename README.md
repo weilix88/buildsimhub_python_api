@@ -121,29 +121,40 @@ If the Job is completed, you can get results by calling `get_simulation_results(
 #Object and Functions
 ## SimulationJob
 The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `newSimulationJob()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
-Nevertheless, you have to provide a `folder_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
+Nevertheless, you have to provide a `model_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
 
-The `folder_key` can be found under each folder of your project
+The `model_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
 ## simulationType
-[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`. Also, ou can increase the number of agent by calling the `increaseAgents()` function.
+[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. There are two simulation types: `regular` and `fast`. Also, you can increase the number of agent by calling the `increaseAgents()` function.
 ```python
 simulationType = bsh.get_simulation_type()
 numOfAgents = simulationType.increaseAgents();
 print (numOfAgents)
 ```
-It should be noted that the maximum number of agents working on one simulation job is limited to 12, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `resetAgent()` function to reset the number of agent to 2.
+It should be noted that the maximum number of agents working on one simulation job is limited to 4, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `resetAgent()` function to reset the number of agent to 1.
 
 ## SimulationJob
-A simulation job manages one type of cloud simulation. It contains three main functions which are listed below:
+A simulation job manages one type of cloud simulation. It contains five main functions which are listed below:
 
 ### create_model
-The `create_model()` function has in total 4 parameters.
+The `create_model()` function allows you to upload an energy model to the platform with no simulation. It has in total 2 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
 2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
-3. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. **It should be noted that if this parameter is not used, then create_model method will not run simulation**
-4. `agent` (optional): The agent number is a property of [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. If fast simulation is selected, then the default of agent will be 2.
+
+This method returns two types of information:
+If sucess: `success`
+or error message states what was wrong in your request.
+
+### create_run_model
+The `create_run_model()` function allows you to upload an energy model to the platform and run simulaiton. It has in total 4 parameters.
+1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
+
+2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
+3. `simulationType` (optional): The current available simulation tyoe is `regular`. This simulation Type can be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. The default is `regular` for this class.
+
+4. `agent` (optional): The agent numbeer should be selected among 1, 2 or 4 agents. You can also use the [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class to help decide the agent number. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
 
 This method returns two types of information:
 If sucess: `success`
