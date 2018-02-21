@@ -1,6 +1,6 @@
 import requests
 import json
-
+from .simulationJob import SimulationJob
 #This is a class that contains all the model information for user
 #to read
 
@@ -13,8 +13,8 @@ class Model():
 
     def __init__(self, userKey, modelKey):
         self._userKey = userKey
-        self._modelKey = modelKey
         self._lastParameterUnit = ""
+        self._modelKey = modelKey
 
     @property
     def lastParameterUnit(self):

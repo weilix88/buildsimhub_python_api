@@ -1,17 +1,15 @@
 import requests
 import json
-from .energyModel import Model
 
 class SimulationJob():
     #every call will connect to this base URL
     BASE_URL = 'https://develop.buildsimhub.net/'
 
-    def __init__(self, userKey, folderkey):
+    def __init__(self, userKey, mk):
         self._userKey = userKey
-        self._folderKey = folderkey
+        self._modelKey = mk
         self._trackToken = ""
         self._trackStatus = "No simulation is running or completed in this Job - please start simulation using createModel method."
-        self._model = None
 
     @property
     def trackStatus(self):
@@ -21,13 +19,13 @@ class SimulationJob():
     def trackToken(self):
         return self._trackToken
 
+    @property
+    def modelKey(self):
+        return self._modelKey
+
     @trackToken.setter
     def trackToken(self, value):
         self._trackToken = value
-
-    @property
-    def model(self):
-        return self._model
 
     def get_simulation_results(self, resultType="html"):
         if(self._trackToken == ""):
@@ -75,7 +73,7 @@ class SimulationJob():
             self._trackStatus = resp_json['error_msg']        
             return resp_json['has_more']
 
-    def run_simulation(self, simulationType = "regular", agent=2):
+    def run_simulation(self, simulationType = "regular", agent=1):
         url = SimulationJob.BASE_URL + 'RunSimulation_API'
         payload = {
             'user_api_key': self._userKey,
@@ -96,7 +94,7 @@ class SimulationJob():
         url = SimulationJob.BASE_URL + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
-            'folder_api_key': self._folderKey,
+            'folder_api_key': self._modelKey,
             'comment': comment,
             'simulation_type': simulationType,
             'agents' : agent
@@ -105,15 +103,13 @@ class SimulationJob():
         files={
             'file': open(file_dir, 'rb')
         }
-
+        
         r = requests.post(url, data=payload, files= files)
-
+        
         resp_json = r.json()
 
         if(resp_json['status'] == 'success'):
             self._trackToken = resp_json['tracking']
-            self._model = Model(self._userKey, self._trackToken)
-
             return resp_json['status']
         else:
             return resp_json['error_msg']

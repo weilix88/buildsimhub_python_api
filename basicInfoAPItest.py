@@ -4,21 +4,22 @@ import time
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #1. set your folder key
-folder_key="0f8ca79b-3952-41c7-89e6-7fbff764a56e"
+model_key="0789da9f-6912-4c2b-858d-d6d986234135"
 #2. define the absolute directory of your energy model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 #3. this is optional
 comment = "new upload 2"
 #4. simulation Type. this is optional
 st = bsh.get_simulation_type()
-stType = st.regular
+st.set_regular()
 
-newSj = bsh.new_simulation_job(folder_key)
+newSj = bsh.new_simulation_job(model_key)
+
 #5. start the API call
 # note if fast simulation, call increaseAgents to increase the agent numbers
 response = newSj.create_model(file_dir, comment)
 if(response == 'success'):
-  m = newSj.model
+  m = bsh.get_model(newSj)
   print (str(m.num_total_floor()) + " " + m.lastParameterUnit)
   print (str(m.num_zones()) + " " + m.lastParameterUnit)
   print (str(m.num_condition_zones()) + " " + m.lastParameterUnit)
@@ -26,7 +27,7 @@ if(response == 'success'):
   print (str(m.gross_floor_area("ip")) + " " + m.lastParameterUnit)
   print (str(m.window_wall_ratio()) + " " + m.lastParameterUnit)
 
-  newSj.run_simulation()
+  newSj.run_simulation(st.type, st.agent)
   while newSj.track_simulation():
     print (newSj.trackStatus)
     time.sleep(5)
