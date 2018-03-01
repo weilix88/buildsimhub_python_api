@@ -1,6 +1,6 @@
 import requests
 import json
-from .simulationJob import SimulationJob
+from .simulation_job import SimulationJob
 #This is a class that contains all the model information for user
 #to read
 

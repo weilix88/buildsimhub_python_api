@@ -28,8 +28,14 @@ class NumericValueParser(HTMLParser):
     def data(self):
         return self._data
 
+    def get_data(self):
+        return self._data
+
     @property
     def unit(self):
+        return self._unit
+
+    def get_unit(self):
         return self._unit
 
     def handle_starttag(self, tag, attributes):

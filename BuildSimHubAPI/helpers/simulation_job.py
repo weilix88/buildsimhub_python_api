@@ -10,6 +10,7 @@ class SimulationJob():
         self._modelKey = mk
         self._trackToken = ""
         self._trackStatus = "No simulation is running or completed in this Job - please start simulation using create_run_model method."
+        
 
     @property
     def trackStatus(self):
@@ -73,8 +74,33 @@ class SimulationJob():
             self._trackStatus = resp_json['error_msg']        
             return resp_json['has_more']
 
-    def run_simulation(self, simulationType = "regular", agent=1):
+    def run(self, file_dir, wea_dir, agent=1, simulationType='regular'):
+        url = SimulationJob.BASE_URL + 'RunSimulationCustomize_API'
+        payload = {
+            'user_api_key':self._userKey,
+            'simulation_type': simulationType,
+            'agents':agent
+        }
+
+        files = {
+            'model': open(file_dir, 'rb'),
+            'weather_file': open(wea_dir,'rb')
+        }
+
+        r= requests.post(url, data=payload, files = files)
+        resp_json = r.json()
+        if(resp_json['status'] == 'success'):
+            self._trackToken = resp_json['tracking']
+            return resp_json['status']
+        else:
+            return resp_json['error_msg']
+
+    def run_model_simulation(self, agent=1, simulationType = "regular"):
         url = SimulationJob.BASE_URL + 'RunSimulation_API'
+
+        if(self._trackToken == ""):
+            return 'error: no model is created in this simulation job. Please create a model use create_model(self, file_dir, comment = "Upload through Python API") method.'
+
         payload = {
             'user_api_key': self._userKey,
             'track_token': self._trackToken,
@@ -89,7 +115,7 @@ class SimulationJob():
         else:
             return resp_json['error_msg']
 
-    def create_run_model(self, file_dir, comment = "Upload through Python API", simulationType ="regular", agent = 1):
+    def create_run_model(self, file_dir, comment = "Upload through Python API", agent = 1, simulationType ="regular"):
         url = SimulationJob.BASE_URL + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
