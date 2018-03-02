@@ -40,3 +40,8 @@ class BuildSimHubAPIClient():
         modelKey = vars(simulationJob)['_trackToken']
         model = helpers.energy_model.Model(self._userAPI,modelKey)
         return model
+
+    def get_parametric_results(self, parametricJob):
+        modelKey = vars(parametricJob)['_trackToken']
+        return helpers.parametric_model.ParametricModel(self._userAPI, modelKey)
+

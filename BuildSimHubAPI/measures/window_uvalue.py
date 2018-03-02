@@ -7,7 +7,7 @@ class WindowUValue(ModelAction):
     #convert U-value IP to SI
     CONVERSION_RATE = 5.678
 
-    def __init__(self, unit):
+    def __init__(self, unit="si"):
         ModelAction.__init__(self, 'window_uvalue',unit)
 
     def get_num_value(self):

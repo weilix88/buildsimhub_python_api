@@ -8,9 +8,17 @@ class ParametricJob():
     def __init__(self, userKey, mk):
         self._userKey = userKey
         self._modelKey = mk
+        self._trackToken = ""
+        self._trackStatus=""
         #list of data
-        self._simulation_job = list()
         self._model_action_list = list()
+
+    @property
+    def trackToken(self):
+        return self._trackToken
+
+    def get_status(self):
+        return self._trackStatus
 
     def add_model_action(self, action):
         self._model_action_list.append(action)
@@ -28,23 +36,24 @@ class ParametricJob():
         #reserved function
         return num_total_combination() * 1.0
 
-    #For this method, it allows user to upload energy model from local machine, along with the weather file
-    #this will creates a new project each time and run the parametric simulation.
-    def submit_parametric_study_local(self, file_dir, wea_dir, simulationType ="parametric", agent = 1):
-        #file_dir indicates the seed model
-        url = ParametricJob.BASE_URL + 'CreateModel_API'
-        payload = {
+
+    def submit_parametric_study_local(self, file_dir, simulationType = "parametric"):
+         #file_dir indicates the seed model
+        url = ParametricJob.BASE_URL + 'ParametricSettingUploadModel_API'
+        payload={
             'user_api_key': self._userKey,
+            'project_api_key': self._modelKey,
             'simulation_type': simulationType,
-            'agents':agent
+            'agents':1
         }
 
         for i in range(len(self._model_action_list)):
-            action = self._model_action_list[i]
-            payload[action.get_api_name()] = action.get_datalist()
+            measure = self._model_action_list[i]
+            payload[measure.get_api_name()] = measure.get_data_string()
+
 
         files = {
-            'file': open(file_dir, 'rb')
+            'model': open(file_dir,'rb')
         }
 
         r = requests.post(url, data=payload, files= files)
@@ -57,22 +66,54 @@ class ParametricJob():
         else:
             return resp_json['error_msg']
 
+    #For this method, it allows user to upload energy model from local machine, along with the weather file
+    #this will creates a new project each time and run the parametric simulation.
+#    def submit_parametric_study_local(self, file_dir, wea_dir, simulationType ="parametric"):
+        #file_dir indicates the seed model
+#        url = ParametricJob.BASE_URL + 'CreateModel_API'
+#        payload = {
+#            'user_api_key': self._userKey,
+#            'simulation_type': simulationType,
+#            'agents':1
+#        }
+
+#        for i in range(len(self._model_action_list)):
+#            action = self._model_action_list[i]
+#            payload[action.get_api_name()] = action.get_datalist()
+
+#        files = {
+#            'file': open(file_dir, 'rb')
+#        }
+
+#        r = requests.post(url, data=payload, files= files)
+
+#        resp_json = r.json()
+
+#        if(resp_json['status'] == 'success'):
+#            self._trackToken = resp_json['tracking']
+#            return resp_json['status']
+#        else:
+#            return resp_json['error_msg']
+
     #for this method, it allows user to identify one seed model in a project.
     #This allows the parametric study performed under a project with fixed weather file,
-    def submit_parametric_study(self, seed_model_key, simulationType = 'parametric', agent = 1):
+    def submit_parametric_study(self, simulationType = 'parametric'):
 
-        url = ParametricJob.BASE_URL + ''
+        url = ParametricJob.BASE_URL + 'ParametricSettingCopyModel_API'
         payload = {
             'user_api_key': self._userKey,
+            'model_api_key': self._modelKey,
             'simulation_type': simulationType,
-            'agents':agent
+            'agents':1
         }
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
-            payload[action.get_api_name()] = action.get_datalist()
+            payload[action.get_api_name()] = action.get_data_string()
 
-        r = requests.post(url, data=payload, files= files)
+        #return payload
+
+        r = requests.post(url, data=payload)
 
         resp_json = r.json()
 
@@ -104,27 +145,31 @@ class ParametricJob():
         if(self._trackToken == ""):
             return self._trackStatus
 
-        url = SimulationJob.BASE_URL + 'TrackSimulation_API'
+        url = ParametricJob.BASE_URL + 'ParametricTracking_API'
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._trackToken
+            'folder_api_key': self._trackToken
         }
+
         r = requests.get(url, params=payload)
         resp_json = r.json()
 
 
-        if('has_more' not in resp_json):
-            if('error_msg' in resp_json):
-                self._trackStatus = resp_json['error_msg']
-                return False
-            else:
-                self._trackStatus = 'Finished'
-                return False
+        if('error_msg' in resp_json):
+            self._trackStatus = resp_json['error_msg']
+            return False
 
-        if(resp_json['has_more'] == True):
-            self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
-            return resp_json['has_more']
+        success = float(resp_json['success'])
+        running = float(resp_json['running'])
+        error = float(resp_json['error'])
+        queue = float(resp_json['queue'])
+
+        totalProgress = (success + error) / (success + running + error + queue) 
+
+        message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
+        self._trackStatus = message%(totalProgress * 100, success, error, running, queue)
+
+        if(totalProgress == 1):
+            return False
         else:
-            self._trackStatus = resp_json['error_msg']        
-            return resp_json['has_more']
-
+            return True

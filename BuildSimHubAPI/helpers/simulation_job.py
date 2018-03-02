@@ -10,7 +10,7 @@ class SimulationJob():
         self._modelKey = mk
         self._trackToken = ""
         self._trackStatus = "No simulation is running or completed in this Job - please start simulation using create_run_model method."
-        
+        self._model_action_list = list()
 
     @property
     def trackStatus(self):
@@ -27,6 +27,11 @@ class SimulationJob():
     @trackToken.setter
     def trackToken(self, value):
         self._trackToken = value
+
+    def add_model_action(self, action):
+        if(action.get_num_value()>0):
+            return "Cannot process more than one value for a single simulation job. Try parametric study."
+        self._model_action_list.append(action)
 
     def get_simulation_results(self, resultType="html"):
         if(self._trackToken == ""):
@@ -57,7 +62,6 @@ class SimulationJob():
         }
         r = requests.get(url, params=payload)
         resp_json = r.json()
-
 
         if('has_more' not in resp_json):
             if('error_msg' in resp_json):

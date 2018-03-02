@@ -13,6 +13,9 @@ class ModelAction():
     def num_of_value(self):
         return len(self._list_data)
 
+    def get_data_string(self):
+        return "["+",".join(str(x) for x in self._list_data)+"]"
+
     def get_datalist(self):
         return self._list_data
 

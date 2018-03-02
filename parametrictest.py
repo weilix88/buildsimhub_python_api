@@ -1,36 +1,57 @@
 import BuildSimHubAPI as bshapi
+import matplotlib.pyplot as plt
+import numpy as np
 import time
 
 bsh = bshapi.BuildSimHubAPIClient()
 
 #1. set your folder key
-model_key="0dde5a46-4d07-4b99-907f-0cfedf301072"
+model_key='151ea8f7-c6bb-49b3-b963-f7b56f46ff2e'
 #2. define the absolute directory of your energy model
-file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
-#3. this is optional
+#file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 
+#3. this is optional
 newPj = bsh.new_parametric_job(model_key)
 
 #add window property
-wp = bshapi.actions.WindowUValue('ip')
-uValue = [0.3,0.2,0.1]
+wp = bshapi.measures.WindowUValue()
+uValue = [2.0,1.6,1.4]
 wp.set_datalist(uValue)
 
-wshgc = bshapi.actions.WindowSHGC()
-shgc = [0.3,0.4,0.5]
+wshgc = bshapi.measures.WindowSHGC()
+shgc = [0.5,0.4,0.3]
 wshgc.set_datalist(shgc)
 
 #add window wall ratio property
-wwr = bshapi.actions.WindowWallRatio()
-wwrlist = [0.2,0.3,0.4]
+wwr = bshapi.measures.WindowWallRatio()
+wwrlist = [0.1,0.2,0.4]
 wwr.set_datalist(wwrlist)
 
 #add these EEM to parametric study
 newPj.add_model_action(wp)
 newPj.add_model_action(wshgc)
-newPj.add_model_action(wwr)
+#newPj.add_model_action(wwr)
 
-#estimate runs
+#estimate runs and submit job
 print(newPj.num_total_combination())
+newPj.submit_parametric_study()
 
-print(newPj.submit_parametric_study_local(''))
+#track job progress
+while(newPj.track_simulation()):
+    print(newPj.get_status())
+    time.sleep(5)
+
+#collect job results
+results = bsh.get_parametric_results(newPj)
+result_dict = results.net_site_eui()
+result_unit = results.lastParameterUnit
+
+#plot
+for i in range(len(result_dict['model_plot'])):
+    print(result_dict['model_plot'][i] + ' ==> ' + result_dict['model'][i])
+
+ind = np.arange(len(result_dict['value']))
+plt.xticks(ind, result_dict['model_plot'])
+plt.plot(result_dict['value'])
+plt.ylabel('EUI (' + result_unit + ')')
+plt.show()
