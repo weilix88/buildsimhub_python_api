@@ -1,7 +1,8 @@
-import json
+
 
 class ModelAction():
     def __init__(self, name, unit='ip'):
+        # type: (str, str) -> ModelAction
         self._list_data = list()
         self._data = None
         self._unit = unit

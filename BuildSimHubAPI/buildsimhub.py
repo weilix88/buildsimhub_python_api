@@ -29,6 +29,7 @@ class BuildSimHubAPIClient():
         return sj
 
     def new_parametric_job(self, model_key):
+        # type: (object) -> object
         pj = helpers.parametric_job.ParametricJob(self._userAPI, model_key)
         return pj
 

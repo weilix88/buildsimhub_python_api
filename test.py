@@ -12,6 +12,8 @@ newSj = bsh.new_simulation_job()
 # note if fast simulation, call increaseAgents to increase the agent numbers
 #response = newSj.create_run_model(file_dir)
 response = newSj.run(file_dir, wea_dir)
+
+
 if(response == 'success'):
   while newSj.track_simulation():
     print (newSj.trackStatus)
