@@ -24,7 +24,7 @@ We appreciate your continued support, thank you!
 
 ## Prerequisites
 - The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
-- Python version 2.6, 2.7, 3.4, 3.5 or 3.6
+- Python version 3.4, 3.5 or 3.6
 
 ## Install Package
 Simply clone this repository and place in any folder you wish to build your application on. Examples:
@@ -54,16 +54,16 @@ The following is the minimum needed code to initiate a regular simulation with t
 ```python
 from BuildSimHubAPI import buildsimhub
 #this key can be found under an energy model
-model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfeec1072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
-
+wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 ###############NOW, START THE CODE########################
 
 bsh = buildsimhub.BuildSimHubAPIClient()
 newSJ = bsh.new_simulation_job(model_key)
-response = newSj.create_run_model(file_dir)
+response = newSj.run(file_dir,wea_dir)
 
 ############### WE DONE! #################################
 
@@ -72,7 +72,7 @@ response = newSj.create_run_model(file_dir)
 print (response)
 ```
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
-From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `create_run_model()` method with parameters can start the cloud simulation.
+From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `run()` method with parameters can start the cloud simulation.
 
 ### Track Cloud simulation progress
 ```python
@@ -80,21 +80,22 @@ from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #this key can be found under your project folder
-model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfee21072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
+wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 
-newSJ = bsh.new_simulation_job(model_key)
-response = newSj.create_run_model(file_dir)
+new_sj = bsh.new_simulation_job()
+response = new_sj.run(file_dir,wea_dir)
 
 ######BELOW ARE THE CODE TO TRACK SIMULATION#########
 if(response == 'success'):
-  while newSJ.track_simulation():
-    print (newSJ.trackStatus)
+  while new_sj.track_simulation():
+    print (new_sj.trackStatus)
     time.sleep(5)
 ```
-As mentioned previously, [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) manages the entire workflow of the simulation. So once a cloud simulation is successfully started by the [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class, you can simply call `trackSimulation()` function to receive the simulation progress.
+As mentioned previously, [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) manages the entire workflow of the simulation. So once a cloud simulation is successfully started by the [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class, you can simply call `track_simulation()` function to receive the simulation progress.
 
 ### Retrieve Cloud simulation results
 ```python
@@ -102,13 +103,14 @@ from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
 #this key can be found under your project folder
-model_key="0ade3a46-4d07-4b99-907f-0cfeece321072"
+model_key="0ade3a46-4d07-4b99-907f-0cfe321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
+wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 
-newSJ = bsh.new_simulation_job(model_key)
-response = newSj.create_run_model(file_dir)
+new_sj = bsh.new_simulation_job()
+response = new_sj.run(file_dir, wea_dir)
 
 if(response == 'success'):
   while newSJ.track_simulation():
@@ -143,6 +145,10 @@ The `model_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
 A simulation job manages one type of cloud simulation. It contains five main functions which are listed below:
+### run
+The `run()` function allows you to upload an energy model and weather file to the platform for cloud simulation (project creation is not required for this method). It has in total 2 parameters.
+1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
+2. `wea_dir`(required): the absolute local director of the simulation weather file (it should be .epw file)
 
 ### create_model
 The `create_model()` function allows you to upload an energy model to the platform with no simulation. It has in total 2 parameters.
@@ -239,7 +245,7 @@ model = bsh.get_model(newSj)
 ### Misc. methods and variables
 1. lastParameterUnit: You can check the value of the variable requested by the most recent API call.
 ```python
-m = newSj.model
+m = new_sj.model
 print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
 #Output: 242.98 MJ/m2
 print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
@@ -251,7 +257,7 @@ The eplusHTMLParser provides a set of methods to help users finding data in the 
 ```python
 from BuildSimHubAPI import eplusHTMLParser
 ...
-  response = newSj.get_simulation_results('html')
+  response = new_sj.get_simulation_results('html')
   value_dict = eplusHTMLParser.extract_a_value_from_table(response, 'Annual Building Utility Performance Summary',
     'Site and Source Energy', 'Energy Per Total Building Area', 'Net Site Energy')
   print(value_dict['value] + " " + value_dict['unit'])
