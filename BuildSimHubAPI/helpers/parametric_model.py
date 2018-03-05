@@ -1,25 +1,26 @@
 import requests
-import json
-#This is a class that contains all the model information for user
-#to read
+
+# This is a class that contains all the model information for user
+# to read
 
 
-#potentially in the future, to write
+# potentially in the future, to write
 
 class ParametricModel():
-    #every call will connect to this base URL
+    # every call will connect to this base URL
     BASE_URL = 'https://develop.buildsimhub.net/'
 
-    def __init__(self, userKey, modelKey):
+    def __init__(self, userKey, parametricJob):
         self._userKey = userKey
         self._lastParameterUnit = ""
-        self._modelKey = modelKey
+        self._modelKey = vars(parametricJob)['_trackToken']
+
 
     @property
     def lastParameterUnit(self):
         return self._lastParameterUnit
 
-    #Below are the methods use for retrieving results
+    # Below are the methods use for retrieving results
     def net_site_eui(self):
         return self.__call_api('NetSiteEUI')
 
@@ -84,7 +85,7 @@ class ParametricModel():
         return self.__call_api('HeatRejectionNaturalGas')
 
     def interior_equipment_electricity(self):
-        return self.__call_api('InteiorEquipmentElectricity')   
+        return self.__call_api('InteiorEquipmentElectricity')
 
     def interior_equipment_naturalgas(self):
         return self.__call_api('InteirorEquipmentNaturalGas')
@@ -109,20 +110,20 @@ class ParametricModel():
             'request_data': request_data
         }
 
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         value = list()
         model = list()
         model_plot = list()
         counter = 1
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             datalist = resp_json['data']
             for i in range(len(datalist)):
                 value.append(datalist[i]['value'])
                 model.append(datalist[i]['model'])
-                model_plot.append('case'+str(counter))
+                model_plot.append('case' + str(counter))
                 counter += 1
-                if('unit' in datalist[i]):
+                if 'unit' in datalist[i]:
                     self._lastParameterUnit = datalist[i]['unit']
             result = dict()
             result['value'] = value

@@ -27,8 +27,8 @@ win = [0.2, 0.3]
 wrr.set_datalist(win)
 
 # add these EEM to parametric study
-newPj.add_model_action(wp)
-newPj.add_model_action(wshgc)
+newPj.add_model_measures(wp)
+newPj.add_model_measures(wshgc)
 # newPj.add_model_action(wwr)
 
 # estimate runs and submit job
@@ -42,6 +42,7 @@ while (newPj.track_simulation()):
 
 # collect job results
 results = bsh.get_parametric_results(newPj)
+
 result_dict = results.net_site_eui()
 result_unit = results.lastParameterUnit
 
