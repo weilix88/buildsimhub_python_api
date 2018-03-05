@@ -1,7 +1,7 @@
-from BuildSimHubAPI import buildsimhub
+import BuildSimHubAPI as bshapi
 import time
 
-bsh = buildsimhub.BuildSimHubAPIClient()
+bsh = bshapi.BuildSimHubAPIClient()
 
 #1. set your folder key
 model_key="0789da9f-6912-4c2b-858d-d6d986234135"

@@ -28,8 +28,14 @@ class NumericValueParser(HTMLParser):
     def data(self):
         return self._data
 
+    def get_data(self):
+        return self._data
+
     @property
     def unit(self):
+        return self._unit
+
+    def get_unit(self):
         return self._unit
 
     def handle_starttag(self, tag, attributes):
@@ -109,7 +115,7 @@ class NumericValueParser(HTMLParser):
             self._current_col_index+=1
 
 ###############LOCAL TEST########################
-#tableReader = NumericValueParser('Climatic Data Summary','Sizing Period Design Day','Maximum Dry Bulb','CHICAGO ANN HTG 99.6% CONDNS DB')
+#tableReader = NumericValueParser('Annual Building Utility Performance Summary','End Uses','Electricity','Cooling')
 #file = open('testTable.html', 'r') 
 #tableReader.feed(file.read())
 #print(tableReader.data)
