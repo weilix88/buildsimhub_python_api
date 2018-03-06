@@ -34,6 +34,7 @@ newPj.add_model_measures(wshgc)
 # estimate runs and submit job
 # print(newPj.num_total_combination())
 newPj.submit_parametric_study()
+print(newPj.trackToken)
 
 # track job progress
 while (newPj.track_simulation()):
@@ -47,11 +48,7 @@ result_dict = results.net_site_eui()
 result_unit = results.lastParameterUnit
 
 # plot
-for i in range(len(result_dict['model_plot'])):
-    print(result_dict['model_plot'][i] + ' ==> ' + result_dict['model'][i])
+plot = bshapi.postprocess.ParametricPlot(result_dict, result_unit)
 
-ind = np.arange(len(result_dict['value']))
-plt.xticks(ind, result_dict['model_plot'])
-plt.plot(result_dict['value'])
-plt.ylabel('EUI (' + result_unit + ')')
-plt.show()
+plot.line_plot("this is demo for line plot")
+plot.parallel_coordinate("this is demo for parallel coordinate plot")

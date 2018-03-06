@@ -253,10 +253,10 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             value = data['value']
-            if('unit' in data):
+            if 'unit' in data:
                 self._lastParameterUnit = data['unit']
             return value
         else:

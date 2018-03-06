@@ -10,10 +10,10 @@ class ParametricModel():
     # every call will connect to this base URL
     BASE_URL = 'https://develop.buildsimhub.net/'
 
-    def __init__(self, userKey, parametricJob):
+    def __init__(self, userKey, model_key):
         self._userKey = userKey
         self._lastParameterUnit = ""
-        self._modelKey = vars(parametricJob)['_trackToken']
+        self._modelKey = model_key
 
 
     @property
