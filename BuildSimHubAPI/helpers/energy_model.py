@@ -1,10 +1,10 @@
 import requests
 import json
-#This is a class that contains all the model information for user
-#to read
+# This is a class that contains all the model information for user
+# to read
 
 
-#potentially in the future, to write
+# potentially in the future, to write
 
 class Model():
     #every call will connect to this base URL
@@ -28,7 +28,7 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             value = data['value']
             self._lastParameterUnit = 'deg'
@@ -46,7 +46,7 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             self._lastParameterUnit = 'floor'
             return data['total_cond_floor']
@@ -62,7 +62,7 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             self._lastParameterUnit = 'floor'
             return data['total_floor']
@@ -78,7 +78,7 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             self._lastParameterUnit = 'zones'
             return data['value']
@@ -94,13 +94,12 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             self._lastParameterUnit = 'zones'
             return data['value']
         else:
             return resp_json['error_msg']
-
 
     def condition_floor_area(self, unit):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
@@ -111,12 +110,12 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             value = float(data['value'])
             self._lastParameterUnit = 'm2'
 
-            if(unit=='ip'):
+            if unit == 'ip':
                 value = value * 10.7639
                 self._lastParameterUnit = 'ft2'
             return value
@@ -132,12 +131,12 @@ class Model():
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             value = float(data['value'])
             self._lastParameterUnit = 'm2'
 
-            if(unit=='ip'):
+            if unit == 'ip':
                 self._lastParameterUnit="ft2"
                 value = value * 10.7639
             return value
@@ -151,9 +150,9 @@ class Model():
             'track_token': self._modelKey,
             'request_data': 'TotalWindowToWallRatio'
         }
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
-        if(resp_json['status'] == 'success'):
+        if resp_json['status'] == 'success':
             data = resp_json['data']
             value = data['value']
             self._lastParameterUnit = ""
@@ -162,7 +161,28 @@ class Model():
         else:
             return -1
 
-    #Below are the methods use for retrieving results
+    def zone_load(self):
+        url = Model.BASE_URL + 'GetZoneLoadInfo_API'
+        track = "folder_api_key"
+
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'user_api_key': self._userKey,
+            track: self._modelKey
+        }
+
+        r = requests.get(url, params=payload)
+        resp_json = r.json()
+        if resp_json['status'] == 'success':
+            zone_list = resp_json['data']
+            return zone_list
+        else:
+            return -1
+
+    # Below are the methods use for retrieving results
     def net_site_eui(self):
         return self.__call_api('NetSiteEUI')
 

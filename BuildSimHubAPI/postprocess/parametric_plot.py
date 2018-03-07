@@ -37,7 +37,7 @@ class ParametricPlot:
             for k in range(len(parameters)):
                 title, val = parameters[k].split(":")
                 data_dict[title.strip()] = float(val.strip())
-            #data_dict['Value'] = self._value[j]
+            # data_dict['Value'] = self._value[j]
 
             data_list.append(data_dict)
 
@@ -51,11 +51,11 @@ class ParametricPlot:
 
     def line_plot(self, title):
         ind = np.arange(len(self._value))
-        plt.pyplot.xticks(ind, self._model_plot)
-        plt.pyplot.plot(self._value)
-        plt.pyplot.ylabel(self._unit)
+        plt.xticks(ind, self._model_plot)
+        plt.plot(self._value)
+        plt.ylabel(self._unit)
         plt.title(title)
-        plt.pyplot.show()
+        plt.show()
 
     def parallel_coordinate(self, title, investigate=None):
         cols = list(self._df)
@@ -81,14 +81,14 @@ class ParametricPlot:
         if not isinstance(axes, list):
             axes = [axes]
         # plot each row
-        for i, ax in enumerate(axes):
+        for (d, y), ax in np.ndenumerate(axes):
             for idx in self._df.index:
                 if hasCategory:
                     category = self._df.loc[idx, investigate]
                     ax.plot(x, self._df.loc[idx, cols], colours[category])
                 else:
                     ax.plot(x, self._df.loc[idx, cols])
-            ax.set_xlim([x[i], x[i + 1]])
+            ax.set_xlim([x[y], x[y + 1]])
 
         # Set the tick positions and labels on y axis for each plot
         # Tick positions based on normalized data
@@ -107,7 +107,9 @@ class ParametricPlot:
 
         #for final axis use
         seen = set()
-        for dim, ax in enumerate(axes):
+        last_ax = None
+        total_dim = 0
+        for (d, dim), ax in np.ndenumerate(axes):
             seen.clear()
             ax.xaxis.set_major_locator(ticker.FixedLocator([dim]))
 
@@ -116,13 +118,15 @@ class ParametricPlot:
                 seen.add(col_data[i])
 
             set_ticks_for_axis(dim, ax, len(seen))
-            ax.set_xticklabels(cols[dim])
+            ax.set_xticklabels([cols[dim]])
+            last_ax = ax
+            total_dim += 1
 
         # move the final axis' ticks to the right-hand side
-        ax = plt.twinx(axes[-1])
-        dim = len(axes)
+        ax = plt.twinx(last_ax)
+        # dim = len(axes)
         ax.xaxis.set_major_locator(ticker.FixedLocator([x[-2], x[-1]]))
-        set_ticks_for_axis(dim, ax, len(seen))
+        set_ticks_for_axis(total_dim, ax, len(seen))
         ax.set_xticklabels([cols[-2], cols[-1]])
 
         # Remove space between subplots
@@ -139,8 +143,7 @@ class ParametricPlot:
 
         plt.show()
 
-
-#result_dict = {'value': [20.0, 19.81, 20.06, 19.88, 19.78, 20.28, 20.04, 20.22, 19.88, 20.52], 'model': ['Window_U: 1.6, Window_SHGC: 0.4', 'Window_U: 1.6, Window_SHGC: 0.3', 'Window_U: 1.4, Window_SHGC: 0.5', 'Window_U: 1.4, Window_SHGC: 0.4', 'Window_U: 1.4, Window_SHGC: 0.3', 'Window_U: 2.0, Window_SHGC: 0.4', 'Window_U: 2.0, Window_SHGC: 0.3', 'Window_U: 1.6, Window_SHGC: 0.5', 'INIT', 'Window_U: 2.0, Window_SHGC: 0.5'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9', 'case10']}
+#result_dict = {'value': [29.34, 29.34, 29.46, 29.45, 29.31, 29.59, 29.46, 29.45, 29.31], 'model': ['WWR: 0.3, Window_U: 1.4, Window_SHGC: 0.3', 'WWR: 0.2, Window_U: 1.4, Window_SHGC: 0.3', 'WWR: 0.3, Window_U: 1.6, Window_SHGC: 0.4', 'WWR: 0.3, Window_U: 1.6, Window_SHGC: 0.3', 'WWR: 0.3, Window_U: 1.4, Window_SHGC: 0.4', 'INIT', 'WWR: 0.2, Window_U: 1.6, Window_SHGC: 0.4', 'WWR: 0.2, Window_U: 1.6, Window_SHGC: 0.3', 'WWR: 0.2, Window_U: 1.4, Window_SHGC: 0.4'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9']}
 #result_unit = ""
 #plot = ParametricPlot(result_dict, result_unit)
-#plot.parallel_coordinate("this is a test", 'Window_U')
+#plot.parallel_coordinate("this is a test","Window_U")

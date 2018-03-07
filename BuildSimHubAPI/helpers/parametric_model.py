@@ -15,7 +15,6 @@ class ParametricModel():
         self._lastParameterUnit = ""
         self._modelKey = model_key
 
-
     @property
     def lastParameterUnit(self):
         return self._lastParameterUnit
