@@ -27,7 +27,7 @@ We appreciate your continued support, thank you!
 - Python version 3.4, 3.5 or 3.6
 
 ## Install Package
-Simply clone this repository and place in any folder you wish to build your application on. Examples:
+Simply clone / download this repository and place in any folder you wish to build your application on. Examples:
 ![picture alt](https://imgur.com/x60rk2O.png)
 
 ## Setup environment
@@ -39,8 +39,8 @@ You can find the API key associate with your account under the profile page:
 Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `user_api_key:[YOUR_API_KEY]`
 
-## Model key
-The model key can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
+## Project / Model key (optional)
+If you want to do simulation under an exisiting project, you will need to retrieve the project or model keys to do it. These keys can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
 ![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
@@ -53,8 +53,6 @@ The following is the minimum needed code to initiate a regular simulation with t
 ### With SimulationJob Class
 ```python
 from BuildSimHubAPI import buildsimhub
-#this key can be found under an energy model
-model_key="0ade3a46-4d07-4b99-907f-0cfeec1072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
@@ -62,8 +60,8 @@ wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 ###############NOW, START THE CODE########################
 
 bsh = buildsimhub.BuildSimHubAPIClient()
-newSJ = bsh.new_simulation_job(model_key)
-response = newSj.run(file_dir,wea_dir)
+new_sj = bsh.new_simulation_job()
+response = new_sj.run(file_dir,wea_dir)
 
 ############### WE DONE! #################################
 
@@ -79,9 +77,6 @@ From this object, you can initiate a [simulationJob](https://github.com/weilix88
 from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
 
-#this key can be found under your project folder
-model_key="0ade3a46-4d07-4b99-907f-0cfee21072"
-
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
@@ -95,15 +90,12 @@ if(response == 'success'):
     print (new_sj.trackStatus)
     time.sleep(5)
 ```
-As mentioned previously, [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) manages the entire workflow of the simulation. So once a cloud simulation is successfully started by the [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class, you can simply call `track_simulation()` function to receive the simulation progress.
+As mentioned previously, [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) manages the entire workflow of the simulation. So once a cloud simulation is successfully started by the [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class, you can simply call `track_simulation()` function to receive the simulation progress. You have to call `track_simulation()` first to update the `trackStatus` of the simulation job.
 
 ### Retrieve Cloud simulation results
 ```python
 from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
-
-#this key can be found under your project folder
-model_key="0ade3a46-4d07-4b99-907f-0cfe321072"
 
 #absolute directory to the energyplus model
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
@@ -113,22 +105,23 @@ new_sj = bsh.new_simulation_job()
 response = new_sj.run(file_dir, wea_dir)
 
 if(response == 'success'):
-  while newSJ.track_simulation():
-    print (newSJ.trackStatus)
+  while new_sj.track_simulation():
+    print (new_sj.trackStatus)
     time.sleep(5)
   
-  ######BELOW ARE THE CODE TO RETRIEVE SIMULATION RESULTS#########
-  response = newSJ.get_simulation_results('html')
-  print(response)
+######BELOW ARE THE CODE TO RETRIEVE SIMULATION RESULTS#########
+response = new_sj.get_simulation_results('html')
+print(response)
 ```
-If the Job is completed, you can get results by calling `get_simulation_results(type)` function.
+If the simulation job is completed, you can get results by calling `get_simulation_results(type)` function. The function will immediately return the requested results in text format.
 
 <a name="functions"></a>
 
 #Object and Functions
 <a name="simultion_type"></a>
 ## simulationType
-[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. Currently, there are only one simulation type available, which is `regular`. You can increase the number of agent by calling the `increase_agents()` function.
+[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. Currently, there are two simulation types available, `regular` and `parametric`. This class also helps you control the number of agent you can use for one simulation job. The number of agents specify how you would like to speed up your simulations.
+You can increase the number of agent by calling the `increase_agents()` function.
 ```python
 simulationType = bsh.get_simulation_type()
 num_of_agents = simulationType.increase_agents();
@@ -139,21 +132,29 @@ It should be noted that the maximum number of agents working on one simulation j
 <a name="simulation_job"></a>
 ## SimulationJob
 The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
-Nevertheless, you have to provide a `model_key` in order to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance.
 
-The `model_key` can be found under each folder of your project
+Optionally, you can provide a `model_key` to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance. The `model_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
-A simulation job manages one type of cloud simulation. It contains five main functions which are listed below:
+Once you provide a `model_key` to instantiate the simulation job, then this job will link to the project, which contains the `model_key`.
+Lastly, a simulation job manages one type of cloud simulation. It contains six main functions for cloud simulations.
+
 ### run
 The `run()` function allows you to upload an energy model and weather file to the platform for cloud simulation (project creation is not required for this method). It has in total 2 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
 2. `wea_dir`(required): the absolute local director of the simulation weather file (it should be .epw file)
+3. `unit` (optional): provide either `'ip'` or `'si'` unit system for your simulation job.
+4. `agent` (optional): The agent numbeer should be selected among 1, 2 or 4 agents. You can also use the [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class to help decide the agent number. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
+5. `simulation_type`(optional): The current available simulation tyoe is `regular`. This simulation Type can be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. The default is `regular` for this class.
+
+This method returns two types of information:
+If sucess: `success`
+or error message states what was wrong in your request.
 
 ### create_model
 The `create_model()` function allows you to upload an energy model to the platform with no simulation. It has in total 2 parameters.
-1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
-2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
+1. `file_dir` (required)
+2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`.
 
 This method returns two types of information:
 If sucess: `success`
@@ -162,20 +163,20 @@ or error message states what was wrong in your request.
 ### create_run_model
 The `create_run_model()` function allows you to upload an energy model to the platform and run simulaiton. It has in total 4 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
-
-2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
-3. `simulationType` (optional): The current available simulation tyoe is `regular`. This simulation Type can be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. The default is `regular` for this class.
-
-4. `agent` (optional): The agent numbeer should be selected among 1, 2 or 4 agents. You can also use the [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class to help decide the agent number. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
+2. `unit` (optional)
+3. `agent` (optional)
+4. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
+5. `simulationType` (optional)
 
 This method returns two types of information:
 If sucess: `success`
 or error message states what was wrong in your request.
 
-### run_simulation
+### run_model_simulation
 The `run_simulation()` function can be called inside a simulation job if the simulation is not conducted. The function has two parameters:
-1. `simulationType` (optional): The simulation Type should be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. The default is `regular`
-2. `agent` (optional): he agent numbeer should be selected among 1, 2 or 4 agents. You can also use the [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class to help decide the agent number. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
+1. `unit` (optional)
+2. `agent` (optional)
+3. `simulation_type` (optional)
 
 ### track_simulaiton
 The `track_simulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
@@ -186,12 +187,16 @@ if(newSimulationJob.track_simulation()):
   print(newSimulationJob.trackStatus)
 ```
 ### get_simulation_results
-The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation.
-
+The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
 ```python
 response = newSimulationJob.get_simulation_results('err')
 print (response)
 ```
+### Misc. methods and variables:
+Besides the above functions, you can also retrieve some properties of the simulation job:
+1. *trackStatus*: get the tracking status of a running cloud simulation job
+2. *trackToken*: get the tracking token used for connecting the cloud simulation.
+
 <a name="energy_model"></a>
 ## Model
 The model class contains a set of methods that provides the model information and results (after simulation). It can be generated from the `BuildSimHubAPIClient` with your specific simulation job. Here is an example to generate a model.
@@ -251,6 +256,51 @@ print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
 print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
 #Output: 156.67 GJ
 ```
+<a name = "parametric_job"></a>
+## Parametric Job
+Similar to simulation job, the parametric job is another type of cloud simulation. The difference is this class handles batch processings by applying energy efficiency measures from our standard EEMs library. The easiest way to initiate a parametric job is calling the `new_parametric_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
+The method requires user to provide a `model_key`. The `model_key` tied to a model on the platform which we call it as the seed model. Below is the sample code for demonstration purpose.
+```python
+model_key = 'ec76b257-5dc2-470a-846e-b8897530d'
+
+bsh = bshapi.BuildSimHubAPIClient()
+new_pj = bsh.new_parametric_job(model_key)
+
+# apply EEMs
+# window U value
+wp = bshapi.measures.WindowUValue()
+uValue = [2.0, 1.6, 1.4]
+wp.set_datalist(uValue)
+
+# window SHGC
+wshgc = bshapi.measures.WindowSHGC()
+shgc = [0.5, 0.4, 0.3]
+wshgc.set_datalist(shgc)
+
+# wwr
+wrr = bshapi.measures.WindowWallRatio()
+win = [0.2, 0.3]
+wrr.set_datalist(win)
+
+# add these EEM to parametric study
+new_pj.add_model_measures(wp)
+new_pj.add_model_measures(wshgc)
+new_pj.add_model_action(wwr)
+
+# estimate runs and submit job
+# print(newPj.num_total_combination())
+new_pj.submit_parametric_study()
+
+# track job progress
+while (newPj.track_simulation()):
+    print(newPj.get_status())
+    time.sleep(5)
+```
+Below are the list of key methods you can use in the parametric job.
+
+### submit_parametric_study()
+This is the key method to start a parametric simulations.
+
 <a name = "eplus_html_parser"></a>
 ## eplusHTMLParser
 The eplusHTMLParser provides a set of methods to help users finding data in the EnergyPlus HTML output file. To use this HTML parser, user has to retrieve the processed HTML file from BuildSimHub service. An example code is illustrated below.
