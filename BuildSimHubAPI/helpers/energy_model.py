@@ -21,11 +21,17 @@ class Model():
 
     def bldg_orientation(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
+
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'Orientation'
         }
+
         r = requests.get(url, params = payload)
         resp_json = r.json()
         if resp_json['status'] == 'success':
@@ -39,9 +45,14 @@ class Model():
 
     def num_above_ground_floor(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
+
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'BuildingStories'
         }
         r = requests.get(url, params = payload)
@@ -55,9 +66,13 @@ class Model():
 
     def num_total_floor(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'BuildingStories'
         }
         r = requests.get(url, params = payload)
@@ -71,11 +86,16 @@ class Model():
 
     def num_zones(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'TotalZoneNumber'
         }
+
         r = requests.get(url, params = payload)
         resp_json = r.json()
         if resp_json['status'] == 'success':
@@ -87,9 +107,13 @@ class Model():
 
     def num_condition_zones(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'ConditionedZoneNumber'
         }
         r = requests.get(url, params = payload)
@@ -103,9 +127,13 @@ class Model():
 
     def condition_floor_area(self, unit):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'ConditionedZoneFloorArea'
         }
         r = requests.get(url, params = payload)
@@ -124,9 +152,13 @@ class Model():
 
     def gross_floor_area(self, unit):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'ZoneFloorArea'
         }
         r = requests.get(url, params = payload)
@@ -145,9 +177,13 @@ class Model():
 
     def window_wall_ratio(self):
         url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        track = "folder_api_key"
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+            track: self._modelKey,
             'request_data': 'TotalWindowToWallRatio'
         }
         r = requests.get(url, params=payload)
@@ -266,11 +302,18 @@ class Model():
 
     def __call_api(self, request_data):
         url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        track = "folder_api_key"
+
+        test = self._modelKey.split("|")
+        if len(test) is 3:
+            track = "track_token"
+
         payload = {
             'user_api_key': self._userKey,
-            'track_token': self._modelKey,
+             track: self._modelKey,
             'request_data': request_data
         }
+
         r = requests.get(url, params = payload)
         resp_json = r.json()
         if resp_json['status'] == 'success':

@@ -1,6 +1,8 @@
 from .model_action import ModelAction
 
-#this class applies overall wwr - no orientation specified
+# this class applies overall wwr - no orientation specified
+
+
 class WindowWallRatio(ModelAction):
 
     def __init__(self):

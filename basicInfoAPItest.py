@@ -27,7 +27,7 @@ if response == 'success':
     print(str(m.gross_floor_area("ip")) + " " + m.lastParameterUnit)
     print(str(m.window_wall_ratio()) + " " + m.lastParameterUnit)
 
-    newSj.run_simulation(st.type, st.agent)
+    newSj.run_model_simulation(st.type, st.agent)
     while newSj.track_simulation():
         print(newSj.trackStatus)
         time.sleep(5)
@@ -41,6 +41,7 @@ if response == 'success':
     print(str(m.total_end_use_naturalgas()) + " " + m.lastParameterUnit)
 
     load_profile = m.zone_load()
+    print(load_profile)
     zl = bshapi.postprocess.ZoneLoad(load_profile)
     print(zl.get_df())
 

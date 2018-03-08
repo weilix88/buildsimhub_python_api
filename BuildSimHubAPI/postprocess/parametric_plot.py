@@ -1,3 +1,4 @@
+import os
 try:
     import matplotlib.pyplot as plt
     from matplotlib import ticker
@@ -143,9 +144,10 @@ class ParametricPlot:
 
         plt.show()
 
-    def parallel_coordinate_plotly(self, investigate=None):
+    def parallel_coordinate_plotly(self, investigate=None, image_name="Plot"):
         try:
-            import plotly.plotly as py
+            from plotly.offline import plot
+            from plotly import tools
             import plotly.graph_objs as go
         except ImportError:
             print('plotly is not installed')
@@ -154,7 +156,7 @@ class ParametricPlot:
         colours = list()
         has_category = False
         if investigate is not None and investigate in self._df.columns:
-            colours = ['#2e8ad8', '#cd3785', '#c64c00', '#889a00']
+            colours = ['#2e8ad8', '#c64c00', '#cd3785', '#889a00']
             self._df[investigate] = pd.Categorical(self._df[investigate])
             colours = [[self._df[investigate].cat.categories[i], colours[i]] for i, _ in enumerate(self._df[investigate].cat.categories)]
             cols.remove(investigate)
@@ -162,7 +164,11 @@ class ParametricPlot:
 
         plotly_list = list()
         for col in cols:
-            data_dict = dict(range=np.ptp(self._df[col]), label=col, values=self._df[col])
+            #convert to cat
+            seen = set()
+            for val in self._df[col]:
+                seen.add(val)
+            data_dict = dict(range=[self._df[col].min(), self._df[col].max()], tickvals=list(seen), label=col, values=self._df[col])
             plotly_list.append(data_dict)
 
         data = list()
@@ -171,10 +177,11 @@ class ParametricPlot:
         else:
             data.append(go.Parcoords(dimensions=plotly_list))
 
-        fig = go.Figure(data=data)
-        py.plot(fig, filename='first_trial')
+        # fig = go.Figure(data=data)
+        dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        plot(data, filename=dir+'/' + image_name + '.html')
 
 #result_dict = {'value': [29.34, 29.34, 29.46, 29.45, 29.31, 29.59, 29.46, 29.45, 29.31], 'model': ['WWR: 0.3, Window_U: 1.4, Window_SHGC: 0.3', 'WWR: 0.2, Window_U: 1.4, Window_SHGC: 0.3', 'WWR: 0.3, Window_U: 1.6, Window_SHGC: 0.4', 'WWR: 0.3, Window_U: 1.6, Window_SHGC: 0.3', 'WWR: 0.3, Window_U: 1.4, Window_SHGC: 0.4', 'INIT', 'WWR: 0.2, Window_U: 1.6, Window_SHGC: 0.4', 'WWR: 0.2, Window_U: 1.6, Window_SHGC: 0.3', 'WWR: 0.2, Window_U: 1.4, Window_SHGC: 0.4'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9']}
 #result_unit = ""
 #plot = ParametricPlot(result_dict, result_unit)
-#plot.parallel_coordinate_plotly("Window_U")
+#plot.parallel_coordinate_plotly()
