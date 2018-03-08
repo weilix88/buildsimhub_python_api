@@ -12,8 +12,10 @@ We appreciate your continued support, thank you!
   * [SimulationType](#simultion_type)
   * [SimulationJob](#simulation_job)
   * [Model](#energy_model)
+  * [Parametric](#parametric_job)
   * [HTML Parser](#eplus_html_parser)
 * [Objects and Functions](#functions)
+* [Standard EEMs library](#eems)
 * [Roadmap](#roadmap)
 * [About](#about)
 * [License](#license)
@@ -259,7 +261,7 @@ print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
 <a name = "parametric_job"></a>
 ## Parametric Job
 Similar to simulation job, the parametric job is another type of cloud simulation. The difference is this class handles batch processings by applying energy efficiency measures from our standard EEMs library. The easiest way to initiate a parametric job is calling the `new_parametric_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
-The method requires user to provide a `model_key`. The `model_key` tied to a model on the platform which we call it as the seed model. Below is the sample code for demonstration purpose.
+The method requires user to provide a `model_key`. The `model_key` ties to a model on the platform which we call it as the seed model. Below is the sample code for demonstration purpose.
 ```python
 model_key = 'ec76b257-5dc2-470a-846e-b8897530d'
 
@@ -296,7 +298,7 @@ while (newPj.track_simulation()):
     print(newPj.get_status())
     time.sleep(5)
 ```
-Below are the list of key methods you can use in the parametric job.
+The full list of EEMs currently available through python API is listed in [EEM library](#(#eems).
 
 ### submit_parametric_study()
 This is the key method to start a parametric simulations.
@@ -326,6 +328,44 @@ This method allows users to extract a specifc cell value from HTML file. It has 
 ![picture alt](https://imgur.com/UY3CHPR.png)
 5. `reportFor`: This is an optional parameter. The default is set to 'Entire Facility'. Usually, all the report is for entire facility. However, there are some cases where the report is generated for a specific zone, e.g., zone load component reports. Below is the example of finding this parameter in the HTML file.
 ![picture alt](https://imgur.com/ZiCyT68.png)
+
+<a name="eems"></a>
+# Standard Energy Effiiency Measure library
+In the current version, the standard EEMs library is only available for parametric study.
+Standard EEMs library allows user to upload any IDF models (early stage, schematic stage, or detail design) and perform simple parametrics. Apply standard EEMs to your idf models can help designers quickly explore different design options on the cloud, and also save huge time for value engineering at later stage. Below lists the EEMs covered in the recent release:
+
+## Standard EEMs
+1. WindowWallRatio: This measure can effectively scale down the overall window to wall ratio (WWR) based on user inputs. But it will ignore all the scale up inputs. For example, the uploaded IDF has WWR of 40%. If user input is 30%, then this measure will scale the WWR of the model to 30%. However, if the user input is 50%, the this measure will not do anything to the model.
+
+2. WindowUValue(unit): This measure will change the window U value to specified user inputs. Unit is optional for this measure. The default unit system is `si`, user can initiate the instance as WindowUValue(`ip`), if the inputs are in ip unit. Also, this measure is required to be applied with WindowSHGC together.
+
+3. WindowSHGC: This measure will change the window SHGC value to specified user inputs. It is required to apply this measure together with WindowUValue measure
+
+4. WallRValue(unit): This measure will change the exterior wall R-value construction to user inputs. The unit is optional with `si` as default.
+
+5. RoofRValue(unit): This measure will change the exterior roof R-value construction to user inputs. The unit is optional with `si` as default.
+
+6. LightLPD(unit): This measure will change the lighting power density (basically all the lights objects) to the desired value (using the watts / floor area method). The unit is optional with `si` as default.
+
+## How to use
+```python
+import BuildSimHubAPI as bsh_api
+
+#you can get model_key from your project
+model_key = '66667-6sd8-4dff-a51d-4a13ddef5f39'
+new_pj = bsh.new_parametric_job(model_key)
+
+#1. for wall insulation measure
+wr = bsh_api.measures.WallRValue('ip')
+#2. create a list and fill in the parametric values for wall insulation
+rValue = [20, 25, 30]
+#3. assign the list to the measure
+wr.set_datalist(rValue)
+
+#add your new measure to the parametric job
+new_pj.add_model_measure(wr)
+...
+```
 
 <a name="roadmap"></a>
 # Roadmap
