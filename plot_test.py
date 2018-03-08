@@ -9,11 +9,10 @@ usr_key = '94266512-c5ea-463d-a108-9dd1e84c07ca'
 # result_unit = results.lastParameterUnit
 # print(result_dict)
 
-model_key = "693fb698-ece5-418c-9810-de90bddc6d35"
-results = bsh_api.helpers.Model(usr_key, model_key)
-load_profile = results.zone_load()
-print(load_profile)
-zl = bsh_api.postprocess.ZoneLoad(load_profile)
-print(zl.get_df())
+model_key = "fe9d9b81-4348-4162-a170-39e86abdd949"
+buildsimhub = bsh_api.BuildSimHubAPIClient()
+model = bsh_api.helpers.Model(buildsimhub.userAPI, model_key)
+print(model.num_zones())
+
 
 
