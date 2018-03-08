@@ -7,42 +7,42 @@ bsh = bshapi.BuildSimHubAPIClient()
 model_key = '617e6667-6ed8-472f-a51d-4a13ecef5f39'
 # 2. define the absolute directory of your energy model
 # file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
-model_key_list = ['a', 'b', 'c']
+# model_key_list = ['a', 'b', 'c']
 # 3. this is optional
 new_pj = bsh.new_parametric_job(model_key)
 
 # add window property
-wp = bshapi.measures.WindowUValue()
-uValue = [1.6, 1.4]
-wp.set_datalist(uValue)
+# wp = bshapi.measures.WindowUValue()
+# uValue = [2.2, 1.6, 1.4]
+# wp.set_datalist(uValue)
 
-wshgc = bshapi.measures.WindowSHGC()
-shgc = [0.4, 0.3]
-wshgc.set_datalist(shgc)
+# wshgc = bshapi.measures.WindowSHGC()
+# shgc = [0.4, 0.3, 0.2]
+# wshgc.set_datalist(shgc)
 
-wrr = bshapi.measures.WindowWallRatio()
-win = [0.2, 0.3]
-wrr.set_datalist(win)
+# wrr = bshapi.measures.WindowWallRatio()
+# win = [0.2, 0.3]
+# wrr.set_datalist(win)
 
-#wr = bshapi.measures.WallRValue()
-#rValue = [2.3, 3.5]
-#wr.set_datalist(rValue)
+wr = bshapi.measures.WallRValue()
+rValue = [2.3, 3.5]
+wr.set_datalist(rValue)
 
-#rr = bshapi.measures.RoofRValue()
-#rrValue = [3.5, 4.0]
-#rr.set_datalist(rrValue)
+rr = bshapi.measures.RoofRValue()
+rrValue = [3.1, 3.5, 4.0]
+rr.set_datalist(rrValue)
 
-#lpd = bshapi.measures.LightLPD()
-#lpdValue = [8.1, 6.5]
-#lpd.set_datalist(lpdValue)
+lpd = bshapi.measures.LightLPD()
+lpdValue = [8.1, 6.5, 4.3]
+lpd.set_datalist(lpdValue)
 
 # add these EEM to parametric study
-new_pj.add_model_measures(wp)
-new_pj.add_model_measures(wshgc)
-new_pj.add_model_measures(wrr)
-#new_pj.add_model_measures(wr)
-#new_pj.add_model_measures(rr)
-#new_pj.add_model_measures(lpd)
+#new_pj.add_model_measure(wp)
+#new_pj.add_model_measure(wshgc)
+#new_pj.add_model_measure(wrr)
+new_pj.add_model_measure(wr)
+new_pj.add_model_measure(rr)
+new_pj.add_model_measure(lpd)
 
 # estimate runs and submit job
 # print(newPj.num_total_combination())
@@ -64,4 +64,4 @@ result_unit = results.lastParameterUnit
 plot = bshapi.postprocess.ParametricPlot(result_dict, result_unit)
 
 plot.line_plot("this is demo for line plot")
-plot.parallel_coordinate("this is demo for parallel coordinate plot")
+plot.parallel_coordinate("this is demo for parallel coordinate plot", "Window_U")
