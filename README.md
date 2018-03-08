@@ -27,6 +27,7 @@ We appreciate your continued support, thank you!
 ## Prerequisites
 - The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
 - Python version 3.4, 3.5 or 3.6
+- Must install requests package (>>>pip3 install requests) 
 
 ## Install Package
 Simply clone / download this repository and place in any folder you wish to build your application on. Examples:
