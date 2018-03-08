@@ -9,7 +9,6 @@ usr_key = '94266512-c5ea-463d-a108-9dd1e84c07ca'
 # result_unit = results.lastParameterUnit
 # print(result_dict)
 
-
 model_key = "693fb698-ece5-418c-9810-de90bddc6d35"
 results = bsh_api.helpers.Model(usr_key, model_key)
 load_profile = results.zone_load()

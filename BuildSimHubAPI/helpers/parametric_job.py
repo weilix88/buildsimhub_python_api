@@ -21,7 +21,11 @@ class ParametricJob():
     def get_status(self):
         return self._trackStatus
 
-    def add_model_measures(self, action):
+    def add_model_measures(self, measures):
+        for measure in measures:
+            self._model_action_list.append(measure)
+
+    def add_model_measure(self, action):
         self._model_action_list.append(action)
 
     def num_total_combination(self):

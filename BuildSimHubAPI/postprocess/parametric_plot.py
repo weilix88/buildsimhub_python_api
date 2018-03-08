@@ -143,7 +143,38 @@ class ParametricPlot:
 
         plt.show()
 
+    def parallel_coordinate_plotly(self, investigate=None):
+        try:
+            import plotly.plotly as py
+            import plotly.graph_objs as go
+        except ImportError:
+            print('plotly is not installed')
+
+        cols = list(self._df)
+        colours = list()
+        has_category = False
+        if investigate is not None and investigate in self._df.columns:
+            colours = ['#2e8ad8', '#cd3785', '#c64c00', '#889a00']
+            self._df[investigate] = pd.Categorical(self._df[investigate])
+            colours = [[self._df[investigate].cat.categories[i], colours[i]] for i, _ in enumerate(self._df[investigate].cat.categories)]
+            cols.remove(investigate)
+            has_category = True
+
+        plotly_list = list()
+        for col in cols:
+            data_dict = dict(range=np.ptp(self._df[col]), label=col, values=self._df[col])
+            plotly_list.append(data_dict)
+
+        data = list()
+        if has_category:
+            data.append(go.Parcoords(line=dict(color=self._df[investigate], colorscale=colours), dimensions=plotly_list))
+        else:
+            data.append(go.Parcoords(dimensions=plotly_list))
+
+        fig = go.Figure(data=data)
+        py.plot(fig, filename='first_trial')
+
 #result_dict = {'value': [29.34, 29.34, 29.46, 29.45, 29.31, 29.59, 29.46, 29.45, 29.31], 'model': ['WWR: 0.3, Window_U: 1.4, Window_SHGC: 0.3', 'WWR: 0.2, Window_U: 1.4, Window_SHGC: 0.3', 'WWR: 0.3, Window_U: 1.6, Window_SHGC: 0.4', 'WWR: 0.3, Window_U: 1.6, Window_SHGC: 0.3', 'WWR: 0.3, Window_U: 1.4, Window_SHGC: 0.4', 'INIT', 'WWR: 0.2, Window_U: 1.6, Window_SHGC: 0.4', 'WWR: 0.2, Window_U: 1.6, Window_SHGC: 0.3', 'WWR: 0.2, Window_U: 1.4, Window_SHGC: 0.4'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9']}
 #result_unit = ""
 #plot = ParametricPlot(result_dict, result_unit)
-#plot.parallel_coordinate("this is a test","Window_U")
+#plot.parallel_coordinate_plotly("Window_U")

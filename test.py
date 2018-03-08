@@ -12,11 +12,12 @@ new_sj = bsh.new_simulation_job()
 # note if fast simulation, call increaseAgents to increase the agent numbers
 # response = newSj.create_run_model(file_dir)
 response = new_sj.run(file_dir, wea_dir)
+
 print(new_sj.trackToken)
 
 if response == 'success':
     while new_sj.track_simulation():
-        print (new_sj.trackStatus)
+        print(new_sj.trackStatus)
         time.sleep(5)
 
     response = new_sj.get_simulation_results('html')
@@ -25,6 +26,13 @@ if response == 'success':
       'Site and Source Energy', 'Energy Per Total Building Area', 'Net Site Energy')
 
     print(value_dict['value'] + " " + value_dict['unit'])
+
+    results = bsh.get_model(new_sj)
+    load_profile = results.zone_load()
+    print(load_profile)
+
+    zl = bshapi.postprocess.ZoneLoad(load_profile)
+    print(zl.get_df())
 
 else:
     print(response)
