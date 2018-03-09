@@ -1,3 +1,4 @@
+from .version import __version__  # noqa
 from .buildsimhub import BuildSimHubAPIClient
 
 import BuildSimHubAPI.htmlParser
