@@ -382,7 +382,8 @@ new_pj.add_model_measure(wr)
 
 <a name="roadmap"></a>
 # Roadmap
-1. We are also working on APIs for results retrieving, which let users to get simulation results for post-processing.
+1. We are integrating matplotlib and plotly in our package for parametric study plots. Suggestions and comments are welcome!
+2. We are working on a standard EEMs, which allows user to apply common energy efficiency measures to any IDF models. Open an issue if you did not see any desired EEMs in the standard EEM library!
 2. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
