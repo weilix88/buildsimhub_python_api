@@ -7,3 +7,5 @@ from .window_wall_ratio import WindowWallRatio
 from .wall_rvalue import WallRValue
 from .roof_rvalue import RoofRValue
 from .light_lpd import LightLPD
+from .infiltration import Infiltration
+from .occupancy_sensor import OccupancySensor

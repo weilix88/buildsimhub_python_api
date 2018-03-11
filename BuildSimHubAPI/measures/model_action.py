@@ -7,6 +7,7 @@ class ModelAction():
         self._data = None
         self._unit = unit
         self._name = name
+        self._default_list = [-1, -2, -3]
 
     def unit(self):
         return self._unit
@@ -15,7 +16,10 @@ class ModelAction():
         return len(self._list_data)
 
     def get_data_string(self):
-        return "["+",".join(str(x) for x in self._list_data)+"]"
+        if not self._list_data:
+            return "["+",".join(str(x) for x in self._default_list)+"]"
+        else:
+            return "["+",".join(str(x) for x in self._list_data)+"]"
 
     def get_datalist(self):
         return self._list_data
