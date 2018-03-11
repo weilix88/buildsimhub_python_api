@@ -4,7 +4,7 @@ import time
 bsh = bshapi.BuildSimHubAPIClient()
 
 # 1. set your folder key
-model_key = '617e6667-6ed8-472f-a51d-4a13ecef5f39'
+model_key = 'a0bc8633-d300-4d80-8f89-9351d992b868'
 # 2. define the absolute directory of your energy model
 # file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 # model_key_list = ['a', 'b', 'c']
@@ -36,6 +36,10 @@ lpd = bshapi.measures.LightLPD()
 lpdValue = [8.1, 6.5, 4.3]
 lpd.set_datalist(lpdValue)
 
+infiltration = bshapi.measures.Infiltration()
+
+occupancy = bshapi.measures.OccupancySensor()
+
 # add these EEM to parametric study
 #new_pj.add_model_measure(wp)
 #new_pj.add_model_measure(wshgc)
@@ -43,6 +47,8 @@ lpd.set_datalist(lpdValue)
 new_pj.add_model_measure(wr)
 new_pj.add_model_measure(rr)
 new_pj.add_model_measure(lpd)
+new_pj.add_model_measure(infiltration)
+new_pj.add_model_measure(occupancy)
 
 # estimate runs and submit job
 # print(newPj.num_total_combination())
