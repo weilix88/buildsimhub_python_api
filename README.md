@@ -348,6 +348,18 @@ Standard EEMs library allows user to upload any IDF models (early stage, schemat
 
 6. LightLPD(unit): This measure will change the lighting power density (basically all the lights objects) to the desired value (using the watts / floor area method). The unit is optional with `si` as default.
 
+7. OccupancySensor: This measure has no inputs required. Once this object is instantiated, the instance will automatically carry two options: has occupancy sensor and no occupancy sensor. The current approach is to deduct the lighting power density by allowed credit according to ASHRAE 90.1 Appendix G table G3.2.
+
+8. DaylightingSensor: This measure has no inputs required. Once this object is instantiated, the instance will automatically carry two options: has daylight sensor and no daylight sensor. The daylight sensor will be installed in perimeter zones that with windows only. The default properties of daylight sensor (e.g. lighting levels, control method) are set according to EnergyPlus example file (5ZoneVAV-WaterStorage.idf) or the example given in the input/output reference document.
+
+9. CoolingCOP: This measure will change the cooling efficiencies of all coils and chillers according to user inputs. The efficiency measure is COP. If the cooling devices in the seed model have higher COP then the user specified, then their COP will remain the same.
+
+10. CoolingCoilCOP: This measure will change the cooling efficiencies of cooling coils only. The efficiency measure is COP. If cooling coils in the seed model have higher COP then the user specified, then their COP will remain the same.
+
+11. CoolingChillerCOP: This measure will change the cooling efficiencies of chillers only. The efficiency measure is COP. If chillers in the seed model have higher COP then the user specified, then their COP will remain the same.
+
+12. HeatingEfficiency: This measure will change the heating efficiencies of coils and boilers. The efficiency measure is either COP or percent. If user specified data is equal or smaller than 1.0, then this measure will only apply to the heating devices that has heating efficiencies such as boilers or coil:heating:fuel. If user specified data is greater than 1, then this measure will apply to the heating devices that use COP as efficiency metric, such as coil:dx:heating:singlespeed. Similarly, if the heating devices in the seed model have higher efficiencies than user specified, then the measure will not be effective.
+
 ## How to use
 ```python
 import BuildSimHubAPI as bsh_api
