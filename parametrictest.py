@@ -4,7 +4,7 @@ import time
 bsh = bshapi.BuildSimHubAPIClient()
 
 # 1. set your folder key
-model_key = 'a0bc8633-d300-4d80-8f89-9351d992b868'
+model_key = '6b2c778c-f795-4444-a2c7-fc614efdb66b'
 # 2. define the absolute directory of your energy model
 # file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 # model_key_list = ['a', 'b', 'c']
@@ -20,35 +20,30 @@ new_pj = bsh.new_parametric_job(model_key)
 # shgc = [0.4, 0.3, 0.2]
 # wshgc.set_datalist(shgc)
 
-# wrr = bshapi.measures.WindowWallRatio()
-# win = [0.2, 0.3]
-# wrr.set_datalist(win)
+wrr = bshapi.measures.WindowWallRatio()
+win = [0.35, 0.3, 0.25]
+wrr.set_datalist(win)
 
-wr = bshapi.measures.WallRValue()
-rValue = [2.3, 3.5]
-wr.set_datalist(rValue)
-
-rr = bshapi.measures.RoofRValue()
-rrValue = [3.1, 3.5, 4.0]
-rr.set_datalist(rrValue)
-
-lpd = bshapi.measures.LightLPD()
-lpdValue = [8.1, 6.5, 4.3]
+lpd = bshapi.measures.LightLPD('ip')
+lpdValue = [1.2,0.9,0.6]
 lpd.set_datalist(lpdValue)
 
-infiltration = bshapi.measures.Infiltration()
-
-occupancy = bshapi.measures.OccupancySensor()
+coolCOP = bshapi.measures.CoolingCOP()
+# 2.80 07, 10 aircooled chiller efficiency
+# 2.866 ashrae
+# 3.0 50% savings for med-small office-aircooled chiller
+cop = [2.80, 2.86, 3.0]
+coolCOP.set_datalist(cop)
 
 # add these EEM to parametric study
 #new_pj.add_model_measure(wp)
 #new_pj.add_model_measure(wshgc)
 #new_pj.add_model_measure(wrr)
-new_pj.add_model_measure(wr)
-new_pj.add_model_measure(rr)
+new_pj.add_model_measure(wrr)
+#new_pj.add_model_measure(rr)
 new_pj.add_model_measure(lpd)
-new_pj.add_model_measure(infiltration)
-new_pj.add_model_measure(occupancy)
+new_pj.add_model_measure(coolCOP)
+#new_pj.add_model_measure(occupancy)
 
 # estimate runs and submit job
 # print(newPj.num_total_combination())
@@ -70,4 +65,4 @@ result_unit = results.lastParameterUnit
 plot = bshapi.postprocess.ParametricPlot(result_dict, result_unit)
 
 plot.line_plot("this is demo for line plot")
-plot.parallel_coordinate("this is demo for parallel coordinate plot", "Window_U")
+plot.parallel_coordinate_plotly()

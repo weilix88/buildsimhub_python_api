@@ -22,13 +22,13 @@ class ParametricPlot:
         self._unit = unit
 
         self._model_plot = data['model_plot']
-        model_des = data['model']
+        self._model_des = data['model']
 
         data_list = list()
 
         # create data dictionary
-        for j in range(len(model_des)):
-            col_list = model_des[j]
+        for j in range(len(self._model_des)):
+            col_list = self._model_des[j]
             parameters = col_list.split(",")
             data_dict = dict()
             for k in range(len(parameters)):
@@ -138,6 +138,49 @@ class ParametricPlot:
 
         plt.show()
 
+    def scatter_chart_plotly(self, title='line graph plot', image_name='line'):
+        try:
+            from plotly.offline import plot
+            from plotly import tools
+            import plotly.graph_objs as go
+        except ImportError:
+            print('plotly is not installed')
+
+        data = list()
+        trace = go.Scatter(
+            x=self._model_plot,
+            y=self._value,
+            mode='markers',
+            marker=dict(size=14,
+                        line=dict(width=1)),
+            text=self._model_des
+        )
+        data.append(trace)
+
+        layout = go.Layout(
+            title=title,
+            xaxis=dict(
+                title='Parametric cases',
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            ),
+            yaxis=dict(
+                title=self._unit,
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            )
+        )
+
+        dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        fig = dict(data=data, layout=layout)
+        plot(fig, filename=dir+'/' + image_name + '.html')
+
     def parallel_coordinate_plotly(self, investigate=None, image_name="Plot"):
         try:
             from plotly.offline import plot
@@ -147,33 +190,21 @@ class ParametricPlot:
             print('plotly is not installed')
 
         cols = list(self._df)
-        colours = list()
         has_category = False
         if investigate is not None and investigate in self._df.columns:
-            colours = ['#2e8ad8', '#c64c00', '#cd3785', '#889a00']
-            self._df[investigate] = pd.Categorical(self._df[investigate])
-            colours = [[self._df[investigate].cat.categories[i], colours[i]]
-                       for i, _ in enumerate(self._df[investigate].cat.categories)]
             cols.remove(investigate)
             has_category = True
 
         plotly_list = list()
         for col in cols:
-            if col is 'Value':
-                data_dict = dict(range=[self._df[col].min(), self._df[col].max()],
-                                 label=col, values=self._df[col], tickformat='.1f')
-            else:
-                # convert to cat
-                seen = set()
-                for val in self._df[col]:
-                    seen.add(val)
-                data_dict = dict(range=[self._df[col].min(), self._df[col].max()], tickvals=list(seen),
-                             label=col, values=self._df[col], tickformat='.1f')
+            data_dict = dict(range=[self._df[col].min(), self._df[col].max()],
+                             label=col, values=self._df[col], tickformat='.2f')
             plotly_list.append(data_dict)
 
         data = list()
         if has_category:
-            data.append(go.Parcoords(line=dict(color=self._df[investigate], colorscale=colours), dimensions=plotly_list))
+            data.append(go.Parcoords(line=dict(color=self._df[investigate], colorscale='Viridis',
+                                               showscale=True, colorbar=dict(title=investigate)), dimensions=plotly_list))
         else:
             data.append(go.Parcoords(dimensions=plotly_list))
 
@@ -181,7 +212,8 @@ class ParametricPlot:
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         plot(data, filename=dir+'/' + image_name + '.html')
 
-result_dict = {'value': [46.09, 45.6, 56.46, 56.07, 187.36, 186.94, 47.81, 47.03, 57.9, 57.25, 188.76, 188.14, 49.13, 48.12, 58.98, 58.15, 189.78, 189.0, 46.09, 45.6, 56.46, 56.07, 187.36, 186.94, 47.81, 47.03, 57.9, 57.25, 188.76, 188.14, 49.13, 48.12, 58.98, 58.15, 189.78, 189.0, 46.09, 45.6, 56.46, 56.07, 187.36, 186.94, 47.81, 47.03, 57.9, 57.25, 188.76, 188.14, 49.13, 48.12, 58.98, 58.15, 189.78, 189.0, 46.76, 46.28, 57.36, 56.96, 188.19, 187.78, 48.47, 47.7, 58.8, 58.14, 189.59, 188.97, 49.78, 48.77, 59.88, 59.06, 190.61, 189.83, 46.76, 46.28, 57.36, 56.96, 188.19, 187.78, 48.47, 47.7, 58.8, 58.14, 189.59, 188.97, 49.78, 48.77, 59.88, 59.06, 190.61, 189.83, 46.76, 46.28, 57.36, 56.96, 188.19, 187.78, 48.47, 47.7, 58.8, 58.14, 189.59, 188.97, 49.78, 48.77, 59.88, 59.06, 190.61, 189.83], 'model': ['Wall_R: 3.5, Roof_R: 4.0, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 4.0, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.5, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 3.5, Roof_R: 3.1, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 4.0, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.5, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 4.3, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 4.3, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 4.3, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 6.5, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 6.5, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 6.5, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 8.1, Infiltration: -3.0, OccupancySensor2: -3.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 8.1, Infiltration: -2.0, OccupancySensor2: -2.0, OccupancySensor: 1.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 0.0', 'Wall_R: 2.3, Roof_R: 3.1, LPD: 8.1, Infiltration: -1.0, OccupancySensor2: -1.0, OccupancySensor: 1.0'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9', 'case10', 'case11', 'case12', 'case13', 'case14', 'case15', 'case16', 'case17', 'case18', 'case19', 'case20', 'case21', 'case22', 'case23', 'case24', 'case25', 'case26', 'case27', 'case28', 'case29', 'case30', 'case31', 'case32', 'case33', 'case34', 'case35', 'case36', 'case37', 'case38', 'case39', 'case40', 'case41', 'case42', 'case43', 'case44', 'case45', 'case46', 'case47', 'case48', 'case49', 'case50', 'case51', 'case52', 'case53', 'case54', 'case55', 'case56', 'case57', 'case58', 'case59', 'case60', 'case61', 'case62', 'case63', 'case64', 'case65', 'case66', 'case67', 'case68', 'case69', 'case70', 'case71', 'case72', 'case73', 'case74', 'case75', 'case76', 'case77', 'case78', 'case79', 'case80', 'case81', 'case82', 'case83', 'case84', 'case85', 'case86', 'case87', 'case88', 'case89', 'case90', 'case91', 'case92', 'case93', 'case94', 'case95', 'case96', 'case97', 'case98', 'case99', 'case100', 'case101', 'case102', 'case103', 'case104', 'case105', 'case106', 'case107', 'case108']}
-result_unit = ""
-plot = ParametricPlot(result_dict, result_unit)
-plot.parallel_coordinate_plotly()
+#result_dict = {'value': [54.82, 54.98, 55.05, 57.11, 57.28, 57.35, 59.36, 59.54, 59.62, 55.96, 56.12, 56.2, 58.28, 58.46, 58.53, 60.49, 60.68, 60.76, 57.2, 57.36, 57.44, 59.38, 59.56, 59.65, 61.69, 61.88, 61.97], 'model': ['WWR: 0.25, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 2.8'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9', 'case10', 'case11', 'case12', 'case13', 'case14', 'case15', 'case16', 'case17', 'case18', 'case19', 'case20', 'case21', 'case22', 'case23', 'case24', 'case25', 'case26', 'case27']}
+
+#result_unit = "kWh/m2"
+#plot = ParametricPlot(result_dict, result_unit)
+#plot.scatter_chart_plotly()

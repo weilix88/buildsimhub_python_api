@@ -10,4 +10,4 @@ class HeatingEfficiency(ModelAction):
 
     def set_datalist(self, datalist):
         # this is just a on off option
-        ModelAction.set_datalist(self, self._default_list)
+        ModelAction.set_datalist(self, datalist)
