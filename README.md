@@ -15,6 +15,7 @@ We appreciate your continued support, thank you!
   * [Parametric](#parametric_job)
   * [HTML Parser](#eplus_html_parser)
   * [Post-processing Package](#post_process)
+   * [Plots](#plots)
 * [Objects and Functions](#functions)
 * [Standard EEMs library](#eems)
 * [Roadmap](#roadmap)
@@ -344,6 +345,39 @@ This method allows users to extract a specifc cell value from HTML file. It has 
 <a name="post_process"></a>
 ## post-processing function
 The post-processing functions help post-processing the simulation data extracted from Cloud simulation. These include but not limited to performing basic plottings, and organize the data into the popular pandas dataframe for user customized post processing.
+
+<a name="plots"></a>
+## ParametricPlot
+The parametric plot class helps organizing parametric data into the popular pandas dataframe (pandas, numpy are required), and offer basic plotting functions for retriving simple and quick plots. With this class, you can either request for the pandas dataframe:
+```python
+##have user key and model key ready here
+results = bsh_api.helpers.ParametricModel(usr_key, model_key)
+##request for parametric EUI list
+result_dict = results.net_site_eui()
+result_unit = results.lastParameterUnit
+#get plot
+plot = bsh_api.postprocess.ParametricPlot(result_dict, result_unit)
+print(plot.pandas_df())
+
+#OUTPUT:
+#        CoolingCOP  LPD   WWR  Value
+#case1         3.00  0.6  0.25  54.82
+#case2         2.86  0.6  0.25  54.98
+#case3         2.80  0.6  0.25  55.05
+#case4         3.00  0.9  0.25  57.11
+#case5         2.86  0.9  0.25  57.28
+```
+### Plotly
+There are two plots available in the current API library.
+1. scatter plot: 
+`plot.scatter_chart_plotly(title)` This produce a scatter plot. Title of the graph is an optional input
+![picture alt](https://imgur.com/RzNuyse.png)
+
+2. Parallel coordinate:
+`plot.parallel_coordinate_plotly(investigate)` This produce a parallel coordinate plot. The investigate is optional, which will color code the lines based on this investigated category. Image below shows the example of investigating the LPD variable.
+![picture alt](https://imgur.com/XnaDW7O.png)
+
+More charts can be added to the standard API library - submit a [issues](https://github.com/weilix88/buildsimhub_python_api/issues)!
 
 <a name="eems"></a>
 # Standard Energy Effiiency Measure library
