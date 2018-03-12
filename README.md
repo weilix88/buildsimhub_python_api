@@ -14,6 +14,7 @@ We appreciate your continued support, thank you!
   * [Model](#energy_model)
   * [Parametric](#parametric_job)
   * [HTML Parser](#eplus_html_parser)
+  * [Post-processing Package](#post_process)
 * [Objects and Functions](#functions)
 * [Standard EEMs library](#eems)
 * [Roadmap](#roadmap)
@@ -249,6 +250,16 @@ model = bsh.get_model(newSj)
 23. *interior_lighting_naturalgas()*: returns the natural gas consumption of the interior lighting. unit: kWh or GJ, IP is kBtu
 24. *pumps_electricity()*: returns the electricity consumption of the pumps. unit: kWh or GJ, IP is kBtu
 25. *pumps_naturalgas()*: returns the natural gas consumption of the pumps. unit: kWh or GJ, IP is kBtu
+26. *zone_load(zone_name)*: This method has two modes. 1. extract list of zones and their total heating / cooling load information. 2. extract one zone's detail load components information. The second mode can be activate by including the `zone_name` variable.
+For the first mode, below is the example code and output:
+```python
+model_result = bsh.get_model(new_sj)
+load_profile = model_result.zone_load()
+
+#Output:
+#[{'zone_name': 'SPACE1-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': -7804.11, 'cooling_load': 7461.61, #'heating_load_density': -78.70219846712384, 'cooling_load_density': 75.2481847519161, 'heating_load_density_unit': 'W/m2', #'cooling_load_density_unit': 'W/m2', 'cooling_peak_load_time': '7/21 15:45:00', 'heating_peak_load_time': '1/21 24:00:00'}, {'zone_name': #'SPACE5-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': -6165.32, 'cooling_load': 8356.869999999999, #'heating_load_density': -33.78442654392021, 'cooling_load_density': 45.793577730286586, 'heating_load_density_unit': 'W/m2', #'cooling_load_density_unit': 'W/m2', 'cooling_peak_load_time': '7/21 15:00:00', 'heating_peak_load_time': '1/21 24:00:00'}]
+```
+
 
 ### Misc. methods and variables
 1. lastParameterUnit: You can check the value of the variable requested by the most recent API call.
@@ -329,6 +340,10 @@ This method allows users to extract a specifc cell value from HTML file. It has 
 ![picture alt](https://imgur.com/UY3CHPR.png)
 5. `reportFor`: This is an optional parameter. The default is set to 'Entire Facility'. Usually, all the report is for entire facility. However, there are some cases where the report is generated for a specific zone, e.g., zone load component reports. Below is the example of finding this parameter in the HTML file.
 ![picture alt](https://imgur.com/ZiCyT68.png)
+
+<a name="post_process"></a>
+## post-processing function
+The post-processing functions help post-processing the simulation data extracted from Cloud simulation. These include but not limited to performing basic plottings, and organize the data into the popular pandas dataframe for user customized post processing.
 
 <a name="eems"></a>
 # Standard Energy Effiiency Measure library
