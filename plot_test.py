@@ -1,6 +1,6 @@
 import BuildSimHubAPI as bsh_api
 
-usr_key = '94266512-c5ea-463d-a108-9dd1e84c07ca'
+usr_key = ''
 model_key = '5dc2b500-7821-4c2a-b27c-266fdbdddb40'
 
 results = bsh_api.helpers.ParametricModel(usr_key, model_key)
