@@ -6,14 +6,14 @@ import requests
 
 # potentially in the future, to write
 
-class ParametricModel():
+class ParametricModel:
     # every call will connect to this base URL
     BASE_URL = 'https://develop.buildsimhub.net/'
 
-    def __init__(self, userKey, model_key):
+    def __init__(self, userKey, parametric_job):
         self._userKey = userKey
         self._lastParameterUnit = ""
-        self._modelKey = model_key
+        self._modelKey = vars(parametric_job)['_trackToken']
 
     @property
     def lastParameterUnit(self):

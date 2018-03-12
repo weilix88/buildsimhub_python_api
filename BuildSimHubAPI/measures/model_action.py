@@ -1,7 +1,7 @@
 
 
-class ModelAction():
-    def __init__(self, name, unit='ip'):
+class ModelAction:
+    def __init__(self, name, unit='si'):
         # type: (str, str) -> ModelAction
         self._list_data = list()
         self._data = None

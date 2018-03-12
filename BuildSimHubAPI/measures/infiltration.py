@@ -15,5 +15,5 @@ class Infiltration(ModelAction):
     def set_datalist(self, datalist):
         for i in range(len(datalist)):
             if datalist[i] > 1:
-                return False;
+                return False
         ModelAction.set_datalist(self, datalist)
