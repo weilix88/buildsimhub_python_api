@@ -197,7 +197,7 @@ class Model():
         else:
             return -1
 
-    def zone_load(self, zone_name = ''):
+    def zone_load(self, zone_name=None):
         url = Model.BASE_URL + 'GetZoneLoadInfo_API'
         track = "folder_api_key"
 
@@ -210,7 +210,7 @@ class Model():
             track: self._modelKey
         }
 
-        if zone_name is not '':
+        if zone_name is not None:
             payload['zone_name'] = zone_name
 
         r = requests.get(url, params=payload)
