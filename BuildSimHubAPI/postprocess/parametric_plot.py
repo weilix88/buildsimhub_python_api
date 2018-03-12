@@ -152,17 +152,23 @@ class ParametricPlot:
         if investigate is not None and investigate in self._df.columns:
             colours = ['#2e8ad8', '#c64c00', '#cd3785', '#889a00']
             self._df[investigate] = pd.Categorical(self._df[investigate])
-            colours = [[self._df[investigate].cat.categories[i], colours[i]] for i, _ in enumerate(self._df[investigate].cat.categories)]
+            colours = [[self._df[investigate].cat.categories[i], colours[i]]
+                       for i, _ in enumerate(self._df[investigate].cat.categories)]
             cols.remove(investigate)
             has_category = True
 
         plotly_list = list()
         for col in cols:
-            #convert to cat
-            seen = set()
-            for val in self._df[col]:
-                seen.add(val)
-            data_dict = dict(range=[self._df[col].min(), self._df[col].max()], tickvals=list(seen), label=col, values=self._df[col])
+            if col is 'Value':
+                data_dict = dict(range=[self._df[col].min(), self._df[col].max()],
+                                 label=col, values=self._df[col], tickformat='.1f')
+            else:
+                # convert to cat
+                seen = set()
+                for val in self._df[col]:
+                    seen.add(val)
+                data_dict = dict(range=[self._df[col].min(), self._df[col].max()], tickvals=list(seen),
+                             label=col, values=self._df[col], tickformat='.1f')
             plotly_list.append(data_dict)
 
         data = list()

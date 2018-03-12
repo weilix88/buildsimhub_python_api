@@ -17,5 +17,5 @@ class WallRValue(ModelAction):
     def set_datalist(self, datalist):
         if ModelAction.unit(self) == 'ip':
             for i in range(len(datalist)):
-                datalist[i] = datalist[i] * WallRValue.CONVERSION_RATE
+                datalist[i] = datalist[i] / WallRValue.CONVERSION_RATE
         ModelAction.set_datalist(self, datalist)

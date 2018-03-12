@@ -47,6 +47,5 @@ class BuildSimHubAPIClient():
         return model
 
     def get_parametric_results(self, parametricJob):
-        model_key = vars(parametricJob)['_trackToken']
-        return helpers.parametric_model.ParametricModel(self._userAPI, model_key)
+        return helpers.parametric_model.ParametricModel(self._userAPI, parametricJob)
 

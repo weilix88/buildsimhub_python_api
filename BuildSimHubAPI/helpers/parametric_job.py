@@ -37,10 +37,6 @@ class ParametricJob():
                 num_total = num_total * self._model_action_list[i].get_num_value()
         return num_total
 
-    def submission_cost(self, file_dir):
-        # reserved function
-        return num_total_combination() * 1.0
-
     def submit_parametric_study_local(self, file_dir, unit='ip', simulationType="parametric"):
         # file_dir indicates the seed model
         url = ParametricJob.BASE_URL + 'ParametricSettingUploadModel_API'
