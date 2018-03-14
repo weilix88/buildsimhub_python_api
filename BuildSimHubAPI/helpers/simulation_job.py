@@ -29,12 +29,12 @@ class SimulationJob():
         self._trackToken = value
 
     def add_model_action(self, action):
-        if action.get_num_value()>0:
+        if action.get_num_value() > 0:
             return "Cannot process more than one value for a single simulation job. Try parametric study."
         self._model_action_list.append(action)
 
     def get_simulation_results(self, resultType="html"):
-        if(self._trackToken == ""):
+        if self._trackToken == "":
             return self._trackStatus
 
         url = SimulationJob.BASE_URL + 'GetSimulationResult_API'
@@ -52,7 +52,7 @@ class SimulationJob():
         return f
 
     def track_simulation(self):
-        if(self._trackToken == ""):
+        if self._trackToken == "":
             return self._trackStatus
 
         url = SimulationJob.BASE_URL + 'TrackSimulation_API'
@@ -81,7 +81,7 @@ class SimulationJob():
     def run(self, file_dir, wea_dir, unit='ip', agent=1, simulationType='regular'):
         url = SimulationJob.BASE_URL + 'RunSimulationCustomize_API'
         payload = {
-            'user_api_key':self._userKey,
+            'user_api_key': self._userKey,
             'simulation_type': simulationType,
             'agents': agent,
             'unit': unit
@@ -100,7 +100,7 @@ class SimulationJob():
         else:
             return resp_json['error_msg']
 
-    def run_model_simulation(self, unit='ip', agent=1, simulationType = "regular"):
+    def run_model_simulation(self, unit='ip', agent=1, simulationType="regular"):
         url = SimulationJob.BASE_URL + 'RunSimulation_API'
 
         if self._trackToken == "":
@@ -126,6 +126,7 @@ class SimulationJob():
         payload = {
             'user_api_key': self._userKey,
             'folder_api_key': self._modelKey,
+            'project_api_key': self._modelKey,
             'comment': comment,
             'simulation_type': simulationType,
             'agents': agent,
@@ -144,11 +145,12 @@ class SimulationJob():
         else:
             return resp_json['error_msg']
 
-    def create_model(self, file_dir, comment = "Upload through Python API"):
+    def create_model(self, file_dir, comment="Upload through Python API"):
         url = SimulationJob.BASE_URL + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
             'folder_api_key': self._modelKey,
+            'project_api_key': self._modelKey,
             'comment': comment,
             'simulation_type': '',
             'agents': 1
@@ -167,4 +169,3 @@ class SimulationJob():
             return resp_json['status']
         else:
             return resp_json['error_msg']
-
