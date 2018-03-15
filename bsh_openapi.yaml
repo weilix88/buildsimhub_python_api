@@ -1,0 +1,237 @@
+swagger: '2.0'
+info:
+  description: This is the document for BuildSimHub cloud API.
+  version: 1.0.0
+  title: BuildSimHub Cloud API
+  termsOfService: >-
+    https://app.termly.io/document/terms-of-use-for-saas/5d663de5-6319-4b6e-970d-dda4de792ea5
+  contact:
+    email: weili.xu@buildsimhub.net
+  license:
+    name: MIT
+    url: 'https://github.com/weilix88/buildsimhub_python_api/blob/master/LICENSE.txt'
+host: develop.buildsimhub.net
+schemes:
+  - https
+paths:
+  /RunSimulationCustomize_API:
+    post:
+      summary: simulate an energy model (IDF format) on cloud
+      description: >-
+        This API allows user to upload an EnergyPlus model and run the model or
+        not.
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: user_api_key
+          in: query
+          required: true
+          description: The user api key for accessing the service
+          type: string
+        - name: unit
+          in: query
+          required: false
+          description: 'unit system, can be either "ip" or "si", "ip" is defaut'
+          type: string
+          enum: ['ip', 'si']
+        - name: agents
+          in: query
+          required: false
+          description: 'simulation agents, 1,2 or 4'
+          type: integer
+          enum: [1,2,3]
+        - in: formData
+          name: model
+          type: file
+          required: true
+          description: Energy model (.idf, gbxml, .osm)
+        - in: formData
+          name: weather_file
+          type: file
+          required: true
+          description: Weather file (.epw)
+      responses:
+        '200':
+          description: message describing simulation
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: error or success
+              error_msg:
+                type: string
+                description: possible error message
+              tracking:
+                type: string
+                description: the simulaton job key to access simulation status and results
+  /TrackSimulation_API:
+    get:
+      summary: get a simulation status
+      description: This API request allows user to receive the simulation status of a specific model
+      parameters:
+        - name: user_api_key
+          in: query
+          required: true
+          description: The user api key for accessing the service
+          type: string
+        - name: track_token
+          in: query
+          required: true
+          type: string
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+      responses:
+        '200':
+          description: successfully received the request
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: error or success
+              error_msg:
+                type: string
+                description: possible error message
+              has_more:
+                type: boolean
+                description: indicate whether the simulation is completed or not
+              doing:
+                type: string
+                description: indicates the simulation progress
+              percent:
+                type: integer
+                description: the percentage of the simulation that is completed
+              is_queued:
+                type: boolean
+                description: indicate whether this simulation is queued
+              queue_position:
+                type: integer
+                description: indicates the position of this simulation in the queue
+  /GetBuildingBasicInfo_API:
+    get:
+      summary: get a model information
+      description: API request to retrieve model information
+      parameters:
+        - name: user_api_key
+          in: query
+          required: true
+          description: The user api key for accessing the service
+          type: string
+        - name: folder_api_key
+          in: query
+          required: false
+          description: The folder where the model located (either this or the track_token has to be filled)
+          type: string
+        - name: track_token
+          in: query
+          required: false
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          type: string
+        - name: request_data
+          in: query
+          required: true
+          description: required data information
+          type: string
+          enum: ['BuildingStories','ConditionedZoneNumber','ZoneFloorArea','ConditionedZoneFloorArea','TotalWindowWallRatio','TotalZoneNumber','Orientation']
+      responses:
+        '200':
+          description: successfully received the request
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: error or success
+              error_msg:
+                type: string
+                description: possible error message
+              data:
+                type: object
+                description: data contains in either string or object format
+  /GetBuildingSimulationResults_API:
+    get:
+      summary: get simulation results information
+      description: API request to retrieve model simulation results
+      parameters:
+        - name: user_api_key
+          in: query
+          required: true
+          description: The user api key for accessing the service
+          type: string
+        - name: folder_api_key
+          in: query
+          required: false
+          description: The folder where the model located (either this or the track_token has to be filled)
+          type: string
+        - name: track_token
+          in: query
+          required: false
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          type: string
+        - name: request_data
+          in: query
+          required: true
+          description: required data information
+          type: string
+          enum: ['CoolingElectricity','CoolingNaturalGas','DomesticHotWaterElectricity','DomesticHotWaterNaturalGas','ExteriorEquipmentElectricity','ExteriorEquipmentNaturalGas','ExteriorLightingElectricity','ExteriorLightingNaturalGas'
+            ,'FansElectricity', 'FansNaturalGas','HeatingElectricity'
+            ,'HeatingNaturalGas','HeatRejectionElectricity','HeatRejectionNaturalGas', 'InteiorEquipmentElectricity'
+            ,'InteriorEquipmentNaturalGas','InteriorLightingElectricity'
+            ,'InteriorLightingNaturalGas','PumpsElectricity','PumpsNaturalGas'
+            ,'NetSiteEUI','NotMetHoursCooling','NotMetHoursHeating'
+            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI']
+      responses:
+        '200':
+          description: successfully received the request
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: error or success
+              error_msg:
+                type: string
+                description: possible error message
+              data:
+                type: object
+                description: data contains in either string or object format
+  /GetZoneLoadInfo_API:
+    get:
+      summary: retrieve a model's zone load information
+      description: This API retrieves a list of zone load information including zone peak cooling and heating loads, time of the peak and load densities, if a zone name is given, then this API will retrieve the detail load component inside this zone
+      parameters:
+        - name: user_api_key
+          in: query
+          required: true
+          description: The user api key for accessing the service
+          type: string
+        - name: folder_api_key
+          in: query
+          required: false
+          description: The folder where the model located (either this or the track_token has to be filled)
+          type: string
+        - name: track_token
+          in: query
+          required: false
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          type: string
+        - name: zone_name
+          in: query
+          required: false
+          description: If this parameter is given, then the API will try to retrieve the detail load component of a zone from the simulation results
+          type: string
+      responses:
+        '200':
+          description: successfully received the request
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: error or success
+              error_msg:
+                type: string
+                description: possible error message
+              data:
+                type: object
+                description: data contains in either string or object format
