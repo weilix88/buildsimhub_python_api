@@ -1,6 +1,7 @@
 from BuildSimHubAPI import helpers
 
-class BuildSimHubAPIClient():
+
+class BuildSimHubAPIClient:
     """
     This BuildSimHub API client
     use this object to interact with the v1 API. for example:
@@ -19,6 +20,7 @@ class BuildSimHubAPIClient():
         """
         info = helpers.bldgsim_info.MetaInfo()
         self._userAPI = info.userKey
+        self._base_url = info.base_url
 
     @property
     def userAPI(self):

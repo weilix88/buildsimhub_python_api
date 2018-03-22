@@ -9,7 +9,7 @@ import json
 class Model:
 
     # every call will connect to this base URL
-    BASE_URL = 'https://develop.buildsimhub.net/'
+    BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, user_key, model_key):
         self._userKey = user_key

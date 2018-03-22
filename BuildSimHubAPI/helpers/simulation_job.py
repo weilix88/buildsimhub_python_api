@@ -4,7 +4,7 @@ import time
 
 class SimulationJob:
     #every call will connect to this base URL
-    BASE_URL = 'https://develop.buildsimhub.net/'
+    BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, userKey, mk):
         self._userKey = userKey
