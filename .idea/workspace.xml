@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d975d362-de7b-42a3-8c65-b8680decdec1" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/info.config" afterPath="$PROJECT_DIR$/BuildSimHubAPI/info.config" />
       <change beforePath="$PROJECT_DIR$/Plot.html" afterPath="$PROJECT_DIR$/Plot.html" />
       <change beforePath="$PROJECT_DIR$/line.html" afterPath="$PROJECT_DIR$/line.html" />
@@ -17,11 +16,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="buildsimhub.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="buildsimhub.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/buildsimhub.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="360">
               <caret line="24" column="13" lean-forward="true" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="info.config" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/info.config">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="13" lean-forward="false" selection-start-line="0" selection-start-column="13" selection-end-line="0" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -94,12 +103,12 @@
         <option value="$PROJECT_DIR$/parametrictest.py" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/bldgsim_info.py" />
-        <option value="$PROJECT_DIR$/BuildSimHubAPI/info.config" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/simulation_job.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_model.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/buildsimhub.py" />
+        <option value="$PROJECT_DIR$/BuildSimHubAPI/info.config" />
       </list>
     </option>
   </component>
@@ -659,14 +668,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/info.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="32" lean-forward="false" selection-start-line="1" selection-start-column="32" selection-end-line="1" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/htmlParser/numeric_value_parser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -771,6 +772,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="24" column="13" lean-forward="true" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/info.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="13" lean-forward="false" selection-start-line="0" selection-start-column="13" selection-end-line="0" selection-end-column="13" />
           <folding />
         </state>
       </provider>
