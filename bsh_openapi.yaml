@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/weilix88/buildsimhub_python_api/blob/master/LICENSE.txt'
-host: develop.buildsimhub.net
+host: my.buildsim.io
 schemes:
   - https
 paths:
