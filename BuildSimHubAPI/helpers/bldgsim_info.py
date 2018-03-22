@@ -12,15 +12,22 @@ class MetaInfo:
         q = dirpath / 'info.config'
         assert(q.exists())
         with q.open() as f:
-            key, value = f.readline().split(":")
+            key, value = f.readline().split("=")
             if key == 'user_api_key':
-                self._userKey = value
+                self._user_key = value.strip()
             elif key == 'base_url':
-                self._base_url = value
+                self._base_url = value.strip()
+
+            key, value = f.readline().split("=")
+            if key == 'user_api_key':
+                self._user_key = value.strip()
+            elif key == 'base_url':
+                self._base_url = value.strip()
+
 
     @property
-    def userKey(self):
-        return self._userKey
+    def user_key(self):
+        return self._user_key
 
     @property
     def base_url(self):

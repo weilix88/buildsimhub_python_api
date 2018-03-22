@@ -11,17 +11,20 @@ class Model:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, user_key, model_key):
+    def __init__(self, user_key, model_key, base_url=None):
         self._userKey = user_key
         self._last_parameter_unit = ""
         self._modelKey = model_key
+        self._base_url = Model.BASE_URL
+        if base_url is not None:
+            self._base_url = base_url
 
     @property
     def last_parameter_unit(self):
         return self._last_parameter_unit
 
     def bldg_orientation(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -45,7 +48,7 @@ class Model:
             return -1
 
     def num_above_ground_floor(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -66,7 +69,7 @@ class Model:
             return resp_json['error_msg']
 
     def num_total_floor(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -86,7 +89,7 @@ class Model:
             return resp_json['error_msg']
 
     def num_zones(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -107,7 +110,7 @@ class Model:
             return resp_json['error_msg']
 
     def num_condition_zones(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -121,13 +124,13 @@ class Model:
         resp_json = r.json()
         if resp_json['status'] == 'success':
             data = resp_json['data']
-            self._lastParameterUnit = 'zones'
+            self._last_parameter_unit = 'zones'
             return data['value']
         else:
             return resp_json['error_msg']
 
     def condition_floor_area(self, unit):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -152,7 +155,7 @@ class Model:
             return -1
 
     def gross_floor_area(self, unit):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -177,7 +180,7 @@ class Model:
             return -1
 
     def window_wall_ratio(self):
-        url = Model.BASE_URL + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._modelKey.split("|")
         if len(test) is 3:
@@ -199,7 +202,7 @@ class Model:
             return -1
 
     def zone_load(self, zone_name=None):
-        url = Model.BASE_URL + 'GetZoneLoadInfo_API'
+        url = self._base_url + 'GetZoneLoadInfo_API'
         track = "folder_api_key"
 
         test = self._modelKey.split("|")
@@ -305,7 +308,7 @@ class Model:
         return self.__call_api('PumpsNaturalGas')
 
     def __call_api(self, request_data):
-        url = Model.BASE_URL + 'GetBuildingSimulationResults_API'
+        url = self._base_url + 'GetBuildingSimulationResults_API'
         track = "folder_api_key"
 
         test = self._modelKey.split("|")

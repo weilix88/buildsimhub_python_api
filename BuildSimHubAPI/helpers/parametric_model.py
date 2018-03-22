@@ -10,14 +10,17 @@ class ParametricModel:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, userKey, model_key):
+    def __init__(self, userKey, model_key, base_url=None):
         self._userKey = userKey
-        self._lastParameterUnit = ""
+        self._last_parameter_unit = ""
         self._modelKey = model_key
+        self._base_url = ParametricModel.BASE_URL
+        if base_url is not None:
+            self._base_url = base_url
 
     @property
-    def lastParameterUnit(self):
-        return self._lastParameterUnit
+    def last_parameter_unit(self):
+        return self._last_parameter_unit
 
     # Below are the methods use for retrieving results
     def net_site_eui(self):
@@ -102,7 +105,7 @@ class ParametricModel:
         return self.__call_api('PumpsNaturalGas')
 
     def __call_api(self, request_data):
-        url = ParametricModel.BASE_URL + 'ParametricResults_API'
+        url = self._base_url + 'ParametricResults_API'
         payload = {
             'user_api_key': self._userKey,
             'folder_api_key': self._modelKey,

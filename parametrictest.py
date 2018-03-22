@@ -2,7 +2,7 @@ import BuildSimHubAPI as bsh_api
 import time
 
 # 1. set your folder key
-model_key = 'f9081a7f-4574-4e98-bb9e-3b77315ed49c'
+model_key = '2c3fb262-3b53-47a6-820a-7b8166e998a9'
 
 bsh = bsh_api.BuildSimHubAPIClient()
 
@@ -28,17 +28,13 @@ new_pj.add_model_measure(lpd)
 new_pj.add_model_measure(coolCOP)
 
 #Start!
-new_pj.submit_parametric_study()
+new_pj.submit_parametric_study(track=True)
 
-# track job progress
-while (new_pj.track_simulation()):
-    print(new_pj.get_status())
-    time.sleep(5)
 # Collect results
 results = bsh.get_parametric_results(new_pj)
 
 result_dict = results.net_site_eui()
-result_unit = results.lastParameterUnit
+result_unit = results.last_parameter_unit
 
 # Plot
 plot = bsh_api.postprocess.ParametricPlot(result_dict, result_unit)
