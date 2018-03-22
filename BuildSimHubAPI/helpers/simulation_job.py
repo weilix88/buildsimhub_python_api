@@ -1,9 +1,10 @@
 import requests
 import json
+import time
 
-class SimulationJob():
+class SimulationJob:
     #every call will connect to this base URL
-    BASE_URL = 'https://develop.buildsimhub.net/'
+    BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, userKey, mk):
         self._userKey = userKey
@@ -78,11 +79,11 @@ class SimulationJob():
             self._trackStatus = resp_json['error_msg']        
             return resp_json['has_more']
 
-    def run(self, file_dir, wea_dir, unit='ip', agent=1, simulationType='regular'):
+    def run(self, file_dir, wea_dir, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
         url = SimulationJob.BASE_URL + 'RunSimulationCustomize_API'
         payload = {
             'user_api_key': self._userKey,
-            'simulation_type': simulationType,
+            'simulation_type': simulation_type,
             'agents': agent,
             'unit': unit
         }
@@ -92,15 +93,20 @@ class SimulationJob():
             'weather_file': open(wea_dir,'rb')
         }
 
-        r= requests.post(url, data=payload, files = files)
+        r = requests.post(url, data=payload, files=files)
         resp_json = r.json()
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
-            return resp_json['status']
+            if track:
+                while self.track_simulation():
+                    print(self.trackStatus)
+                    time.sleep(request_time)
+            return self._trackToken
+
         else:
             return resp_json['error_msg']
 
-    def run_model_simulation(self, unit='ip', agent=1, simulationType="regular"):
+    def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular", track=False, request_time=5):
         url = SimulationJob.BASE_URL + 'RunSimulation_API'
 
         if self._trackToken == "":
@@ -109,7 +115,7 @@ class SimulationJob():
         payload = {
             'user_api_key': self._userKey,
             'track_token': self._trackToken,
-            'simulation_type': simulationType,
+            'simulation_type': simulation_type,
             'agents': agent,
             'unit': unit
         }
@@ -117,18 +123,24 @@ class SimulationJob():
         r = requests.post(url, data=payload)
         resp_json = r.json()
         if resp_json['status'] == 'success':
-            return resp_json['status']
+            self._trackToken = resp_json['tracking']
+            if track:
+                while self.track_simulation():
+                    print(self.trackStatus)
+                    time.sleep(request_time)
+            return self._trackToken
+
         else:
             return resp_json['error_msg']
 
-    def create_run_model(self, file_dir,  unit='ip', agent = 1, comment = "Upload through Python API", simulationType ="regular"):
+    def create_run_model(self, file_dir,  unit='ip', agent=1, comment="Python API", simulation_type="regular", track=False, request_time=5):
         url = SimulationJob.BASE_URL + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
             'folder_api_key': self._modelKey,
             'project_api_key': self._modelKey,
             'comment': comment,
-            'simulation_type': simulationType,
+            'simulation_type': simulation_type,
             'agents': agent,
             'unit': unit
         }
@@ -141,7 +153,12 @@ class SimulationJob():
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
-            return resp_json['status']
+            if track:
+                while self.track_simulation():
+                    print(self.trackStatus)
+                    time.sleep(request_time)
+            return self._trackToken
+
         else:
             return resp_json['error_msg']
 

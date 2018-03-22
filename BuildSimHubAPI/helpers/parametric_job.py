@@ -1,10 +1,11 @@
 import requests
 import json
+import time
 
 
 class ParametricJob():
     # every call will connect to this base URL
-    BASE_URL = 'https://develop.buildsimhub.net/'
+    BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, userKey, mk):
         self._userKey = userKey
@@ -37,13 +38,13 @@ class ParametricJob():
                 num_total = num_total * self._model_action_list[i].get_num_value()
         return num_total
 
-    def submit_parametric_study_local(self, file_dir, unit='ip', simulationType="parametric"):
+    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric", track=False, request_time=5):
         # file_dir indicates the seed model
         url = ParametricJob.BASE_URL + 'ParametricSettingUploadModel_API'
         payload = {
             'user_api_key': self._userKey,
             'project_api_key': self._modelKey,
-            'simulation_type': simulationType,
+            'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit
         }
@@ -62,7 +63,12 @@ class ParametricJob():
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
-            return resp_json['status']
+            if track:
+                while self.track_simulation():
+                    print(self.trackStatus)
+                    time.sleep(request_time)
+            return self._trackToken
+
         else:
             return resp_json['error_msg']
 
@@ -97,13 +103,13 @@ class ParametricJob():
 
     # for this method, it allows user to identify one seed model in a project.
     # This allows the parametric study performed under a project with a fixed weather file,
-    def submit_parametric_study(self, unit='ip', simulationType='parametric'):
+    def submit_parametric_study(self, unit='ip', simulation_type='parametric', track=False, request_time=5):
 
         url = ParametricJob.BASE_URL + 'ParametricSettingCopyModel_API'
         payload = {
             'user_api_key': self._userKey,
             'model_api_key': self._modelKey,
-            'simulation_type': simulationType,
+            'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit
         }
@@ -120,7 +126,12 @@ class ParametricJob():
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
-            return resp_json['status']
+            if track:
+                while self.track_simulation():
+                    print(self.trackStatus)
+                    time.sleep(request_time)
+            return self._trackToken
+
         else:
             return resp_json['error_msg']
 
