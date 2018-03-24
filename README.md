@@ -7,6 +7,7 @@ This library represents the beginning of the Cloud Simulation function on BuildS
 We appreciate your continued support, thank you!
 
 # Table of Contents
+* [Latest Update](#update)
 * [Installation](#installation)
 * [Quick Start](#quick-start)
   * [SimulationType](#simultion_type)
@@ -21,6 +22,13 @@ We appreciate your continued support, thank you!
 * [Roadmap](#roadmap)
 * [About](#about)
 * [License](#license)
+
+<a name="update"></a>
+The latest version is 1.2.0. Changes include:
+1. Track information is included in the run simulation function - no need to write extra code to do cloud simulation tracking
+2. Add geo API call to open the BuildSimHub geometry viewer.
+3. add checks for every EEMs to make sure the numbers are making sense for the EEMs
+4. apply EEMs to a single simulation job.
 
 <a name="installation"></a>
 
