@@ -1,4 +1,5 @@
 import requests
+import webbrowser
 
 # This is a class that contains all the model information for user
 # to read
@@ -21,6 +22,21 @@ class ParametricModel:
     @property
     def last_parameter_unit(self):
         return self._last_parameter_unit
+
+    def bldg_geo(self):
+        url = self._base_url + 'IDF3DViewerSocket.html'
+        track = 'model_api_key'
+        test = self._modelKey.split('|')
+        if len(test) is 3:
+            track = 'tracking'
+
+        payload = {
+            'user_api_key': self._userKey,
+            track: self._modelKey,
+        }
+
+        r = requests.get(url, params=payload)
+        webbrowser.open(r.url)
 
     # Below are the methods use for retrieving results
     def net_site_eui(self):

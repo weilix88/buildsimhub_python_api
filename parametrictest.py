@@ -2,7 +2,7 @@ import BuildSimHubAPI as bsh_api
 import time
 
 # 1. set your folder key
-model_key = '2c3fb262-3b53-47a6-820a-7b8166e998a9'
+model_key = 'eb7e4a41-04f2-4da6-832a-b761980fb7cc'
 
 bsh = bsh_api.BuildSimHubAPIClient()
 
