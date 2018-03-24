@@ -2,16 +2,20 @@ import requests
 import json
 import time
 
+
 class SimulationJob:
-    #every call will connect to this base URL
+    # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, userKey, mk):
+    def __init__(self, userKey, mk, base_url=None):
         self._userKey = userKey
         self._modelKey = mk
         self._trackToken = ""
         self._trackStatus = "No simulation is running or completed in this Job - please start simulation using create_run_model method."
         self._model_action_list = list()
+        self._base_url = SimulationJob.BASE_URL
+        if base_url is not None:
+            self._base_url = base_url
 
     @property
     def trackStatus(self):
@@ -38,7 +42,7 @@ class SimulationJob:
         if self._trackToken == "":
             return self._trackStatus
 
-        url = SimulationJob.BASE_URL + 'GetSimulationResult_API'
+        url = self._base_url + 'GetSimulationResult_API'
         payload = {
             'user_api_key': self._userKey,
             'result_type': resultType,
@@ -56,7 +60,7 @@ class SimulationJob:
         if self._trackToken == "":
             return self._trackStatus
 
-        url = SimulationJob.BASE_URL + 'TrackSimulation_API'
+        url = self._base_url + 'TrackSimulation_API'
         payload = {
             'user_api_key': self._userKey,
             'track_token': self._trackToken
@@ -80,7 +84,7 @@ class SimulationJob:
             return resp_json['has_more']
 
     def run(self, file_dir, wea_dir, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
-        url = SimulationJob.BASE_URL + 'RunSimulationCustomize_API'
+        url = self._base_url+ 'RunSimulationCustomize_API'
         payload = {
             'user_api_key': self._userKey,
             'simulation_type': simulation_type,
@@ -107,7 +111,7 @@ class SimulationJob:
             return resp_json['error_msg']
 
     def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular", track=False, request_time=5):
-        url = SimulationJob.BASE_URL + 'RunSimulation_API'
+        url = self._base_url + 'RunSimulation_API'
 
         if self._trackToken == "":
             return 'error: no model is created in this simulation job. Please create a model use create_model method.'
@@ -134,7 +138,7 @@ class SimulationJob:
             return resp_json['error_msg']
 
     def create_run_model(self, file_dir,  unit='ip', agent=1, comment="Python API", simulation_type="regular", track=False, request_time=5):
-        url = SimulationJob.BASE_URL + 'CreateModel_API'
+        url = self._base_url + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
             'folder_api_key': self._modelKey,
@@ -163,7 +167,7 @@ class SimulationJob:
             return resp_json['error_msg']
 
     def create_model(self, file_dir, comment="Upload through Python API"):
-        url = SimulationJob.BASE_URL + 'CreateModel_API'
+        url = self._base_url + 'CreateModel_API'
         payload = {
             'user_api_key': self._userKey,
             'folder_api_key': self._modelKey,
@@ -180,6 +184,7 @@ class SimulationJob:
         r = requests.post(url, data=payload, files=files)
         
         resp_json = r.json()
+        print(resp_json)
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']

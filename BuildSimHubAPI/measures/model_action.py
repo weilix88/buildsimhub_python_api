@@ -25,7 +25,7 @@ class ModelAction:
         return self._list_data
 
     def get_data(self):
-        return data
+        return "[" + self._data + "]"
 
 #    def num_of_combinations(self):
 #        comb = 0
@@ -37,10 +37,10 @@ class ModelAction:
 #                comb = comb * len(data_list)
 #        return comb
 
-    def set_datalist(self, datalist):
-        self._list_data = datalist
+    def set_datalist(self, data_list: object) -> object:
+        self._list_data = data_list
 
-    def set_data(self, data):
+    def set_data(self, data: object) -> object:
         self._data = data
 
     def get_api_name(self):
