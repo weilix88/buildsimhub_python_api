@@ -14,3 +14,7 @@ from .cooling_all_cop import CoolingCOP
 from .cooling_coil_cop import CoolingCoilCOP
 from .cooling_chiller_cop import CoolingChillerCOP
 from .heating_efficiency import HeatingEfficiency
+from .window_wall_ratio_south import WindowWallRatioSouth
+from .window_wall_ratio_west import WindowWallRatioWest
+from .window_wall_ratio_east import WindowWallRatioEast
+from .window_wall_ratio_north import WindowWallRatioNorth
