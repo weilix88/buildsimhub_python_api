@@ -8,7 +8,6 @@ class BuildSimHubAPIClient:
     bsh = buildsimhub.BuildSimHubAPIClient(apikey = os.environ.get('BUILDSIMHUB_API_KEY'))
 
     """
-
     def __init__(self):
         """
         Construct BuildSimHub v1 API object
