@@ -10,6 +10,7 @@ wea_dir="/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 new_sj = bsh.new_simulation_job()
 # 3. start the API call
 # note if fast simulation, call increaseAgents to increase the agent numbers
+
 # response = newSj.create_run_model(file_dir)
 response = new_sj.run(file_dir, wea_dir, track=True)
 print(response)

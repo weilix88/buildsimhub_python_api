@@ -22,4 +22,4 @@ class WindowWallRatio(ModelAction):
         for d in data_list:
             if d > 1.0 or d < 0.0:
                 return False
-        ModelAction.set_datalist(data_list)
+        ModelAction.set_datalist(self, data_list)

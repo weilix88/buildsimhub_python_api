@@ -51,7 +51,7 @@ class Model:
             'request_data': 'Orientation'
         }
 
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if resp_json['status'] == 'success':
             data = resp_json['data']
