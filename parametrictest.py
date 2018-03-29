@@ -9,17 +9,16 @@ bsh = bsh_api.BuildSimHubAPIClient()
 new_pj = bsh.new_parametric_job(model_key)
 
 # Define EEMs
-
 wwr = bsh_api.measures.WindowWallRatio()
 wwr_ratio = [0.35, 0.3, 0.25]
 wwr.set_datalist(wwr_ratio)
 
 lpd = bsh_api.measures.LightLPD('ip')
-lpdValue = [1.2,0.9,0.6]
+lpdValue = [1.2, 0.9, 0.6]
 lpd.set_datalist(lpdValue)
 
 coolCOP = bsh_api.measures.CoolingCOP()
-cop = [2.80,2.86,3.0]
+cop = [2.80, 2.86, 3.0]
 coolCOP.set_datalist(cop)
 
 # Add EEMs to parametric job
