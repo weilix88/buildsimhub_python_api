@@ -10,3 +10,9 @@ response = regular_sj.run(file_dir, wea_dir, agent=1, track=True)
 
 results = bsh.get_model(regular_sj)
 print(str(results.net_site_eui()) + " " + results.last_parameter_unit)
+
+load_profile = results.zone_load()
+print(load_profile)
+
+zl = bsh_api.postprocess.ZoneLoad(load_profile)
+print(zl.get_df())
