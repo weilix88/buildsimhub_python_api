@@ -26,7 +26,7 @@ class ParametricModel:
     def bldg_geo(self):
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._modelKey.split('|')
+        test = self._modelKey.split('-')
         if len(test) is 3:
             track = 'tracking'
 

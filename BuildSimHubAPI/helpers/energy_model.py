@@ -26,7 +26,7 @@ class Model:
     def bldg_geo(self):
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._modelKey.split('|')
+        test = self._modelKey.split('-')
         if len(test) is 3:
             track = 'tracking'
 
@@ -41,7 +41,7 @@ class Model:
     def bldg_orientation(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
 
@@ -65,7 +65,7 @@ class Model:
     def num_above_ground_floor(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
 
@@ -86,7 +86,7 @@ class Model:
     def num_total_floor(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
@@ -106,7 +106,7 @@ class Model:
     def num_zones(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
@@ -127,7 +127,7 @@ class Model:
     def num_condition_zones(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
@@ -147,7 +147,7 @@ class Model:
     def condition_floor_area(self, unit):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
@@ -172,7 +172,7 @@ class Model:
     def gross_floor_area(self, unit):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
@@ -197,7 +197,7 @@ class Model:
     def window_wall_ratio(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
@@ -220,7 +220,7 @@ class Model:
         url = self._base_url + 'GetZoneLoadInfo_API'
         track = "folder_api_key"
 
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
 
@@ -326,7 +326,7 @@ class Model:
         url = self._base_url + 'GetBuildingSimulationResults_API'
         track = "folder_api_key"
 
-        test = self._modelKey.split("|")
+        test = self._modelKey.split("-")
         if len(test) is 3:
             track = "track_token"
 

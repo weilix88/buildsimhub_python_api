@@ -68,23 +68,24 @@ class SimulationJob:
         r = requests.get(url, params=payload)
         resp_json = r.json()
 
-        if 'has_more' not in resp_json:
-            if 'error_msg' in resp_json:
-                self._trackStatus = resp_json['error_msg']
-                return False
-            else:
-                self._trackStatus = 'Finished'
-                return False
-
-        if resp_json['has_more']:
-            self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
-            return resp_json['has_more']
-        else:
-            self._trackStatus = resp_json['error_msg']        
-            return resp_json['has_more']
+        if isinstance(resp_json, list):
+            # parallel simulation
+            sim_json = dict()
+            percent = 100
+            for sim_obj in resp_json:
+                if 'has_more' in sim_obj:
+                    if sim_obj['has_more']:
+                        sim_json['has_more'] = sim_obj['has_more']
+                if 'percent' in sim_obj:
+                    if sim_obj['percent'] < percent:
+                        sim_json['percent'] = sim_obj['percent']
+                        percent = sim_obj['percent']
+                        sim_json['doing'] = sim_obj['doing']
+            resp_json = sim_json
+        return self._track_info(resp_json)
 
     def run(self, file_dir, wea_dir, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
-        url = self._base_url+ 'RunSimulationCustomize_API'
+        url = self._base_url+'RunSimulationCustomize_API'
         payload = {
             'user_api_key': self._userKey,
             'simulation_type': simulation_type,
@@ -191,3 +192,19 @@ class SimulationJob:
             return resp_json['status']
         else:
             return resp_json['error_msg']
+
+    def _track_info(self, resp_json):
+        if 'has_more' not in resp_json:
+            if 'error_msg' in resp_json:
+                self._trackStatus = resp_json['error_msg']
+                return False
+            else:
+                self._trackStatus = 'Finished'
+                return False
+
+        if resp_json['has_more']:
+            self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
+            return resp_json['has_more']
+        else:
+            #self._trackStatus = resp_json['error_msg']
+            return resp_json['has_more']

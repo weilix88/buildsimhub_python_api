@@ -40,7 +40,7 @@ class BuildSimHubAPIClient:
 
     def get_model(self, simulationJob):
         model_key = vars(simulationJob)['_trackToken']
-        test = model_key.split("|")
+        test = model_key.split("-")
         if len(test) is not 3:
             model_key = vars(simulationJob)['_modelKey']
 
