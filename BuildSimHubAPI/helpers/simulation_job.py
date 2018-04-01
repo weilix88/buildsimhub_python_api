@@ -80,7 +80,7 @@ class SimulationJob:
             self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
             return resp_json['has_more']
         else:
-            self._trackStatus = resp_json['error_msg']        
+            #self._trackStatus = resp_json['error_msg']
             return resp_json['has_more']
 
     def run(self, file_dir, wea_dir, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
