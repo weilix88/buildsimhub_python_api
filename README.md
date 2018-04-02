@@ -52,6 +52,9 @@ You can find the API key associate with your account under the profile page:
 Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `user_api_key:[YOUR_API_KEY]`
 
+## Dependencies
+- [Python-HTTP-Requests](https://github.com/requests/requests)
+
 ## Project / Model key (optional)
 If you want to do simulation under an exisiting project, you will need to retrieve the project or model keys to do it. These keys can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
 ![picture alt](https://imgur.com/gO4elTT.png)
