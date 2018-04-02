@@ -10,7 +10,6 @@ We appreciate your continued support, thank you!
 * [Latest Update](#update)
 * [Installation](#installation)
 * [Quick Start](#quick-start)
-  * [SimulationType](#simultion_type)
   * [SimulationJob](#simulation_job)
   * [Model](#energy_model)
   * [Parametric](#parametric_job)
@@ -62,33 +61,22 @@ If you want to do simulation under an exisiting project, you will need to retrie
 <a name="quick-start"></a>
 
 # Quick Start
-
-## Run simulation
-The following is the minimum needed code to initiate a regular simulation with the [helpers/simulationJob](https://github.com/weilix88/buildsimhub_python_api/tree/master/BuildSimHubAPI/helpers)
-
-### With SimulationJob Class
+### Hello BuildSim
 ```python
 from BuildSimHubAPI import buildsimhub
-
-#absolute directory to the energyplus model
-file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
-wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 ###############NOW, START THE CODE########################
 
 bsh = buildsimhub.BuildSimHubAPIClient()
 new_sj = bsh.new_simulation_job()
-response = new_sj.run(file_dir,wea_dir)
-
-############### WE DONE! #################################
-
-#You can print the responses to verify whether the simulation
-#is success or not.
-print (response)
+new_sj.run("/Users/weilixu/Desktop/5ZoneAirCooled.idf"
+          ,"/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
+          , track=True)
 ```
+
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
 From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `run()` method with parameters can start the cloud simulation.
 
-### Track Cloud simulation progress
+## Retrieve Cloud simulation results
 ```python
 from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
@@ -98,33 +86,8 @@ file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 
 new_sj = bsh.new_simulation_job()
-response = new_sj.run(file_dir,wea_dir)
+new_sj.run(file_dir, wea_dir, track=True)
 
-######BELOW ARE THE CODE TO TRACK SIMULATION#########
-if(response == 'success'):
-  while new_sj.track_simulation():
-    print (new_sj.trackStatus)
-    time.sleep(5)
-```
-As mentioned previously, [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) manages the entire workflow of the simulation. So once a cloud simulation is successfully started by the [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class, you can simply call `track_simulation()` function to receive the simulation progress. You have to call `track_simulation()` first to update the `trackStatus` of the simulation job.
-
-### Retrieve Cloud simulation results
-```python
-from BuildSimHubAPI import buildsimhub
-bsh = buildsimhub.BuildSimHubAPIClient()
-
-#absolute directory to the energyplus model
-file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
-wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
-
-new_sj = bsh.new_simulation_job()
-response = new_sj.run(file_dir, wea_dir)
-
-if(response == 'success'):
-  while new_sj.track_simulation():
-    print (new_sj.trackStatus)
-    time.sleep(5)
-  
 ######BELOW ARE THE CODE TO RETRIEVE SIMULATION RESULTS#########
 response = new_sj.get_simulation_results('html')
 print(response)
@@ -132,18 +95,7 @@ print(response)
 If the simulation job is completed, you can get results by calling `get_simulation_results(type)` function. The function will immediately return the requested results in text format.
 
 <a name="functions"></a>
-
 #Object and Functions
-<a name="simultion_type"></a>
-## simulationType
-[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. Currently, there are two simulation types available, `regular` and `parametric`. This class also helps you control the number of agent you can use for one simulation job. The number of agents specify how you would like to speed up your simulations.
-You can increase the number of agent by calling the `increase_agents()` function.
-```python
-simulationType = bsh.get_simulation_type()
-num_of_agents = simulationType.increase_agents();
-print (num_of_agents)
-```
-It should be noted that the maximum number of agents working on one simulation job is limited to 4, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `reset_agent()` function to reset the number of agent to 1.
 
 <a name="simulation_job"></a>
 ## SimulationJob
@@ -167,15 +119,6 @@ This method returns two types of information:
 If sucess: `success`
 or error message states what was wrong in your request.
 
-### create_model
-The `create_model()` function allows you to upload an energy model to the platform with no simulation. It has in total 2 parameters.
-1. `file_dir` (required)
-2. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`.
-
-This method returns two types of information:
-If sucess: `success`
-or error message states what was wrong in your request.
-
 ### create_run_model
 The `create_run_model()` function allows you to upload an energy model to the platform and run simulaiton. It has in total 4 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
@@ -188,20 +131,6 @@ This method returns two types of information:
 If sucess: `success`
 or error message states what was wrong in your request.
 
-### run_model_simulation
-The `run_simulation()` function can be called inside a simulation job if the simulation is not conducted. The function has two parameters:
-1. `unit` (optional)
-2. `agent` (optional)
-3. `simulation_type` (optional)
-
-### track_simulaiton
-The `track_simulation()` function does not require any parameters. However, it is required that a successful cloud simulation is created and running on the cloud. Otherwise, you will receive this message by calling this function:
-`No simulation is running or completed in this Job - please start simulation using create_run_Model method.`
-If there is a simulation running on the cloud for this simulationJob, then, this function will return `true` and you can retrieve the simulation status by get the class parameter `trackStatus`. Example code is below:
-```python
-if(newSimulationJob.track_simulation()):
-  print(newSimulationJob.trackStatus)
-```
 ### get_simulation_results
 The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
 ```python
@@ -210,8 +139,8 @@ print (response)
 ```
 ### Misc. methods and variables:
 Besides the above functions, you can also retrieve some properties of the simulation job:
-1. *trackStatus*: get the tracking status of a running cloud simulation job
-2. *trackToken*: get the tracking token used for connecting the cloud simulation.
+1. *trackToken*: get the tracking token used for connecting the cloud simulation.
+2. *modelKey*: get the model key which connects to a branch of models
 
 <a name="energy_model"></a>
 ## Model
@@ -235,6 +164,7 @@ model = bsh.get_model(newSj)
 `
 6. *window_wall_ratio()*: can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
 7. *bldg_orientation()*: can be called before simulation is completed. It returns the orientation of the building.
+8. *bldg_geo()*: open the browser to view the model 3D geometry
 
 ### Post-simulation methods
 1. *new_site_eui()*: It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
@@ -272,9 +202,8 @@ load_profile = model_result.zone_load()
 #[{'zone_name': 'SPACE1-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': -7804.11, 'cooling_load': 7461.61, #'heating_load_density': -78.70219846712384, 'cooling_load_density': 75.2481847519161, 'heating_load_density_unit': 'W/m2', #'cooling_load_density_unit': 'W/m2', 'cooling_peak_load_time': '7/21 15:45:00', 'heating_peak_load_time': '1/21 24:00:00'}, {'zone_name': #'SPACE5-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': -6165.32, 'cooling_load': 8356.869999999999, #'heating_load_density': -33.78442654392021, 'cooling_load_density': 45.793577730286586, 'heating_load_density_unit': 'W/m2', #'cooling_load_density_unit': 'W/m2', 'cooling_peak_load_time': '7/21 15:00:00', 'heating_peak_load_time': '1/21 24:00:00'}]
 ```
 
-
 ### Misc. methods and variables
-1. lastParameterUnit: You can check the value of the variable requested by the most recent API call.
+1. last_parameter_unit: You can check the value of the variable requested by the most recent API call.
 ```python
 m = new_sj.model
 print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
@@ -315,12 +244,7 @@ new_pj.add_model_action(wwr)
 
 # estimate runs and submit job
 # print(newPj.num_total_combination())
-new_pj.submit_parametric_study()
-
-# track job progress
-while (newPj.track_simulation()):
-    print(newPj.get_status())
-    time.sleep(5)
+new_pj.submit_parametric_study(track=True)
 ```
 The full list of EEMs currently available through python API is listed in [EEM library](#(#eems).
 
@@ -419,6 +343,9 @@ Standard EEMs library allows user to upload any IDF models (early stage, schemat
 11. CoolingChillerCOP: This measure will change the cooling efficiencies of chillers only. The efficiency measure is COP. If chillers in the seed model have higher COP then the user specified, then their COP will remain the same.
 
 12. HeatingEfficiency: This measure will change the heating efficiencies of coils and boilers. The efficiency measure is either COP or percent. If user specified data is equal or smaller than 1.0, then this measure will only apply to the heating devices that has heating efficiencies such as boilers or coil:heating:fuel. If user specified data is greater than 1, then this measure will apply to the heating devices that use COP as efficiency metric, such as coil:dx:heating:singlespeed. Similarly, if the heating devices in the seed model have higher efficiencies than user specified, then the measure will not be effective.
+
+## New EEMs
+1. WWR South/East/West/North: These are a group of measures that can be used individually to change the window wall ratio of facades facing different orientations.
 
 ## How to use
 ```python
