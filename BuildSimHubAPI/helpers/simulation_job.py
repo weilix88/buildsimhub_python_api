@@ -1,4 +1,5 @@
 import requests
+from .energy_model import Model
 import json
 import time
 
@@ -102,8 +103,10 @@ class SimulationJob:
             'weather_file': open(wea_dir,'rb')
         }
 
+        print("Submitting simulation request...")
         r = requests.post(url, data=payload, files=files)
         resp_json = r.json()
+        print("Received server response")
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
@@ -111,11 +114,15 @@ class SimulationJob:
                 while self.track_simulation():
                     print(self.trackStatus)
                     time.sleep(request_time)
-            print(self.trackStatus)
-            if self.trackStatus is 'Simulation finished successfully':
-                return True
+            if self.trackStatus == 'Simulation finished successfully':
+                print(self.trackStatus)
+                # check whether there is requested data
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                res = Model(self._userKey, self._trackToken, self._base_url)
+                return res
             else:
-                return False
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                return True
         else:
             print(resp_json['error_msg'])
             return False
@@ -134,16 +141,26 @@ class SimulationJob:
             'unit': unit
         }
 
+        print("Submitting simulation request...")
         r = requests.post(url, data=payload)
         resp_json = r.json()
+        print("Received server response")
+
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
             if track:
                 while self.track_simulation():
                     print(self.trackStatus)
                     time.sleep(request_time)
-            return self._trackToken
-
+            if self.trackStatus is 'Simulation finished successfully':
+                print(self.trackStatus)
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                # check whether there is requested data
+                res = Model(self._userKey, self._trackToken, self._base_url)
+                return res
+            else:
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                return True
         else:
             return resp_json['error_msg']
 
@@ -162,8 +179,10 @@ class SimulationJob:
             'file': open(file_dir, 'rb')
         }
 
-        r = requests.post(url, data=payload, files = files)
+        print("Submitting simulation request...")
+        r = requests.post(url, data=payload, files=files)
         resp_json = r.json()
+        print("Received server response")
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
@@ -171,8 +190,15 @@ class SimulationJob:
                 while self.track_simulation():
                     print(self.trackStatus)
                     time.sleep(request_time)
-            return self._trackToken
-
+            if self.trackStatus is 'Simulation finished successfully':
+                print(self.trackStatus)
+                # check whether there is requested data
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                res = Model(self._userKey, self._trackToken, self._base_url)
+                return res
+            else:
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                return True
         else:
             return resp_json['error_msg']
 
@@ -217,5 +243,5 @@ class SimulationJob:
         else:
             if resp_json['percent'] == 100:
                 self._trackStatus = resp_json['msg']
-            #self._trackStatus = resp_json['error_msg']
+            # self._trackStatus = resp_json['error_msg']
             return resp_json['has_more']

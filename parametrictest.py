@@ -25,17 +25,19 @@ new_pj.add_model_measure(wwr)
 new_pj.add_model_measure(lpd)
 new_pj.add_model_measure(heatEff)
 
-#Start!
-new_pj.submit_parametric_study(track=True)
+# Start!
+results = new_pj.submit_parametric_study(track=True)
 
-# Collect results
-results = bsh.get_parametric_results(new_pj)
+if results:
 
-result_dict = results.net_site_eui()
-result_unit = results.last_parameter_unit
+    # Collect results
+    results = bsh.get_parametric_results(new_pj)
 
-# Plot
-plot = bsh_api.postprocess.ParametricPlot(result_dict, result_unit)
+    result_dict = results.net_site_eui()
+    result_unit = results.last_parameter_unit
 
-plot.scatter_chart_plotly("Scatter plot demo")
-plot.parallel_coordinate_plotly('LPD')
+    # Plot
+    plot = bsh_api.postprocess.ParametricPlot(result_dict, result_unit)
+
+    plot.scatter_chart_plotly("Scatter plot demo")
+    plot.parallel_coordinate_plotly('LPD')

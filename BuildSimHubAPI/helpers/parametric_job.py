@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+from .parametric_model import ParametricModel
 
 
 class ParametricJob():
@@ -60,7 +61,9 @@ class ParametricJob():
             'model': open(file_dir, 'rb')
         }
 
+        print('Submitting parametric simulation job request...')
         r = requests.post(url, data=payload, files=files)
+        print('Received server response')
 
         resp_json = r.json()
 
@@ -70,11 +73,15 @@ class ParametricJob():
                 while self.track_simulation():
                     print(self._trackStatus)
                     time.sleep(request_time)
-            return self._trackToken
-
+                print(self._trackStatus)
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                res = ParametricModel(self._userKey, self._trackToken, self._base_url)
+                return res
+            else:
+                return True
         else:
-            return resp_json['error_msg']
-
+            print(resp_json['error_msg'])
+            return False
     # For this method, it allows user to upload energy model from local machine, along with the weather file
     # this will creates a new project each time and run the parametric simulation.
     #    def submit_parametric_study_local(self, file_dir, wea_dir, simulationType ="parametric"):
@@ -122,9 +129,9 @@ class ParametricJob():
             payload[action.get_api_name()] = action.get_data_string()
 
         # return payload
-
+        print('Submitting parametric simulation job request...')
         r = requests.post(url, data=payload)
-
+        print('Received server response')
         resp_json = r.json()
 
         if resp_json['status'] == 'success':
@@ -133,10 +140,15 @@ class ParametricJob():
                 while self.track_simulation():
                     print(self._trackStatus)
                     time.sleep(request_time)
-            return self._trackToken
-
+                print(self._trackStatus)
+                print('Completed! You can retrieve results using the key: '+self._trackToken)
+                res = ParametricModel(self._userKey, self._trackToken, self._base_url)
+                return res
+            else:
+                return True
         else:
-            return resp_json['error_msg']
+            print(resp_json['error_msg'])
+            return False
 
     def track_simulation(self):
         if self._trackToken == "":
