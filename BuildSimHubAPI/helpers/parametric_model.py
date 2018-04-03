@@ -130,6 +130,10 @@ class ParametricModel:
 
         r = requests.get(url, params=payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         value = list()
         model = list()
         model_plot = list()

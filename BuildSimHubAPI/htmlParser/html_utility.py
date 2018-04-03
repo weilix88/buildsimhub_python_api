@@ -11,10 +11,3 @@ def extract_value_from_table(content, report, table, column_name, row_name, repo
     parser = NumericValueParser(report, table, column_name, row_name, reportFor)
     parser.feed(content)
     return {'value':parser.data, 'unit':parser.unit}
-
-###############LOCAL TEST########################
-#tableReader = NumericValueParser('Climatic Data Summary','Sizing Period Design Day','Maximum Dry Bulb','CHICAGO ANN HTG 99.6% CONDNS DB')
-#file = open('testTable.html', 'r') 
-#tableReader.feed(file.read())
-#print(tableReader.data)
-#print(tableReader.unit)
