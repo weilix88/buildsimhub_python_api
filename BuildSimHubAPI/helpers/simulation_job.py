@@ -55,7 +55,10 @@ class SimulationJob:
         f = ""
         if r.status_code == 200:
             f = r.text
-        return f
+            return f
+        else:
+            print('Code: ' + r.status_code)
+            return False
 
     def track_simulation(self):
         if self._trackToken == "":
@@ -106,6 +109,9 @@ class SimulationJob:
         print("Submitting simulation request...")
         r = requests.post(url, data=payload, files=files)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
         print("Received server response")
 
         if resp_json['status'] == 'success':
@@ -144,6 +150,9 @@ class SimulationJob:
         print("Submitting simulation request...")
         r = requests.post(url, data=payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
         print("Received server response")
 
         if resp_json['status'] == 'success':
@@ -182,6 +191,10 @@ class SimulationJob:
         print("Submitting simulation request...")
         r = requests.post(url, data=payload, files=files)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         print("Received server response")
 
         if resp_json['status'] == 'success':
@@ -218,8 +231,11 @@ class SimulationJob:
         }
         
         r = requests.post(url, data=payload, files=files)
-        
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         print(resp_json)
 
         if resp_json['status'] == 'success':

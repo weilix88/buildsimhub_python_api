@@ -53,6 +53,10 @@ class Model:
 
         r = requests.get(url, params=payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             value = data['value']
@@ -76,12 +80,16 @@ class Model:
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             self._last_parameter_unit = 'floor'
             return data['total_cond_floor']
         else:
-            return resp_json['error_msg']
+            return -1
 
     def num_total_floor(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
@@ -96,12 +104,16 @@ class Model:
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             self._last_parameter_unit = 'floor'
             return data['total_floor']
         else:
-            return resp_json['error_msg']
+            return -1
 
     def num_zones(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
@@ -117,12 +129,16 @@ class Model:
 
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             self._last_parameter_unit = 'zones'
             return data['value']
         else:
-            return resp_json['error_msg']
+            return -1
 
     def num_condition_zones(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
@@ -137,12 +153,16 @@ class Model:
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             self._last_parameter_unit = 'zones'
             return data['value']
         else:
-            return resp_json['error_msg']
+            return -1
 
     def condition_floor_area(self, unit):
         url = self._base_url + 'GetBuildingBasicInfo_API'
@@ -157,6 +177,10 @@ class Model:
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             value = float(data['value'])
@@ -182,6 +206,10 @@ class Model:
         }
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             value = float(data['value'])
@@ -207,6 +235,10 @@ class Model:
         }
         r = requests.get(url, params=payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             value = data['value']
@@ -234,6 +266,10 @@ class Model:
 
         r = requests.get(url, params=payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             zone_list = resp_json['data']
             return zone_list
@@ -338,6 +374,10 @@ class Model:
 
         r = requests.get(url, params = payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+
         if resp_json['status'] == 'success':
             data = resp_json['data']
             value = data['value']

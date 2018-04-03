@@ -63,9 +63,11 @@ class ParametricJob():
 
         print('Submitting parametric simulation job request...')
         r = requests.post(url, data=payload, files=files)
-        print('Received server response')
-
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+        print('Received server response')
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
@@ -131,8 +133,11 @@ class ParametricJob():
         # return payload
         print('Submitting parametric simulation job request...')
         r = requests.post(url, data=payload)
-        print('Received server response')
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
+        print('Received server response')
 
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
@@ -162,6 +167,9 @@ class ParametricJob():
 
         r = requests.get(url, params=payload)
         resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            return False
 
         if 'error_msg' in resp_json:
             self._trackStatus = resp_json['error_msg']
