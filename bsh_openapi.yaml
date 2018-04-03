@@ -16,17 +16,16 @@ schemes:
 paths:
   /RunSimulationCustomize_API:
     post:
-      summary: simulate an energy model (IDF format) on cloud
+      summary: Simulate an energy model (IDF format) on cloud
       description: >-
-        This API allows user to upload an EnergyPlus model and run the model or
-        not.
+        This API allows user to upload an EnergyPlus model and a weather file and run the model or not.
       consumes:
         - multipart/form-data
       parameters:
         - name: user_api_key
           in: query
           required: true
-          description: The user api key for accessing the service
+          description: The user api key for accessing the service, can be found or updated in user profile page
           type: string
         - name: unit
           in: query
@@ -39,7 +38,7 @@ paths:
           required: false
           description: 'simulation agents, 1,2 or 4'
           type: integer
-          enum: [1,2,3]
+          enum: [1,2,4]
         - in: formData
           name: model
           type: file
@@ -52,80 +51,166 @@ paths:
           description: Weather file (.epw)
       responses:
         '200':
-          description: message describing simulation
+          description: Message describing simulation
           schema:
             type: object
             properties:
               status:
                 type: string
-                description: error or success
-              error_msg:
-                type: string
-                description: possible error message
+                example: success
               tracking:
                 type: string
                 description: the simulaton job key to access simulation status and results
+                example: 12-101-250
+        '460':
+          description: Invalid user api key
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Given user API key doesn't match any account
+        '461':
+          description: Invalid API request parameter
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Currently we only support IDF model
+        '464':
+          description: Simulation request failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Requested agents number is more than total agents number
+        '466':
+          description: Parse uploaded model or weather file failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Cannot read uploaded model file or weather file
   /TrackSimulation_API:
     get:
-      summary: get a simulation status
+      summary: Get a simulation status
       description: This API request allows user to receive the simulation status of a specific model
       parameters:
         - name: user_api_key
           in: query
           required: true
-          description: The user api key for accessing the service
+          description: The user api key for accessing the service, can be found or updated in user profile page
           type: string
         - name: track_token
           in: query
           required: true
           type: string
-          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          description: The tracking token to access a model, returend by other API request
       responses:
         '200':
-          description: successfully received the request
+          description: successfully received the request response
           schema:
             type: object
             properties:
               status:
                 type: string
-                description: error or success
-              error_msg:
-                type: string
-                description: possible error message
+                example: success
               has_more:
                 type: boolean
                 description: indicate whether the simulation is completed or not
               doing:
                 type: string
                 description: indicates the simulation progress
+                example: Connecting to simulation engine
               percent:
                 type: integer
                 description: the percentage of the simulation that is completed
               is_queued:
                 type: boolean
-                description: indicate whether this simulation is queued
+                description: indicate whether this simulation is queued, optional
+                example: true
               queue_position:
                 type: integer
-                description: indicates the position of this simulation in the queue
+                description: indicates the position of this simulation in the queue, optional
+                example: 3
+        '460':
+          description: Invalid user api key
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Given user API key doesn't match any account
+        '461':
+          description: Invalid API request parameter
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Tracking token is not valid
+        '462':
+          description: Resource access denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: You don't have access to this model
+        '465':
+          description: Abnormal simulation result or status
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Simulation terminated with error
   /GetBuildingBasicInfo_API:
     get:
-      summary: get a model information
+      summary: Get a model basic information
       description: API request to retrieve model information
       parameters:
         - name: user_api_key
           in: query
           required: true
-          description: The user api key for accessing the service
+          description: The user api key for accessing the service, can be found or updated in user profile page
           type: string
         - name: folder_api_key
           in: query
           required: false
-          description: The folder where the model located (either this or the track_token has to be filled)
+          description: The folder where the model located (either this or the track_token has to be filled), can be found in folder information side bar
           type: string
         - name: track_token
           in: query
           required: false
-          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled), returned by other API request
           type: string
         - name: request_data
           in: query
@@ -135,38 +220,96 @@ paths:
           enum: ['BuildingStories','ConditionedZoneNumber','ZoneFloorArea','ConditionedZoneFloorArea','TotalWindowWallRatio','TotalZoneNumber','Orientation']
       responses:
         '200':
-          description: successfully received the request
+          description: Successfully received the request
           schema:
             type: object
             properties:
               status:
                 type: string
-                description: error or success
-              error_msg:
-                type: string
-                description: possible error message
+                example: success
               data:
                 type: object
                 description: data contains in either string or object format
+                properties:
+                  value:
+                    description: basic information value, string, numeric or array
+                    example: 0.5
+                  type:
+                    type: string
+                    description: value's type if value is a single value, or element\'s type if value is an array, either string or numeric
+                    example: Numeric
+                    enum: ['String', 'Numeric']
+                  collection:
+                    type: boolean
+                    description: indicate whether value is an array
+                    example: false
+                  unit:
+                    type: string
+                    description: indicate the unit
+                    example: kWh
+        '460':
+          description: Invalid user api key
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Given user API key doesn't match any account
+        '461':
+          description: Invalid API request parameter
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Tracking token is not valid
+        '462':
+          description: Resource access denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: You don't have access to this model
+        '467':
+          description: Access model failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Convert OSM to IDF is still in process...
   /GetBuildingSimulationResults_API:
     get:
-      summary: get simulation results information
+      summary: Get simulation results
       description: API request to retrieve model simulation results
       parameters:
         - name: user_api_key
           in: query
           required: true
-          description: The user api key for accessing the service
+          description: The user api key for accessing the service, can be found or updated in user profile page
           type: string
         - name: folder_api_key
           in: query
           required: false
-          description: The folder where the model located (either this or the track_token has to be filled)
+          description: The folder where the model located (either this or the track_token has to be filled), can be found in folder information side bar
           type: string
         - name: track_token
           in: query
           required: false
-          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled), returned by other API request
           type: string
         - name: request_data
           in: query
@@ -188,13 +331,82 @@ paths:
             properties:
               status:
                 type: string
-                description: error or success
-              error_msg:
-                type: string
-                description: possible error message
+                example: success
               data:
                 type: object
                 description: data contains in either string or object format
+                properties:
+                  value:
+                    description: basic information value, string, numeric or array
+                    example: 0.5
+                  type:
+                    type: string
+                    description: value's type if value is a single value, or element\'s type if value is an array, either string or numeric
+                    example: Numeric
+                    enum: ['String', 'Numeric']
+                  collection:
+                    type: boolean
+                    description: indicate whether value is an array
+                    example: false
+                  unit:
+                    type: string
+                    description: indicate the unit
+                    example: kWh
+        '460':
+          description: Invalid user api key
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Given user API key doesn't match any account
+        '461':
+          description: Invalid API request parameter
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Tracking token is not valid
+        '462':
+          description: Resource access denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: You don't have access to this model
+        '465':
+          description: Abnormal simulation result or status
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: No HTML is produced for this simulation job
+        '467':
+          description: Access model failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Unrecogonized model, please contact the BuildSimHub team at contact@buildsim.io for more info
   /GetZoneLoadInfo_API:
     get:
       summary: retrieve a model's zone load information
@@ -203,17 +415,17 @@ paths:
         - name: user_api_key
           in: query
           required: true
-          description: The user api key for accessing the service
+          description: The user api key for accessing the service, can be found or updated in user profile page
           type: string
         - name: folder_api_key
           in: query
           required: false
-          description: The folder where the model located (either this or the track_token has to be filled)
+          description: The folder where the model located (either this or the track_token has to be filled), can be found in folder information side bar
           type: string
         - name: track_token
           in: query
           required: false
-          description: The tracking token to access a model (either this or the folder_api_key has to be filled)
+          description: The tracking token to access a model (either this or the folder_api_key has to be filled), returned by other API request
           type: string
         - name: zone_name
           in: query
@@ -228,10 +440,70 @@ paths:
             properties:
               status:
                 type: string
-                description: error or success
-              error_msg:
-                type: string
-                description: possible error message
+                example: success
               data:
                 type: object
                 description: data contains in either string or object format
+                properties:
+                  zone_name:
+                    type: string
+                    example: 'zone-1'
+                  floor_area:
+                    type: number
+                    example: 400
+                  floor_area_unit:
+                    type: string
+                    example: 'ft2'
+                  cooling_peak_load_time:
+                    type: string
+                  heating_peak_load_time:
+                    type: string
+                  data:
+                    type: object
+                    description: zone load
+                    properties:
+                      cooling_unit:
+                        type: string
+                      cooling:
+                        type: array
+                        items:
+                          type: object
+                      heating_unit:
+                        type: string
+                      heating:
+                        type: array
+                        items:
+                          type: object
+        '460':
+          description: Invalid user api key
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Given user API key doesn't match any account
+        '461':
+          description: Invalid API request parameter
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: Tracking token is not valid
+        '462':
+          description: Resource access denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              error_msg:
+                type: string
+                example: You don't have access to this model
