@@ -68,6 +68,10 @@ class SimulationJob:
         r = requests.get(url, params=payload)
         resp_json = r.json()
 
+        if 'severe_error' in resp_json:
+            self._trackStatus = resp_json['severe_error']
+            return False
+
         if isinstance(resp_json, list):
             # parallel simulation
             sim_json = dict()
@@ -100,16 +104,21 @@ class SimulationJob:
 
         r = requests.post(url, data=payload, files=files)
         resp_json = r.json()
+
         if resp_json['status'] == 'success':
             self._trackToken = resp_json['tracking']
             if track:
                 while self.track_simulation():
                     print(self.trackStatus)
                     time.sleep(request_time)
-            return self._trackToken
-
+            print(self.trackStatus)
+            if self.trackStatus is 'Simulation finished successfully':
+                return True
+            else:
+                return False
         else:
-            return resp_json['error_msg']
+            print(resp_json['error_msg'])
+            return False
 
     def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular", track=False, request_time=5):
         url = self._base_url + 'RunSimulation_API'
@@ -206,5 +215,7 @@ class SimulationJob:
             self._trackStatus = resp_json['doing'] + " " + str(resp_json['percent']) + "%"
             return resp_json['has_more']
         else:
+            if resp_json['percent'] == 100:
+                self._trackStatus = resp_json['msg']
             #self._trackStatus = resp_json['error_msg']
             return resp_json['has_more']
