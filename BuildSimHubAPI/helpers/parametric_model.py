@@ -12,9 +12,9 @@ class ParametricModel:
     BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, userKey, model_key, base_url=None):
-        self._userKey = userKey
+        self._user_key = userKey
         self._last_parameter_unit = ""
-        self._modelKey = model_key
+        self._model_key = model_key
         self._base_url = ParametricModel.BASE_URL
         if base_url is not None:
             self._base_url = base_url
@@ -26,13 +26,13 @@ class ParametricModel:
     def bldg_geo(self):
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._modelKey.split('-')
+        test = self._model_key.split('-')
         if len(test) is 3:
             track = 'tracking'
 
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
         }
 
         r = requests.get(url, params=payload)
@@ -123,8 +123,8 @@ class ParametricModel:
     def __call_api(self, request_data):
         url = self._base_url + 'ParametricResults_API'
         payload = {
-            'user_api_key': self._userKey,
-            'folder_api_key': self._modelKey,
+            'user_api_key': self._user_key,
+            'folder_api_key': self._model_key,
             'request_data': request_data
         }
 

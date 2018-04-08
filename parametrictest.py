@@ -2,31 +2,19 @@ import BuildSimHubAPI as bsh_api
 import time
 
 # 1. set your folder key
-model_key = '39ed84d0-062b-470d-96e6-b03abff9c31c'
+model_key = '553de3da-a092-4245-a456-3f81f036a6db'
 
 bsh = bsh_api.BuildSimHubAPIClient()
 new_pj = bsh.new_parametric_job(model_key)
 
 # Define EEMs
-wwr = bsh_api.measures.WindowWallRatio()
-wwr_ratio = [0.6, 0.4, 0.2]
-wwr.set_datalist(wwr_ratio)
-
-lpd = bsh_api.measures.LightLPD('ip')
-lpdValue = [1.2, 0.9, 0.6]
-lpd.set_datalist(lpdValue)
-
-heatEff = bsh_api.measures.HeatingEfficiency()
-cop = [0.8, 0.86, 0.92]
-heatEff.set_datalist(cop)
+dds = bsh_api.measures.DaylightingSensor()
 
 # Add EEMs to parametric job
-new_pj.add_model_measure(wwr)
-new_pj.add_model_measure(lpd)
-new_pj.add_model_measure(heatEff)
+new_pj.add_model_measure(dds)
 
 # Start!
-results = new_pj.submit_parametric_study(track=True)
+results = new_pj.submit_parametric_study(track=True, unit='si')
 
 if results:
 

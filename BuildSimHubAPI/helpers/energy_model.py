@@ -12,9 +12,9 @@ class Model:
     BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, user_key, model_key, base_url=None):
-        self._userKey = user_key
+        self._user_key = user_key
         self._last_parameter_unit = ""
-        self._modelKey = model_key
+        self._model_key = model_key
         self._base_url = Model.BASE_URL
         if base_url is not None:
             self._base_url = base_url
@@ -26,13 +26,13 @@ class Model:
     def bldg_geo(self):
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._modelKey.split('-')
+        test = self._model_key.split('-')
         if len(test) is 3:
             track = 'tracking'
 
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
         }
 
         r = requests.get(url, params=payload)
@@ -41,13 +41,13 @@ class Model:
     def bldg_orientation(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'Orientation'
         }
 
@@ -69,13 +69,13 @@ class Model:
     def num_above_ground_floor(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'BuildingStories'
         }
         r = requests.get(url, params = payload)
@@ -94,12 +94,12 @@ class Model:
     def num_total_floor(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'BuildingStories'
         }
         r = requests.get(url, params = payload)
@@ -118,12 +118,12 @@ class Model:
     def num_zones(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'TotalZoneNumber'
         }
 
@@ -143,12 +143,12 @@ class Model:
     def num_condition_zones(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'ConditionedZoneNumber'
         }
         r = requests.get(url, params = payload)
@@ -167,12 +167,12 @@ class Model:
     def condition_floor_area(self, unit):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'ConditionedZoneFloorArea'
         }
         r = requests.get(url, params = payload)
@@ -196,12 +196,12 @@ class Model:
     def gross_floor_area(self, unit):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'ZoneFloorArea'
         }
         r = requests.get(url, params = payload)
@@ -225,12 +225,12 @@ class Model:
     def window_wall_ratio(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
             'request_data': 'TotalWindowToWallRatio'
         }
         r = requests.get(url, params=payload)
@@ -252,13 +252,13 @@ class Model:
         url = self._base_url + 'GetZoneLoadInfo_API'
         track = "folder_api_key"
 
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey
+            'user_api_key': self._user_key,
+            track: self._model_key
         }
 
         if zone_name is not None:
@@ -362,13 +362,13 @@ class Model:
         url = self._base_url + 'GetBuildingSimulationResults_API'
         track = "folder_api_key"
 
-        test = self._modelKey.split("-")
+        test = self._model_key.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._userKey,
-             track: self._modelKey,
+            'user_api_key': self._user_key,
+             track: self._model_key,
             'request_data': request_data
         }
 

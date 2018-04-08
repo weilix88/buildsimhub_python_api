@@ -9,10 +9,10 @@ class ParametricJob():
     BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, userKey, mk, base_url=None):
-        self._userKey = userKey
-        self._modelKey = mk
-        self._trackToken = ""
-        self._trackStatus = ""
+        self._user_key = userKey
+        self._model_key = mk
+        self._track_token = ""
+        self._track_status = ""
         # list of data
         self._model_action_list = list()
         self._base_url = ParametricJob.BASE_URL
@@ -20,11 +20,11 @@ class ParametricJob():
             self._base_url = base_url
 
     @property
-    def trackToken(self):
-        return self._trackToken
+    def track_token(self):
+        return self._track_token
 
     def get_status(self):
-        return self._trackStatus
+        return self._track_status
 
     def add_model_measures(self, measures):
         for measure in measures:
@@ -46,8 +46,8 @@ class ParametricJob():
         # file_dir indicates the seed model
         url = self._base_url + 'ParametricSettingUploadModel_API'
         payload = {
-            'user_api_key': self._userKey,
-            'project_api_key': self._modelKey,
+            'user_api_key': self._user_key,
+            'project_api_key': self._model_key,
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit
@@ -63,6 +63,9 @@ class ParametricJob():
 
         print('Submitting parametric simulation job request...')
         r = requests.post(url, data=payload, files=files)
+        if r.status_code == 500:
+            print('Code: ' + r.status_code)
+            return False
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -70,14 +73,14 @@ class ParametricJob():
         print('Received server response')
 
         if resp_json['status'] == 'success':
-            self._trackToken = resp_json['tracking']
+            self._track_token = resp_json['tracking']
             if track:
                 while self.track_simulation():
-                    print(self._trackStatus)
+                    print(self._track_status)
                     time.sleep(request_time)
-                print(self._trackStatus)
-                print('Completed! You can retrieve results using the key: '+self._trackToken)
-                res = ParametricModel(self._userKey, self._trackToken, self._base_url)
+                print(self._track_status)
+                print('Completed! You can retrieve results using the key: '+self._track_token)
+                res = ParametricModel(self._user_key, self._track_token, self._base_url)
                 return res
             else:
                 return True
@@ -90,7 +93,7 @@ class ParametricJob():
     # file_dir indicates the seed model
     #        url = ParametricJob.BASE_URL + 'CreateModel_API'
     #        payload = {
-    #            'user_api_key': self._userKey,
+    #            'user_api_key': self._user_key,
     #            'simulation_type': simulationType,
     #            'agents':1
     #        }
@@ -108,7 +111,7 @@ class ParametricJob():
     #        resp_json = r.json()
 
     #        if(resp_json['status'] == 'success'):
-    #            self._trackToken = resp_json['tracking']
+    #            self._track_token = resp_json['tracking']
     #            return resp_json['status']
     #        else:
     #            return resp_json['error_msg']
@@ -119,8 +122,8 @@ class ParametricJob():
 
         url = self._base_url + 'ParametricSettingCopyModel_API'
         payload = {
-            'user_api_key': self._userKey,
-            'model_api_key': self._modelKey,
+            'user_api_key': self._user_key,
+            'model_api_key': self._model_key,
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit
@@ -133,6 +136,9 @@ class ParametricJob():
         # return payload
         print('Submitting parametric simulation job request...')
         r = requests.post(url, data=payload)
+        if r.status_code == 500:
+            print('Code: ' + r.status_code)
+            return False
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -140,14 +146,14 @@ class ParametricJob():
         print('Received server response')
 
         if resp_json['status'] == 'success':
-            self._trackToken = resp_json['tracking']
+            self._track_token = resp_json['tracking']
             if track:
                 while self.track_simulation():
-                    print(self._trackStatus)
+                    print(self._track_status)
                     time.sleep(request_time)
-                print(self._trackStatus)
-                print('Completed! You can retrieve results using the key: '+self._trackToken)
-                res = ParametricModel(self._userKey, self._trackToken, self._base_url)
+                print(self._track_status)
+                print('Completed! You can retrieve results using the key: '+self._track_token)
+                res = ParametricModel(self._user_key, self._track_token, self._base_url)
                 return res
             else:
                 return True
@@ -156,13 +162,13 @@ class ParametricJob():
             return False
 
     def track_simulation(self):
-        if self._trackToken == "":
-            return self._trackStatus
+        if self._track_token == "":
+            return self._track_status
 
         url = self._base_url + 'ParametricTracking_API'
         payload = {
-            'user_api_key': self._userKey,
-            'folder_api_key': self._trackToken
+            'user_api_key': self._user_key,
+            'folder_api_key': self._track_token
         }
 
         r = requests.get(url, params=payload)
@@ -172,7 +178,7 @@ class ParametricJob():
             return False
 
         if 'error_msg' in resp_json:
-            self._trackStatus = resp_json['error_msg']
+            self._track_status = resp_json['error_msg']
             return False
 
         success = float(resp_json['success'])
@@ -183,7 +189,7 @@ class ParametricJob():
         totalProgress = (success + error) / (success + running + error + queue)
 
         message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
-        self._trackStatus = message % (totalProgress * 100, success, error, running, queue)
+        self._track_status = message % (totalProgress * 100, success, error, running, queue)
 
         if totalProgress == 1:
             return False
