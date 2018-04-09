@@ -1,6 +1,8 @@
-import requests
 import time
+from .httpurllib import request_get
+from .httpurllib import request_post
 from .parametric_model import ParametricModel
+from .compat import is_py2
 
 
 class ParametricJob:
@@ -61,18 +63,22 @@ class ParametricJob:
             measure = self._model_action_list[i]
             payload[measure.get_api_name()] = measure.get_data_string()
 
-        files = {
-            'model': open(file_dir, 'rb')
-        }
+        files = dict()
+
+        if is_py2:
+            files['model'] = open(file_dir, 'r')
+        else:
+            # py3 cannot decode incompatible utf-8 string
+            files['model'] = open(file_dir, 'r', errors='ignore')
 
         print('Submitting parametric simulation job request...')
-        r = requests.post(url, data=payload, files=files)
+        r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
-            print('Code: ' + r.status_code)
+            print('Code: ' + str(r.status_code))
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
         print('Received server response')
 
@@ -139,13 +145,14 @@ class ParametricJob:
 
         # return payload
         print('Submitting parametric simulation job request...')
-        r = requests.post(url, data=payload)
+        r = request_post(url, params=payload)
         if r.status_code == 500:
-            print('Code: ' + r.status_code)
+            print(r.json())
+            print('Code: ' + str(r.status_code))
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
         print('Received server response')
 
@@ -175,10 +182,10 @@ class ParametricJob:
             'folder_api_key': self._track_token
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if 'error_msg' in resp_json:

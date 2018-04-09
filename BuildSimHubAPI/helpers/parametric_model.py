@@ -1,5 +1,5 @@
-import requests
 import webbrowser
+from .httpurllib import request_get
 
 # This is a class that contains all the model information for user
 # to read
@@ -35,7 +35,7 @@ class ParametricModel:
             track: self._model_key,
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         webbrowser.open(r.url)
 
     # Below are the methods use for retrieving results
@@ -128,10 +128,10 @@ class ParametricModel:
             'request_data': request_data
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         value = list()

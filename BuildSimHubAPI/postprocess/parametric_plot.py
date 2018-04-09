@@ -37,6 +37,12 @@ class ParametricPlot:
             data_dict = dict()
             for k in range(len(parameters)):
                 title, val = parameters[k].split(":")
+                # for cases like on off options
+                if val.strip() == 'Off':
+                    val = '0'
+                if val.strip() == 'On':
+                    val = '1'
+
                 data_dict[title.strip()] = float(val.strip())
             # data_dict['Value'] = self._value[j]
 

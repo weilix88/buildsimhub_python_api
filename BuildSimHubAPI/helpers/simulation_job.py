@@ -1,6 +1,8 @@
-import requests
 from .energy_model import Model
 import time
+from .httpurllib import request_get
+from .httpurllib import request_post
+from .compat import is_py2
 
 
 class SimulationJob:
@@ -76,12 +78,12 @@ class SimulationJob:
             'track_token': self._track_token
         }
 
-        r = requests.post(url, params=payload, stream=True)
+        r = request_post(url, params=payload, stream=True)
 
         if r.status_code == 200:
             return r.text
         else:
-            self._track_status = 'Code: ' + r.status_code
+            self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
 
             return False
@@ -109,7 +111,7 @@ class SimulationJob:
             'user_api_key': self._user_key,
             'track_token': self._track_token
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
 
         if 'severe_error' in resp_json:
@@ -163,20 +165,25 @@ class SimulationJob:
             'unit': unit
         }
 
-        files = {
-            'model': open(file_dir, 'rb'),
-            'weather_file': open(epw_dir, 'rb')
-        }
+        files = dict()
+
+        if is_py2:
+            files['model'] = open(file_dir, 'r')
+            files['weather_file'] = open(epw_dir, 'r')
+        else:
+            # py3 cannot decode incompatible utf-8 string
+            files['model'] = open(file_dir, 'r', errors='ignore')
+            files['weather_file'] = open(epw_dir, 'r', errors='ignore')
 
         print("Submitting simulation request...")
-        r = requests.post(url, data=payload, files=files)
+        r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
-            self._track_status = 'Code: ' + r.status_code
+            self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            self._track_status = 'Code: ' + r.status_code + ' message: ' + resp_json['error_msg']
+            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
             print(self._track_status)
             return False
         print("Received server response")
@@ -194,8 +201,8 @@ class SimulationJob:
                 res = Model(self._user_key, self._track_token, self._base_url)
                 return res
             else:
-                print(self.track_status)
-                return False
+                # print(self.track_status)
+                return True
         else:
             print(resp_json['error_msg'])
             return False
@@ -203,10 +210,11 @@ class SimulationJob:
     def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular", track=False, request_time=5):
         """
         Use this method to run a model on the BuildSimHub platform.
+        Use it with create_model function
 
         Example:
 
-        # key should be the project key
+        # key should be the model key
         new_sj = bsh.new_simulation_job("xxx-x-xxx-xx")
         new_sj.create_model("local/usr/in.idf")
         new_sj.run_model_simulation()
@@ -239,14 +247,14 @@ class SimulationJob:
         }
 
         print("Submitting simulation request...")
-        r = requests.post(url, data=payload)
+        r = request_post(url, params=payload)
         if r.status_code == 500:
-            self._track_status = 'Code: ' + r.status_code
+            self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            self._track_status = 'Code: ' + r.status_code + ' message: ' + resp_json['error_msg']
+            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
             print(self._track_status)
             return False
         print("Received server response")
@@ -257,28 +265,29 @@ class SimulationJob:
                 while self.track_simulation():
                     print(self.track_status)
                     time.sleep(request_time)
-            if self.track_status is 'Simulation finished successfully':
+            print(self.track_status)
+            if self.track_status == 'Simulation finished successfully':
                 print(self.track_status)
                 print('Completed! You can retrieve results using the key: '+self._track_token)
                 # check whether there is requested data
                 res = Model(self._user_key, self._track_token, self._base_url)
                 return res
             else:
-                print(self.track_status)
-                return False
+                # print(self.track_status)
+                return True
         else:
             return resp_json['error_msg']
 
     def create_run_model(self, file_dir,  unit='ip', agent=1, comment="Python API", simulation_type="regular",
                          track=False, request_time=5):
         """
-        this method requires supplying a model_key
+        this method requires supplying a project key
         Use this method to upload and run an energy model
 
         Example:
 
         # key should be the project key
-        new_sj = bsh.new_simulation_job("xxx-x-xxx-xx")
+        new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-df36d6d3dbc6")
         new_sj.create_run_model("local/usr/in.idf")
 
         :param file_dir:
@@ -301,19 +310,26 @@ class SimulationJob:
             'agents': agent,
             'unit': unit
         }
-        files = {
-            'file': open(file_dir, 'rb')
-        }
+
+        files = dict()
+
+        if is_py2:
+            files['file'] = open(file_dir, 'r')
+        else:
+            # py3 cannot decode incompatible utf-8 string
+            files['file'] = open(file_dir, 'r', errors='ignore')
 
         print("Submitting simulation request...")
-        r = requests.post(url, data=payload, files=files)
+        r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
-            self._track_status = 'Code: ' + r.status_code
+            print(r.json())
+
+            self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            self._track_status = 'Code: ' + r.status_code + ' message: ' + resp_json['error_msg']
+            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
             print(self._track_status)
             return False
 
@@ -325,25 +341,26 @@ class SimulationJob:
                 while self.track_simulation():
                     print(self.track_status)
                     time.sleep(request_time)
-            if self.track_status is 'Simulation finished successfully':
+            if self.track_status == 'Simulation finished successfully':
                 print(self.track_status)
                 # check whether there is requested data
                 print('Completed! You can retrieve results using the key: '+self._track_token)
                 res = Model(self._user_key, self._track_token, self._base_url)
                 return res
             else:
-                print(self.track_status)
-                return False
+                # print(self.track_status)
+                return True
         else:
             return resp_json['error_msg']
 
     def create_model(self, file_dir, comment="Upload through Python API"):
         """
         Upload an energy model but no simulation
+        use it with run_model_simulation() function to do simulation
 
         Example:
 
-        # key should be the project key
+        # key should be the model key
         new_sj = bsh.new_simulation_job("xxx-x-xxx-xx")
         new_sj.create_model("local/usr/in.idf")
 
@@ -361,18 +378,22 @@ class SimulationJob:
             'agents': 1
         }
 
-        files = {
-            'file': open(file_dir, 'rb')
-        }
+        files = dict()
+
+        if is_py2:
+            files['file'] = open(file_dir, 'r')
+        else:
+            # py3 cannot decode incompatible utf-8 string
+            files['file'] = open(file_dir, 'r', errors='ignore')
         
-        r = requests.post(url, data=payload, files=files)
+        r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
-            self._track_status = 'Code: ' + r.status_code
+            self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            self._track_status = 'Code: ' + r.status_code + ' message: ' + resp_json['error_msg']
+            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
             print(self._track_status)
             return False
 

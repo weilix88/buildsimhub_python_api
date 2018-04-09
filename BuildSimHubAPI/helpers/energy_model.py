@@ -1,30 +1,59 @@
-import requests
 import webbrowser
-
-
-# This is a class that contains all the model information for user
-# to read
-
-
-# potentially in the future, to write
+from .httpurllib import request_get
 
 class Model:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, user_key, model_key, base_url=None):
+        """
+        Construct Model object
+
+        Model objects use to retrieve model info and simulation results
+        You can get this object by
+        1. run a successful simulation using SimulationJob class: e.g.
+        results = new_sj.run("in.idf","in.epw", track=True)
+        if response:
+            print(results.net_site_eui())
+
+        2. get from BuildSim API client with a simulation job
+        results = bsh.get_simulation_results(new_sj)
+        print(results.net_site_eui())
+
+        3. get it by importing the class (you need to supply user api and either a model key or tracking token)
+        results = buildsimhub.helpers.Model(user_api, model_key)
+        print(results.net_site_eui())
+
+        :param user_key:
+        :param model_key:
+        :param base_url: optional, this is only for testing purpose
+        :type user_key: str
+        :type model_key: str
+
+        """
         self._user_key = user_key
         self._last_parameter_unit = ""
         self._model_key = model_key
         self._base_url = Model.BASE_URL
+        # record all the messages in API calling
+        self._log = ""
+
         if base_url is not None:
             self._base_url = base_url
 
     @property
     def last_parameter_unit(self):
+        """The unit of data that retrieved from the latest API call"""
         return self._last_parameter_unit
 
+    @property
+    def log(self):
+        return self._log
+
     def bldg_geo(self):
+        """
+        This method will open up your default browser to view the model geometry
+        """
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
         test = self._model_key.split('-')
@@ -36,7 +65,8 @@ class Model:
             track: self._model_key,
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
+        self._log = r.url
         webbrowser.open(r.url)
 
     def bldg_orientation(self):
@@ -52,10 +82,10 @@ class Model:
             'request_data': 'Orientation'
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -68,6 +98,10 @@ class Model:
             return -1
 
     def num_above_ground_floor(self):
+        """
+        Estimate the number of floors above the ground
+        :return:
+        """
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -79,10 +113,10 @@ class Model:
             track: self._model_key,
             'request_data': 'BuildingStories'
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -103,10 +137,10 @@ class Model:
             track: self._model_key,
             'request_data': 'BuildingStories'
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -128,10 +162,10 @@ class Model:
             'request_data': 'TotalZoneNumber'
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -152,10 +186,10 @@ class Model:
             track: self._model_key,
             'request_data': 'ConditionedZoneNumber'
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -176,10 +210,10 @@ class Model:
             track: self._model_key,
             'request_data': 'ConditionedZoneFloorArea'
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -205,10 +239,10 @@ class Model:
             track: self._model_key,
             'request_data': 'ZoneFloorArea'
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -234,10 +268,10 @@ class Model:
             track: self._model_key,
             'request_data': 'TotalWindowToWallRatio'
         }
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -265,10 +299,10 @@ class Model:
         if zone_name is not None:
             payload['zone_name'] = zone_name
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -373,10 +407,10 @@ class Model:
             'request_data': request_data
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
