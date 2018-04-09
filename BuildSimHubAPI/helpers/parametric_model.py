@@ -11,8 +11,8 @@ class ParametricModel:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, userKey, model_key, base_url=None):
-        self._user_key = userKey
+    def __init__(self, user_key, model_key, base_url=None):
+        self._user_key = user_key
         self._last_parameter_unit = ""
         self._model_key = model_key
         self._base_url = ParametricModel.BASE_URL

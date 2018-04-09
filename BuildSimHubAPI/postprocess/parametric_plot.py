@@ -3,16 +3,20 @@ try:
     import matplotlib.pyplot as plt
     from matplotlib import ticker
 except ImportError:
+    plt = None
+    ticker = None
     print('matplotlib is not installed')
 
 try:
     import numpy as np
 except ImportError:
+    np = None
     print('numpy is not installed')
 
 try:
     import pandas as pd
 except ImportError:
+    pd = None
     print('pandas is not installed')
 
 
@@ -55,13 +59,14 @@ class ParametricPlot:
     def parallel_coordinate(self, title, investigate=None):
         cols = list(self._df)
         colours = list()
-        hasCategory = False
+        has_category = False
         if investigate is not None and investigate in self._df.columns:
             colours = ['#2e8ad8', '#cd3785', '#c64c00', '#889a00']
             self._df[investigate] = pd.Categorical(self._df[investigate])
-            colours = {self._df[investigate].cat.categories[i]: colours[i] for i, _ in enumerate(self._df[investigate].cat.categories)}
+            colours = {self._df[investigate].cat.categories[i]: colours[i]
+                       for i, _ in enumerate(self._df[investigate].cat.categories)}
             cols.remove(investigate)
-            hasCategory = True
+            has_category = True
 
         x = [i for i, _ in enumerate(cols)]
         fig, axes = plt.subplots(1, len(x) - 1, sharey=False, figsize=(15, 5))
@@ -78,7 +83,7 @@ class ParametricPlot:
         # plot each row
         for (d, y), ax in np.ndenumerate(axes):
             for idx in self._df.index:
-                if hasCategory:
+                if has_category:
                     category = self._df.loc[idx, investigate]
                     ax.plot(x, self._df.loc[idx, cols], colours[category])
                 else:
@@ -100,7 +105,7 @@ class ParametricPlot:
             ax.yaxis.set_ticks(ticks)
             ax.set_yticklabels(tick_labels)
 
-        #for final axis use
+        # for final axis use
         seen = set()
         last_ax = None
         total_dim = 0
@@ -129,7 +134,7 @@ class ParametricPlot:
 
         plt.title(title + " [" + self._unit + "]")
 
-        if hasCategory:
+        if has_category:
             # add legend
             plt.legend(
                 [plt.Line2D((0, 1), (0, 0), color=colours[cat]) for cat in self._df[investigate].cat.categories],
@@ -212,8 +217,3 @@ class ParametricPlot:
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         plot(data, filename=dir+'/' + image_name + '.html')
 
-#result_dict = {'value': [54.82, 54.98, 55.05, 57.11, 57.28, 57.35, 59.36, 59.54, 59.62, 55.96, 56.12, 56.2, 58.28, 58.46, 58.53, 60.49, 60.68, 60.76, 57.2, 57.36, 57.44, 59.38, 59.56, 59.65, 61.69, 61.88, 61.97], 'model': ['WWR: 0.25, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 2.8'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9', 'case10', 'case11', 'case12', 'case13', 'case14', 'case15', 'case16', 'case17', 'case18', 'case19', 'case20', 'case21', 'case22', 'case23', 'case24', 'case25', 'case26', 'case27']}
-
-#result_unit = "kWh/m2"
-#plot = ParametricPlot(result_dict, result_unit)
-#plot.scatter_chart_plotly()

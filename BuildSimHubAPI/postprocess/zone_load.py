@@ -1,6 +1,7 @@
 try:
     import pandas as pd
 except ImportError:
+    pd = None
     print('pandas is not installed')
 
 

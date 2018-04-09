@@ -1,16 +1,19 @@
 import requests
-import json
 import time
 from .parametric_model import ParametricModel
 
 
-class ParametricJob():
+class ParametricJob:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, userKey, mk, base_url=None):
-        self._user_key = userKey
-        self._model_key = mk
+    def __init__(self, user_key, model_key, base_url=None):
+        """
+
+        :type base_url: string
+        """
+        self._user_key = user_key
+        self._model_key = model_key
         self._track_token = ""
         self._track_status = ""
         # list of data
@@ -42,7 +45,8 @@ class ParametricJob():
                 num_total = num_total * self._model_action_list[i].get_num_value()
         return num_total
 
-    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric", track=False, request_time=5):
+    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric",
+                                      track=False, request_time=5):
         # file_dir indicates the seed model
         url = self._base_url + 'ParametricSettingUploadModel_API'
         payload = {
@@ -186,12 +190,12 @@ class ParametricJob():
         error = float(resp_json['error'])
         queue = float(resp_json['queue'])
 
-        totalProgress = (success + error) / (success + running + error + queue)
+        total_progress = (success + error) / (success + running + error + queue)
 
         message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
-        self._track_status = message % (totalProgress * 100, success, error, running, queue)
+        self._track_status = message % (total_progress * 100, success, error, running, queue)
 
-        if totalProgress == 1:
+        if total_progress == 1:
             return False
         else:
             return True

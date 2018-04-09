@@ -1,5 +1,7 @@
 import requests
 import webbrowser
+
+
 # This is a class that contains all the model information for user
 # to read
 
@@ -7,7 +9,6 @@ import webbrowser
 # potentially in the future, to write
 
 class Model:
-
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
@@ -78,7 +79,7 @@ class Model:
             track: self._model_key,
             'request_data': 'BuildingStories'
         }
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -102,7 +103,7 @@ class Model:
             track: self._model_key,
             'request_data': 'BuildingStories'
         }
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -127,7 +128,7 @@ class Model:
             'request_data': 'TotalZoneNumber'
         }
 
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -151,7 +152,7 @@ class Model:
             track: self._model_key,
             'request_data': 'ConditionedZoneNumber'
         }
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -175,7 +176,7 @@ class Model:
             track: self._model_key,
             'request_data': 'ConditionedZoneFloorArea'
         }
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -204,7 +205,7 @@ class Model:
             track: self._model_key,
             'request_data': 'ZoneFloorArea'
         }
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
@@ -216,7 +217,7 @@ class Model:
             self._last_parameter_unit = 'm2'
 
             if unit == 'ip':
-                self._last_parameter_unit="ft2"
+                self._last_parameter_unit = "ft2"
                 value = value * 10.7639
             return value
         else:
@@ -341,7 +342,7 @@ class Model:
         return self.__call_api('HeatRejectionNaturalGas')
 
     def interior_equipment_electricity(self):
-        return self.__call_api('InteiorEquipmentElectricity')   
+        return self.__call_api('InteiorEquipmentElectricity')
 
     def interior_equipment_naturalgas(self):
         return self.__call_api('InteirorEquipmentNaturalGas')
@@ -368,11 +369,11 @@ class Model:
 
         payload = {
             'user_api_key': self._user_key,
-             track: self._model_key,
+            track: self._model_key,
             'request_data': request_data
         }
 
-        r = requests.get(url, params = payload)
+        r = requests.get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])

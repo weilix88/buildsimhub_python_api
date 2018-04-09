@@ -24,7 +24,6 @@ class MetaInfo:
             elif key == 'base_url':
                 self._base_url = value.strip()
 
-
     @property
     def user_key(self):
         return self._user_key
