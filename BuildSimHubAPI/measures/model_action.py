@@ -1,7 +1,14 @@
 
 
 class ModelAction:
+
     def __init__(self, name, unit='si'):
+        """
+        Construct a ModelAction - a model action is a measure
+
+        :param name:
+        :param unit: choose between si or ip, default is si
+        """
         # type: (str, str) -> ModelAction
         self._list_data = list()
         self._data = None
@@ -10,6 +17,7 @@ class ModelAction:
         self._default_list = [-1, -2, -3]
 
     def unit(self):
+        """Returns the unit system (si or ip)"""
         return self._unit
 
     def num_of_value(self):
@@ -37,14 +45,13 @@ class ModelAction:
 #                comb = comb * len(data_list)
 #        return comb
 
-    def set_datalist(self, data_list: object) -> object:
+    def set_datalist(self, data_list):
         self._list_data = data_list
+        return True
 
-    def set_data(self, data: object) -> object:
+    def set_data(self, data):
         self._data = data
+        return True
 
     def get_api_name(self):
-        return self._name;
-
-
-
+        return self._name

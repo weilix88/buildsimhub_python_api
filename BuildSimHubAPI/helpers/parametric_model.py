@@ -12,6 +12,17 @@ class ParametricModel:
     BASE_URL = 'https://my.buildsim.io/'
 
     def __init__(self, user_key, model_key, base_url=None):
+        """
+        Construct parametric result object
+
+        :param user_key:
+        :param model_key:
+        :param base_url: optional
+        :type user_key: str
+        :type model_key: str
+        :type base_url: str
+
+        """
         self._user_key = user_key
         self._last_parameter_unit = ""
         self._model_key = model_key
@@ -24,6 +35,7 @@ class ParametricModel:
         return self._last_parameter_unit
 
     def bldg_geo(self):
+        """Open the online geometric viewer in browser"""
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
         test = self._model_key.split('-')

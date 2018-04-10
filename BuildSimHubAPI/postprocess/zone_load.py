@@ -1,3 +1,8 @@
+"""
+ZoneLoad class - post-process zone load data
+and form it into a pandas dataframe
+"""
+
 try:
     import pandas as pd
 except ImportError:
@@ -7,6 +12,11 @@ except ImportError:
 
 class ZoneLoad:
     def __init__(self, load_profile):
+        """
+        Construct zoneload class
+
+        :param load_profile: data returned from zone_load api call
+        """
         # reform the dict
         index_list = list()
         self._cooling_unit = ''
@@ -54,6 +64,7 @@ class ZoneLoad:
         return self._heating_density_unit
 
     def get_df(self):
+        """get the dataframe"""
         return self._df
 
     def get_zone_heat_load(self, zone):
@@ -71,15 +82,3 @@ class ZoneLoad:
     def get_zone_cool_load_time(self, zone):
         zone_name = zone.upper()
         return self._df.at[zone_name, 'cooling_peak_load_time']
-
-# sample test data
-#test_data = [{'zone_name': 'SPACE1-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': '-7804.11',
-#              'cooling_load': '7389.08', 'cooling_peak_load_time': '7/21/15:45:00', 'heating_peak_load_time': '1/21 24:00:00'},
-#             {'zone_name': 'SPACE5-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': '-6165.32',
-#              'cooling_load': '8335.26', 'cooling_peak_load_time': '7/21/15:00:00',
-#              'heating_peak_load_time': '1/21 24:00:00'}
-#             ]
-
-# zl = ZoneLoad(test_data)
-# print(zl.get_zone_heat_load('space1-1'))
-# print(zl.get_zone_cool_load('space5-1'))

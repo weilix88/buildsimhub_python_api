@@ -10,6 +10,12 @@ import urllib
 
 class HTTPConnect:
     def __init__(self, status_code, response_obj):
+        """
+        Construct HTTP connection object
+
+        :param status_code:
+        :param response_obj:
+        """
         self._status_code = status_code
         self._response_error = ""
         if type(response_obj) is bytes:
@@ -118,6 +124,14 @@ def __encode_multipart_formdata(fields, files):
 
 
 def request_get(path, params, stream=False):
+    """
+    send GET request to server
+
+    :param path: url
+    :param params: header
+    :param stream:
+    :return:
+    """
     process = __split_path(path)
 
     if process['status'] == 'success':

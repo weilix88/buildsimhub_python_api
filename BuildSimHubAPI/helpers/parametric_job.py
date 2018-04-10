@@ -11,8 +11,16 @@ class ParametricJob:
 
     def __init__(self, user_key, model_key, base_url=None):
         """
+        Construct a parametric job
 
-        :type base_url: string
+        Specify EEM and do parametrics
+
+        :param user_key:
+        :param model_key:
+        :param base_url: optional - use for testing only
+        :type user_key: str
+        :type model_key: str
+        :type base_url: str
         """
         self._user_key = user_key
         self._model_key = model_key
@@ -29,16 +37,28 @@ class ParametricJob:
         return self._track_token
 
     def get_status(self):
+        """Get the tracking status"""
         return self._track_status
 
     def add_model_measures(self, measures):
+        """
+        Add measures
+        :param measures: list of measures
+        :type measures: list of ModelAction
+        """
         for measure in measures:
             self._model_action_list.append(measure)
 
-    def add_model_measure(self, action):
-        self._model_action_list.append(action)
+    def add_model_measure(self, measure):
+        """
+        Add a measure
+        :param measure: a measure
+        :type measure: ModelAction
+        """
+        self._model_action_list.append(measure)
 
     def num_total_combination(self):
+        """Number of combinations based on the number of EEM & number of options for each EEM"""
         num_total = 0
         for i in range(len(self._model_action_list)):
             if num_total == 0:
@@ -49,6 +69,26 @@ class ParametricJob:
 
     def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric",
                                       track=False, request_time=5):
+        """
+        Submit an energy model from local as the seed model to a project for this parametric study
+        Example:
+            project_key = "xxx"
+            file_dir = "in.idf"
+            new_sj = buildsimhub.new_parametric_job(project_key)
+            new_sj.submit_parametric_study_local(file_dir, track=True)
+
+        :param file_dir:
+        :param unit:
+        :param simulation_type: deprecated
+        :param track:
+        :param request_time:
+        :type file_dir: str
+        :type unit: str (ip or si)
+        :type simulation_type: str
+        :type track: bool
+        :type request_time: float
+        :return: True success, False otherwise
+        """
         # file_dir indicates the seed model
         url = self._base_url + 'ParametricSettingUploadModel_API'
         payload = {
@@ -129,7 +169,25 @@ class ParametricJob:
     # for this method, it allows user to identify one seed model in a project.
     # This allows the parametric study performed under a project with a fixed weather file,
     def submit_parametric_study(self, unit='ip', simulation_type='parametric', track=False, request_time=5):
+        """
+        Select a model in the project as the seed model and do parametric study
 
+        Example:
+            model_key = "xx"
+
+            new_pj = bsh.new_parametric_job(model_key)
+            new_pj.submit_parametric_study(track=True)
+
+        :param unit:
+        :param simulation_type: deprecated
+        :param track:
+        :param request_time:
+        :type unit: str
+        :type simulation_type: str
+        :type track: bool
+        :type request_time: float
+        :return: True if success, False otherwise
+        """
         url = self._base_url + 'ParametricSettingCopyModel_API'
         payload = {
             'user_api_key': self._user_key,

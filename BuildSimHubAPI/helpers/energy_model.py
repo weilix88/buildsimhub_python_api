@@ -1,6 +1,7 @@
 import webbrowser
 from .httpurllib import request_get
 
+
 class Model:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
@@ -127,6 +128,7 @@ class Model:
             return -1
 
     def num_total_floor(self):
+        """Total floor = above ground floors + below ground floors"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -151,6 +153,7 @@ class Model:
             return -1
 
     def num_zones(self):
+        """Include conditioned & unconditioned zones"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -176,6 +179,7 @@ class Model:
             return -1
 
     def num_condition_zones(self):
+        """Conditioned zones only"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -200,6 +204,7 @@ class Model:
             return -1
 
     def condition_floor_area(self, unit):
+        """Total conditioned floor area"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -229,6 +234,7 @@ class Model:
             return -1
 
     def gross_floor_area(self, unit):
+        """Total floor area"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -258,6 +264,7 @@ class Model:
             return -1
 
     def window_wall_ratio(self):
+        """Window to wall ratio"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._model_key.split("-")
@@ -284,6 +291,18 @@ class Model:
             return -1
 
     def zone_load(self, zone_name=None):
+        """
+        Zone load list. If a zone_name is provided, then a detail
+        zone load components will be returned
+
+        If zone_name is not supplied, then a list of zone and their
+        load info (including total heating & cooling load) will be supplied.
+
+        Note: There will be no component load information included if zone_name is not provided
+
+        :param zone_name:
+        :return:
+        """
         url = self._base_url + 'GetZoneLoadInfo_API'
         track = "folder_api_key"
 
