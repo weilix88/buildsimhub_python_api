@@ -1,23 +1,41 @@
+"""
+This post-process class shows the integration of parametric results with plotly.
+Plotly is an open-source project that can be found in: https://plot.ly
+
+It is required to have the latest plotly python package in your python.
+
+"""
 import os
 try:
     import matplotlib.pyplot as plt
     from matplotlib import ticker
 except ImportError:
+    plt = None
+    ticker = None
     print('matplotlib is not installed')
 
 try:
     import numpy as np
 except ImportError:
+    np = None
     print('numpy is not installed')
 
 try:
     import pandas as pd
 except ImportError:
+    pd = None
     print('pandas is not installed')
 
 
 class ParametricPlot:
+
     def __init__(self, data, unit=""):
+        """
+        Construct parametric plot
+
+        :param data: returned from the parametric result call
+        :param unit:
+        """
         self._value = data['value']
         self._unit = unit
 
@@ -33,6 +51,12 @@ class ParametricPlot:
             data_dict = dict()
             for k in range(len(parameters)):
                 title, val = parameters[k].split(":")
+                # for cases like on off options
+                if val.strip() == 'Off':
+                    val = '0'
+                if val.strip() == 'On':
+                    val = '1'
+
                 data_dict[title.strip()] = float(val.strip())
             # data_dict['Value'] = self._value[j]
 
@@ -42,103 +66,11 @@ class ParametricPlot:
         self._df['Value'] = self._value
 
     def pandas_df(self):
+        """get the data in pandas dataframe"""
         return self._df
 
-    def line_plot(self, title):
-        ind = np.arange(len(self._value))
-        plt.xticks(ind, self._model_plot)
-        plt.plot(self._value)
-        plt.ylabel(self._unit)
-        plt.title(title)
-        plt.show()
-
-    def parallel_coordinate(self, title, investigate=None):
-        cols = list(self._df)
-        colours = list()
-        hasCategory = False
-        if investigate is not None and investigate in self._df.columns:
-            colours = ['#2e8ad8', '#cd3785', '#c64c00', '#889a00']
-            self._df[investigate] = pd.Categorical(self._df[investigate])
-            colours = {self._df[investigate].cat.categories[i]: colours[i] for i, _ in enumerate(self._df[investigate].cat.categories)}
-            cols.remove(investigate)
-            hasCategory = True
-
-        x = [i for i, _ in enumerate(cols)]
-        fig, axes = plt.subplots(1, len(x) - 1, sharey=False, figsize=(15, 5))
-
-        # get min, max and range for each column
-        min_max_range = {}
-        for col in cols:
-            min_max_range[col] = [self._df[col].min(), self._df[col].max(), np.ptp(self._df[col])]
-            # Normalize the data for each column
-            self._df[col] = np.true_divide(self._df[col] - self._df[col].min(), np.ptp(self._df[col]))
-
-        if not isinstance(axes, list):
-            axes = [axes]
-        # plot each row
-        for (d, y), ax in np.ndenumerate(axes):
-            for idx in self._df.index:
-                if hasCategory:
-                    category = self._df.loc[idx, investigate]
-                    ax.plot(x, self._df.loc[idx, cols], colours[category])
-                else:
-                    ax.plot(x, self._df.loc[idx, cols])
-            ax.set_xlim([x[y], x[y + 1]])
-
-        # Set the tick positions and labels on y axis for each plot
-        # Tick positions based on normalized data
-        # Tick labels are based on original data
-        def set_ticks_for_axis(dim, ax, ticks):
-            min_val, max_val, val_range = min_max_range[cols[dim]]
-            step = val_range / float(ticks - 1)
-            tick_labels = [round(min_val + step * i, 2) for i in range(ticks)]
-
-            norm_min = self._df[cols[dim]].min()
-            norm_range = np.ptp(self._df[cols[dim]])
-            norm_step = norm_range / float(ticks - 1)
-            ticks = [round(norm_min + norm_step * i, 2) for i in range(ticks)]
-            ax.yaxis.set_ticks(ticks)
-            ax.set_yticklabels(tick_labels)
-
-        #for final axis use
-        seen = set()
-        last_ax = None
-        total_dim = 0
-        for (d, dim), ax in np.ndenumerate(axes):
-            seen.clear()
-            ax.xaxis.set_major_locator(ticker.FixedLocator([dim]))
-
-            col_data = self._df[cols[dim]]
-            for i in range(len(col_data)):
-                seen.add(col_data[i])
-
-            set_ticks_for_axis(dim, ax, len(seen))
-            ax.set_xticklabels([cols[dim]])
-            last_ax = ax
-            total_dim += 1
-
-        # move the final axis' ticks to the right-hand side
-        ax = plt.twinx(last_ax)
-        # dim = len(axes)
-        ax.xaxis.set_major_locator(ticker.FixedLocator([x[-2], x[-1]]))
-        set_ticks_for_axis(total_dim, ax, len(seen))
-        ax.set_xticklabels([cols[-2], cols[-1]])
-
-        # Remove space between subplots
-        plt.subplots_adjust(wspace=0)
-
-        plt.title(title + " [" + self._unit + "]")
-
-        if hasCategory:
-            # add legend
-            plt.legend(
-                [plt.Line2D((0, 1), (0, 0), color=colours[cat]) for cat in self._df[investigate].cat.categories],
-                self._df[investigate].cat.categories,
-                loc=1)
-
-        plt.show()
-
     def scatter_chart_plotly(self, title='line graph plot', image_name='line'):
+        """Plotly scatter plot"""
         try:
             from plotly.offline import plot
             from plotly import tools
@@ -182,6 +114,13 @@ class ParametricPlot:
         plot(fig, filename=dir+'/' + image_name + '.html')
 
     def parallel_coordinate_plotly(self, investigate=None, image_name="Plot"):
+        """
+        Plotly parallel coordinate plot
+
+        :param investigate: parameter in the legend
+        :param image_name: name of the image
+        :return:
+        """
         try:
             from plotly.offline import plot
             from plotly import tools
@@ -212,8 +151,3 @@ class ParametricPlot:
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         plot(data, filename=dir+'/' + image_name + '.html')
 
-#result_dict = {'value': [54.82, 54.98, 55.05, 57.11, 57.28, 57.35, 59.36, 59.54, 59.62, 55.96, 56.12, 56.2, 58.28, 58.46, 58.53, 60.49, 60.68, 60.76, 57.2, 57.36, 57.44, 59.38, 59.56, 59.65, 61.69, 61.88, 61.97], 'model': ['WWR: 0.25, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.25, LPD: 1.2, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.3, LPD: 1.2, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 0.6, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 0.9, CoolingCOP: 2.8', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 3.0', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 2.86', 'WWR: 0.35, LPD: 1.2, CoolingCOP: 2.8'], 'model_plot': ['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7', 'case8', 'case9', 'case10', 'case11', 'case12', 'case13', 'case14', 'case15', 'case16', 'case17', 'case18', 'case19', 'case20', 'case21', 'case22', 'case23', 'case24', 'case25', 'case26', 'case27']}
-
-#result_unit = "kWh/m2"
-#plot = ParametricPlot(result_dict, result_unit)
-#plot.scatter_chart_plotly()

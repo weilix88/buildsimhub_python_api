@@ -1,5 +1,5 @@
-import requests
 import webbrowser
+from .httpurllib import request_get
 
 # This is a class that contains all the model information for user
 # to read
@@ -11,10 +11,21 @@ class ParametricModel:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, userKey, model_key, base_url=None):
-        self._userKey = userKey
+    def __init__(self, user_key, model_key, base_url=None):
+        """
+        Construct parametric result object
+
+        :param user_key:
+        :param model_key:
+        :param base_url: optional
+        :type user_key: str
+        :type model_key: str
+        :type base_url: str
+
+        """
+        self._user_key = user_key
         self._last_parameter_unit = ""
-        self._modelKey = model_key
+        self._model_key = model_key
         self._base_url = ParametricModel.BASE_URL
         if base_url is not None:
             self._base_url = base_url
@@ -24,18 +35,19 @@ class ParametricModel:
         return self._last_parameter_unit
 
     def bldg_geo(self):
+        """Open the online geometric viewer in browser"""
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._modelKey.split('-')
+        test = self._model_key.split('-')
         if len(test) is 3:
             track = 'tracking'
 
         payload = {
-            'user_api_key': self._userKey,
-            track: self._modelKey,
+            'user_api_key': self._user_key,
+            track: self._model_key,
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         webbrowser.open(r.url)
 
     # Below are the methods use for retrieving results
@@ -123,15 +135,15 @@ class ParametricModel:
     def __call_api(self, request_data):
         url = self._base_url + 'ParametricResults_API'
         payload = {
-            'user_api_key': self._userKey,
-            'folder_api_key': self._modelKey,
+            'user_api_key': self._user_key,
+            'folder_api_key': self._model_key,
             'request_data': request_data
         }
 
-        r = requests.get(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + r.status_code + ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         value = list()

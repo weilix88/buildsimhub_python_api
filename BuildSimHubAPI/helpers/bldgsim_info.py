@@ -5,7 +5,12 @@ from pathlib import Path
 
 class MetaInfo:
 
-    """docstring for MetalInfo"""
+    """docstring for MetalInfo
+
+    read the info configuration
+    api and base_url (for testing)
+
+    """
     def __init__(self):
         dirpath = Path(os.path.dirname(os.path.realpath(__file__))).parent
         assert(dirpath.is_dir())
@@ -23,7 +28,6 @@ class MetaInfo:
                 self._user_key = value.strip()
             elif key == 'base_url':
                 self._base_url = value.strip()
-
 
     @property
     def user_key(self):

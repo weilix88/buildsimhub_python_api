@@ -1,10 +1,7 @@
-class SimulationType():
+class SimulationType:
 
     def __init__(self):
         self._type = "regular"
-        #self._base = "baseline"
-        #self._diagnostic = "diagnostic"
-        #
         self._agent = 1
 
     @property
@@ -19,10 +16,10 @@ class SimulationType():
         self._type = "regular"
 
     def increase_agents(self):
-        if(self._agent == 1):
+        if self._agent == 1:
             self._agent = 1
             return self._agent
-        elif(self._agent == 2):
+        elif self._agent == 2:
             self._agent = 4
             return self._agent
         else:
