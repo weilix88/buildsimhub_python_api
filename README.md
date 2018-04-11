@@ -23,11 +23,12 @@ We appreciate your continued support, thank you!
 * [License](#license)
 
 <a name="update"></a>
-The latest version is 1.2.0. Changes include:
-1. Track information is included in the run simulation function - no need to write extra code to do cloud simulation tracking
-2. Add geo API call to open the BuildSimHub geometry viewer.
-3. add checks for every EEMs to make sure the numbers are making sense for the EEMs
-4. apply EEMs to a single simulation job.
+The latest version is 1.3.0. Changes include:
+1. Fully support EnergyPlus 8.9 cloud simulation
+2. Fully support epJSON file upload & simulation
+3. add `eio` and `rdd` to extract .eio and .rdd result files
+4. Use the developed httpurllib to take out the requests dependency
+5. Address compatibility issues with Python 2.7
 
 <a name="installation"></a>
 
