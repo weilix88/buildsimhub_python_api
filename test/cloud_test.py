@@ -22,6 +22,8 @@ The most straightforward way to do simulation
 new_sj_run = bsh.new_simulation_job()
 results = new_sj_run.run(file_dir, wea_dir, track=True)
 
+if results:
+    print(str(results.net_site_eui()) + " " + results.last_parameter_unit)
 
 """
 Upload your model with a specific model_key and run simulation
@@ -30,9 +32,18 @@ new_sj = bsh.new_simulation_job(model_key)
 response = new_sj.create_model(file_dir)
 results = new_sj.run_model_simulation(track=True)
 
+if results:
+    print(str(results.not_met_hour_cooling()) + " " + results.last_parameter_unit)
+    load_data = results.zone_load()
+    load = bsh_api.postprocess.ZoneLoad(load_data)
+    print(load.get_df())
+
 """
 Upload your model to a project and run simulation
 """
 new_sj_project = bsh.new_simulation_job(project_key)
-results = new_sj_project.create_run_model(track=True)
+results = new_sj_project.create_run_model(file_dir, track=True)
 
+if results:
+    print(str(results.not_met_hour_heating()) + " " + results.last_parameter_unit)
+    # results.bldg_geo()

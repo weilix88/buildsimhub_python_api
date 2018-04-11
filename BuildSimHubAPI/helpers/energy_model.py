@@ -1,5 +1,6 @@
 import webbrowser
 from .httpurllib import request_get
+from .httpurllib import make_url
 
 
 class Model:
@@ -66,9 +67,9 @@ class Model:
             track: self._model_key,
         }
 
-        r = request_get(url, params=payload)
-        self._log = r.url
-        webbrowser.open(r.url)
+        r = make_url(url, payload)
+        self._log = r
+        webbrowser.open(r)
 
     def bldg_orientation(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'

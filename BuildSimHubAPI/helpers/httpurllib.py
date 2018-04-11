@@ -181,3 +181,11 @@ def request_post(path, params, files=None, stream=False):
         return HTTPConnect(resp.status, resp_obj)
     else:
         return HTTPConnect(404, process)
+
+
+def make_url(path, params):
+    try:
+        url = path+"?"+urllib.urlencode(params)
+    except:
+        url = path+"?"+urllib.parse.urlencode(params)
+    return url
