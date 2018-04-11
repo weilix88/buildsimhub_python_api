@@ -63,7 +63,7 @@ class SimulationJob:
         """
         get a simulation result file (only use after the simulation is completed)
 
-        :param result_type: currently available option include html, err, eso
+        :param result_type: currently available option include html, err, eso, eio, rdd
         :return: text of the file, or error code
         :rtype: string
 
@@ -81,7 +81,7 @@ class SimulationJob:
         r = request_post(url, params=payload, stream=True)
 
         if r.status_code == 200:
-            return r.text
+            return r.json()
         else:
             self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
