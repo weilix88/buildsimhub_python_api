@@ -1,6 +1,6 @@
 import webbrowser
 from .httpurllib import request_get
-
+from .httpurllib import make_url
 # This is a class that contains all the model information for user
 # to read
 
@@ -47,8 +47,8 @@ class ParametricModel:
             track: self._model_key,
         }
 
-        r = request_get(url, params=payload)
-        webbrowser.open(r.url)
+        r = make_url(url, payload)
+        webbrowser.open(r)
 
     # Below are the methods use for retrieving results
     def net_site_eui(self):

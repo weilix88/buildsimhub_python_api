@@ -1,5 +1,7 @@
 import webbrowser
 from .httpurllib import request_get
+from .httpurllib import request_post
+from .httpurllib import make_url
 
 
 class Model:
@@ -66,9 +68,9 @@ class Model:
             track: self._model_key,
         }
 
-        r = request_get(url, params=payload)
-        self._log = r.url
-        webbrowser.open(r.url)
+        r = make_url(url, payload)
+        self._log = r
+        webbrowser.open(r)
 
     def bldg_orientation(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
@@ -321,7 +323,7 @@ class Model:
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -329,6 +331,39 @@ class Model:
             return zone_list
         else:
             return -1
+
+    def get_simulation_results(self, result_type="html", accept="string"):
+        """
+        get a simulation result file (only use after the simulation is completed)
+
+        :param result_type: currently available option include html, err, eso, eio, rdd
+        :return: text of the file, or error code
+        :rtype: string
+
+        """
+        track = "folder_api_key"
+        test = self._model_key.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        url = self._base_url + 'GetSimulationResult_API'
+        payload = {
+            'user_api_key': self._user_key,
+            'result_type': result_type,
+            'accept': accept,
+            track: self._model_key
+        }
+
+        r = request_post(url, params=payload, stream=True)
+
+        if r.status_code == 200:
+            if accept == 'string':
+                return r.json()['data']
+            else:
+                return r.json()
+        else:
+            print('Code: ' + str(r.status_code) + ' message: ' + r['error_msg'])
+            return False
 
     # Below are the methods use for retrieving results
     def net_site_eui(self):
