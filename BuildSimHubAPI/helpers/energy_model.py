@@ -1,6 +1,5 @@
 import webbrowser
 from .httpurllib import request_get
-from .httpurllib import request_post
 from .httpurllib import make_url
 
 
@@ -170,7 +169,7 @@ class Model:
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -220,7 +219,7 @@ class Model:
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -250,7 +249,7 @@ class Model:
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code)+ ' message: ' + resp_json['error_msg'])
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
 
         if resp_json['status'] == 'success':
@@ -332,11 +331,12 @@ class Model:
         else:
             return -1
 
-    def get_simulation_results(self, result_type="html", accept="string"):
+    def get_simulation_results(self, result_type="html", accept='file'):
         """
         get a simulation result file (only use after the simulation is completed)
 
         :param result_type: currently available option include html, err, eso, eio, rdd
+        :param accept:
         :return: text of the file, or error code
         :rtype: string
 
@@ -354,7 +354,7 @@ class Model:
             track: self._model_key
         }
 
-        r = request_post(url, params=payload, stream=True)
+        r = request_get(url, params=payload)
 
         if r.status_code == 200:
             if accept == 'string':

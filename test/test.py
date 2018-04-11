@@ -1,7 +1,6 @@
 """
 8.9 test
 """
-
 import BuildSimHubAPI as bshapi
 import time
 
@@ -16,6 +15,8 @@ wea_dir = "/Users/weilixu/Desktop/data/jsontest/in.epw"
 new_sj = bsh.new_simulation_job(model_key)
 response = new_sj.create_model(file_dir)
 results = new_sj.run_model_simulation(track=True)
+print(results.get_simulation_results('eio'))
+print(results.get_simulation_results('rdd'))
 
 if results:
     print(str(results.not_met_hour_cooling()) + " " + results.last_parameter_unit)

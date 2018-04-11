@@ -6,6 +6,8 @@ except ImportError:
     import http.client as httplib
 
 import urllib
+from .bldgsim_info import MetaInfo
+
 
 
 class HTTPConnect:
@@ -136,12 +138,13 @@ def request_get(path, params, stream=False):
 
     if process['status'] == 'success':
         conn = process['conn']
-
+        info = MetaInfo()
+        header = {'vendor_key': info.vendor_id}
         # check 2.x and 3.x differences in using urllib
         try:
-            conn.request("GET", process['req_path'] + "?" + urllib.urlencode(params))
+            conn.request("GET", process['req_path'] + "?" + urllib.urlencode(params), headers=header)
         except AttributeError:
-            conn.request("GET", process['req_path'] + "?" + urllib.parse.urlencode(params))
+            conn.request("GET", process['req_path'] + "?" + urllib.parse.urlencode(params), headers=header)
 
         resp = conn.getresponse()
 
@@ -163,7 +166,8 @@ def request_post(path, params, files=None, stream=False):
 
         if files:
             boundary, body = __encode_multipart_formdata(params, files)
-            header = {'content-type': 'multipart/form-data; boundary=' + boundary}
+            info = MetaInfo()
+            header = {'content-type': 'multipart/form-data; boundary=' + boundary, 'vendor_key': info.vendor_id}
 
             conn.request("POST", process['req_path'], body, header)
         else:

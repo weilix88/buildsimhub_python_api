@@ -14,20 +14,34 @@ class MetaInfo:
     def __init__(self):
         dirpath = Path(os.path.dirname(os.path.realpath(__file__))).parent
         assert(dirpath.is_dir())
+
         q = dirpath / 'info.config'
         assert(q.exists())
+
         with q.open() as f:
             key, value = f.readline().split("=")
             if key == 'user_api_key':
                 self._user_key = value.strip()
             elif key == 'base_url':
                 self._base_url = value.strip()
+            elif key == 'vendor_id':
+                self._vendor_id = value.strip()
 
             key, value = f.readline().split("=")
             if key == 'user_api_key':
                 self._user_key = value.strip()
             elif key == 'base_url':
                 self._base_url = value.strip()
+            elif key == 'vendor_id':
+                self._vendor_id = value.strip()
+
+            key, value = f.readline().split("=")
+            if key == 'user_api_key':
+                self._user_key = value.strip()
+            elif key == 'base_url':
+                self._base_url = value.strip()
+            elif key == 'vendor_id':
+                self._vendor_id = value.strip()
 
     @property
     def user_key(self):
@@ -36,3 +50,7 @@ class MetaInfo:
     @property
     def base_url(self):
         return self._base_url
+
+    @property
+    def vendor_id(self):
+        return self._vendor_id
