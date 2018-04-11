@@ -35,8 +35,7 @@ The latest version is 1.2.0. Changes include:
 
 ## Prerequisites
 - The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
-- Python version 3.4, 3.5 or 3.6
-- Must install requests package (>>>pip3 install requests) 
+- Python version 3.4, 3.5 or 3.6, Python 2.7 is undere-testing.
 
 ## Install Package
 Simply clone / download this repository and place in any folder you wish to build your application on. Examples:
@@ -51,8 +50,11 @@ You can find the API key associate with your account under the profile page:
 Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `user_api_key:[YOUR_API_KEY]`
 
+Lastly, base_url should be: https://my.buildsim.io/
+
 ## Dependencies
-- [Python-HTTP-Requests](https://github.com/requests/requests)
+- There is no dependecy requirements for using API calls.
+- However, if you'd like to utilize our plotly integration function, [plotly python](https://plot.ly/python/getting-started/) is required along with numpy, pandas.
 
 ## Project / Model key (optional)
 If you want to do simulation under an exisiting project, you will need to retrieve the project or model keys to do it. These keys can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
@@ -110,14 +112,9 @@ Lastly, a simulation job manages one type of cloud simulation. It contains six m
 ### run
 The `run()` function allows you to upload an energy model and weather file to the platform for cloud simulation (project creation is not required for this method). It has in total 2 parameters.
 1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
-2. `wea_dir`(required): the absolute local director of the simulation weather file (it should be .epw file)
+2. `epw_dir`(required): the absolute local director of the simulation epw weather file (it should be .epw file)
 3. `unit` (optional): provide either `'ip'` or `'si'` unit system for your simulation job.
-4. `agent` (optional): The agent numbeer should be selected among 1, 2 or 4 agents. You can also use the [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class to help decide the agent number. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
-5. `simulation_type`(optional): The current available simulation tyoe is `regular`. This simulation Type can be generated from [SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) class. This class manages the simulation type as well as how many agents you want to assign to this simulation job. The default is `regular` for this class.
-
-This method returns two types of information:
-If sucess: `success`
-or error message states what was wrong in your request.
+4. `agent` (optional): The agent number should be selected among 1, 2 or 4 agents. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
 
 ### create_run_model
 The `create_run_model()` function allows you to upload an energy model to the platform and run simulaiton. It has in total 4 parameters.
@@ -125,22 +122,17 @@ The `create_run_model()` function allows you to upload an energy model to the pl
 2. `unit` (optional)
 3. `agent` (optional)
 4. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
-5. `simulationType` (optional)
-
-This method returns two types of information:
-If sucess: `success`
-or error message states what was wrong in your request.
 
 ### get_simulation_results
-The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`) and html file (`html`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
+The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`), html file (`html`), eio file(`eio`) and rdd file(`rdd`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
 ```python
 response = newSimulationJob.get_simulation_results('err')
 print (response)
 ```
 ### Misc. methods and variables:
 Besides the above functions, you can also retrieve some properties of the simulation job:
-1. *trackToken*: get the tracking token used for connecting the cloud simulation.
-2. *modelKey*: get the model key which connects to a branch of models
+1. *track_token*: get the tracking token used for connecting the cloud simulation.
+2. *model_key*: get the model key which connects to a branch of models
 
 <a name="energy_model"></a>
 ## Model
@@ -315,7 +307,7 @@ There are two plots available in the current API library.
 More charts can be added to the standard API library - submit a [issues](https://github.com/weilix88/buildsimhub_python_api/issues)!
 
 <a name="eems"></a>
-# Standard Energy Effiiency Measure library
+# Standard Energy Efficiency Measure library
 In the current version, the standard EEMs library is only available for parametric study.
 Standard EEMs library allows user to upload any IDF models (early stage, schematic stage, or detail design) and perform simple parametrics. Apply standard EEMs to your idf models can help designers quickly explore different design options on the cloud, and also save huge time for value engineering at later stage. Below lists the EEMs covered in the recent release:
 
@@ -369,9 +361,9 @@ new_pj.add_model_measure(wr)
 
 <a name="roadmap"></a>
 # Roadmap
-1. We are integrating matplotlib and plotly in our package for parametric study plots. Suggestions and comments are welcome!
-2. We are working on a standard EEMs, which allows user to apply common energy efficiency measures to any IDF models. Open an issue if you did not see any desired EEMs in the standard EEM library!
-2. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
+1. We are working on a standard EEMs, which allows user to apply common energy efficiency measures to any IDF models. Open an issue if you did not see any desired EEMs in the standard EEM library!
+2. More simulation configurations and output results return will be added in the future!
+3. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
 <a name="about"></a>
