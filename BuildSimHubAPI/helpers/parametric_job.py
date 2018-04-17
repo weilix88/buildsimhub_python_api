@@ -40,6 +40,10 @@ class ParametricJob:
         """Get the tracking status"""
         return self._track_status
 
+    def set_track_token(self, track_token):
+        self._track_token = track_token
+        return True
+
     def add_model_measures(self, measures):
         """
         Add measures

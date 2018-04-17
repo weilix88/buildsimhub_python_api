@@ -152,13 +152,14 @@ class ParametricModel:
         counter = 1
         if resp_json['status'] == 'success':
             datalist = resp_json['data']
+            print(datalist)
             for i in range(len(datalist)):
                 value.append(datalist[i]['value'])
                 model.append(datalist[i]['model'])
                 model_plot.append('case' + str(counter))
                 counter += 1
                 if 'unit' in datalist[i]:
-                    self._lastParameterUnit = datalist[i]['unit']
+                    self._last_parameter_unit = datalist[i]['unit']
             result = dict()
             result['value'] = value
             result['model'] = model

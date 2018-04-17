@@ -3,6 +3,7 @@ import time
 from .httpurllib import request_get
 from .httpurllib import request_post
 from .compat import is_py2
+from .parametric_model import ParametricModel
 
 
 class SimulationJob:
@@ -88,6 +89,41 @@ class SimulationJob:
 
             return False
 
+    def track_batch_simulation(self):
+        if self._track_token == "":
+            return self._track_status
+
+        url = self._base_url + 'ParametricTracking_API'
+        payload = {
+            'user_api_key': self._user_key,
+            'folder_api_key': self._track_token
+        }
+
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            return False
+
+        if 'error_msg' in resp_json:
+            self._track_status = resp_json['error_msg']
+            return False
+
+        success = float(resp_json['success'])
+        running = float(resp_json['running'])
+        error = float(resp_json['error'])
+        queue = float(resp_json['queue'])
+
+        total_progress = (success + error) / (success + running + error + queue)
+
+        message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
+        self._track_status = message % (total_progress * 100, success, error, running, queue)
+
+        if total_progress == 1:
+            return False
+        else:
+            return True
+
     def track_simulation(self):
         """
         track the simulation progress
@@ -139,7 +175,7 @@ class SimulationJob:
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
         Use this method when an empty model key is supplied.
 
-        :param file_dir: directory of the energy file (idf, osm, or gbXML)
+        :param file_dir: directory of the energy file (idf, osm, or gbXML) or list of directories
         :param epw_dir: directory of the .epw file
         :param unit: si or ip
         :param agent: the number of agents determines how many CPU use for this simulation
@@ -165,46 +201,79 @@ class SimulationJob:
             'unit': unit
         }
 
-        files = dict()
+        if type(file_dir) is str:
 
-        if is_py2:
-            files['model'] = open(file_dir, 'r')
-            files['weather_file'] = open(epw_dir, 'r')
-        else:
-            # py3 cannot decode incompatible utf-8 string
-            files['model'] = open(file_dir, 'r', errors='ignore')
-            files['weather_file'] = open(epw_dir, 'r', errors='ignore')
-
-        print("Submitting simulation request...")
-        r = request_post(url, params=payload, files=files)
-        if r.status_code == 500:
-            self._track_status = 'Code: ' + str(r.status_code)
-            print(self._track_status)
-            return False
-        resp_json = r.json()
-        if r.status_code > 200:
-            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
-            print(self._track_status)
-            return False
-        print("Received server response")
-
-        if resp_json['status'] == 'success':
-            self._track_token = resp_json['tracking']
-            if track:
-                while self.track_simulation():
-                    print(self.track_status)
-                    time.sleep(request_time)
-            if self.track_status == 'Simulation finished successfully':
-                print(self.track_status)
-                # check whether there is requested data
-                print('Completed! You can retrieve results using the key: '+self._track_token)
-                res = Model(self._user_key, self._track_token, self._base_url)
-                return res
+            files = self._decode_model_and_epw(file_dir, epw_dir)
+            print("Submitting simulation request...")
+            r = request_post(url, params=payload, files=files)
+            if self._http_code_check(r):
+                resp_json = r.json()
+                if resp_json['status'] == 'success':
+                    self._track_token = resp_json['tracking']
+                    if track:
+                        while self.track_simulation():
+                            print(self.track_status)
+                            time.sleep(request_time)
+                    if self.track_status == 'Simulation finished successfully':
+                        print(self.track_status)
+                        # check whether there is requested data
+                        print('Completed! You can retrieve results using the key: '+self._track_token)
+                        res = Model(self._user_key, self._track_token, self._base_url)
+                        return res
+                    else:
+                        # print(self.track_status)
+                        return True
+                else:
+                    print(resp_json['error_msg'])
+                    return False
             else:
-                # print(self.track_status)
-                return True
+                return False
+        elif type(file_dir) is list:
+            if len(file_dir) == 0:
+                print("Model directory list should not be empty")
+                return False
+            print("Submitting the model number: 1")
+            files = self._decode_model_and_epw(file_dir[0], epw_dir)
+            r = request_post(url, params=payload, files=files)
+            if self._http_code_check(r):
+                resp_json = r.json()
+                if resp_json['status'] == 'success':
+                    # in this case, we are getting the branch key / model key
+                    self._track_token = resp_json['branch_key']
+
+                    payload['branch_key'] = self._track_token
+
+                    for i in range(1, len(file_dir)):
+                        time.sleep(5)
+                        print("Submitting the model number: " + str(i+1))
+                        files = self._decode_model_and_epw(file_dir[i], None)
+                        r = request_post(url, params=payload, files=files)
+                        if self._http_code_check(r):
+                            resp_json = r.json()
+                            if resp_json['status'] == 'error':
+                                print(resp_json['error_msg'])
+                                return False
+                        else:
+                            return False
+                    if track:
+                        while self.track_batch_simulation():
+                            print(self._track_status)
+                            time.sleep(request_time)
+                        print(self._track_status)
+                        print('Completed! You can retrieve results using the key: '+self._track_token)
+                        res = ParametricModel(self._user_key, self._track_token, self._base_url)
+                        return res
+                    else:
+                        return True
+                else:
+                    print(resp_json['error_msg'])
+                    return False
+            else:
+                # code check failed
+                return False
         else:
-            print(resp_json['error_msg'])
+            # model check failed
+            print("Error: file_dir should be either a str or a list of str")
             return False
 
     def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular", track=False, request_time=5):
@@ -248,35 +317,29 @@ class SimulationJob:
 
         print("Submitting simulation request...")
         r = request_post(url, params=payload)
-        if r.status_code == 500:
-            self._track_status = 'Code: ' + str(r.status_code)
-            print(self._track_status)
-            return False
-        resp_json = r.json()
-        if r.status_code > 200:
-            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
-            print(self._track_status)
-            return False
-        print("Received server response")
-
-        if resp_json['status'] == 'success':
-            self._track_token = resp_json['tracking']
-            if track:
-                while self.track_simulation():
-                    print(self.track_status)
-                    time.sleep(request_time)
-            print(self.track_status)
-            if self.track_status == 'Simulation finished successfully':
+        if self._http_code_check(r):
+            resp_json = r.json()
+            if resp_json['status'] == 'success':
+                self._track_token = resp_json['tracking']
+                if track:
+                    while self.track_simulation():
+                        print(self.track_status)
+                        time.sleep(request_time)
                 print(self.track_status)
-                print('Completed! You can retrieve results using the key: '+self._track_token)
-                # check whether there is requested data
-                res = Model(self._user_key, self._track_token, self._base_url)
-                return res
+                if self.track_status == 'Simulation finished successfully':
+                    print(self.track_status)
+                    print('Completed! You can retrieve results using the key: '+self._track_token)
+                    # check whether there is requested data
+                    res = Model(self._user_key, self._track_token, self._base_url)
+                    return res
+                else:
+                    # print(self.track_status)
+                    return True
             else:
-                # print(self.track_status)
-                return True
+                return resp_json['error_msg']
         else:
-            return resp_json['error_msg']
+            # http code check error
+            return False
 
     def create_run_model(self, file_dir,  unit='ip', agent=1, comment="Python API", simulation_type="regular",
                          track=False, request_time=5):
@@ -290,7 +353,7 @@ class SimulationJob:
         new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-df36d6d3dbc6")
         new_sj.create_run_model("local/usr/in.idf")
 
-        :param file_dir:
+        :param file_dir: a str contains model directory or a list of str contains model directories
         :param unit:
         :param agent:
         :param comment:
@@ -321,37 +384,28 @@ class SimulationJob:
 
         print("Submitting simulation request...")
         r = request_post(url, params=payload, files=files)
-        if r.status_code == 500:
-            print(r.json())
-
-            self._track_status = 'Code: ' + str(r.status_code)
-            print(self._track_status)
-            return False
-        resp_json = r.json()
-        if r.status_code > 200:
-            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
-            print(self._track_status)
-            return False
-
-        print("Received server response")
-
-        if resp_json['status'] == 'success':
-            self._track_token = resp_json['tracking']
-            if track:
-                while self.track_simulation():
+        if self._http_code_check(r):
+            resp_json = r.json()
+            if resp_json['status'] == 'success':
+                self._track_token = resp_json['tracking']
+                if track:
+                    while self.track_simulation():
+                        print(self.track_status)
+                        time.sleep(request_time)
+                if self.track_status == 'Simulation finished successfully':
                     print(self.track_status)
-                    time.sleep(request_time)
-            if self.track_status == 'Simulation finished successfully':
-                print(self.track_status)
-                # check whether there is requested data
-                print('Completed! You can retrieve results using the key: '+self._track_token)
-                res = Model(self._user_key, self._track_token, self._base_url)
-                return res
+                    # check whether there is requested data
+                    print('Completed! You can retrieve results using the key: '+self._track_token)
+                    res = Model(self._user_key, self._track_token, self._base_url)
+                    return res
+                else:
+                    # print(self.track_status)
+                    return True
             else:
-                # print(self.track_status)
-                return True
+                return resp_json['error_msg']
         else:
-            return resp_json['error_msg']
+            # http code check error
+            return False
 
     def create_model(self, file_dir, comment="Upload through Python API"):
         """
@@ -420,3 +474,31 @@ class SimulationJob:
                 self._track_status = resp_json['msg']
             # self._track_status = resp_json['error_msg']
             return resp_json['has_more']
+
+    @staticmethod
+    def _decode_model_and_epw(model, epw):
+        files = dict()
+        if is_py2:
+            files['model'] = open(model, 'r')
+            if epw is not None:
+                files['weather_file'] = open(epw, 'r')
+        else:
+            # py3 cannot decode incompatible utf-8 string
+            files['model'] = open(model, 'r', errors='ignore')
+            if epw is not None:
+                files['weather_file'] = open(epw, 'r', errors='ignore')
+        return files
+
+    def _http_code_check(self, resp):
+        if resp.status_code == 500:
+            self._track_status = 'Code: ' + str(resp.status_code)
+            print(self._track_status)
+            return False
+        resp_json = resp.json()
+        if resp.status_code > 200:
+            self._track_status = 'Code: ' + str(resp.status_code) + ' message: ' + resp_json['error_msg']
+            print(self._track_status)
+            return False
+        # None of those code, then it should be 200
+        print("Received server response")
+        return True
