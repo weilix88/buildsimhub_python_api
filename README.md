@@ -29,6 +29,7 @@ The latest version is 1.3.0. Changes include:
 3. add `eio` and `rdd` to extract .eio and .rdd result files
 4. Use the developed httpurllib to take out the requests dependency
 5. Address compatibility issues with Python 2.7
+6. Run method in a SimulationJob supports batch model uploading with one epw file.
 
 <a name="installation"></a>
 
@@ -50,15 +51,22 @@ You can find the API key associate with your account under the profile page:
 
 Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `user_api_key:[YOUR_API_KEY]`
-
-Lastly, base_url should be: https://my.buildsim.io/
+and the `base_url` should be: https://my.buildsim.io/
+You can leave the `vendor_id=BuildSimHub` as it is. A sample of a complete info.config file is:
+`user_api_key=00268f8c-e538-41bc-8927-a2ba96a639b3
+base_url=https://my.buildsim.io/
+vendor_id=BuildSimHub`
 
 ## Dependencies
 - There is no dependecy requirements for using API calls.
 - However, if you'd like to utilize our plotly integration function, [plotly python](https://plot.ly/python/getting-started/) is required along with numpy, pandas.
 
 ## Project / Model key (optional)
-If you want to do simulation under an exisiting project, you will need to retrieve the project or model keys to do it. These keys can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
+If you want to do simulations under an exisiting project, you will need to retrieve the project or model keys to do it. 
+Differences between a project key and a model key:
+1. project_key can be found under a project. If this key is supplied, then the API will create a new model under the project.
+2. model_key can be found under every model. If a model key is supplied, then the API will create a new model history under the model.
+You will then find the model key under the energy model tab (highlighted in the figure below)
 ![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
