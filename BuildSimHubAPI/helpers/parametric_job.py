@@ -9,20 +9,20 @@ class ParametricJob:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, user_key, model_key, base_url=None):
+    def __init__(self, project_key, model_key='', base_url=None):
         """
         Construct a parametric job
 
         Specify EEM and do parametrics
 
-        :param user_key:
-        :param model_key:
+        :param project_key: required
+        :param model_key: optional
         :param base_url: optional - use for testing only
-        :type user_key: str
+        :type project_key: str
         :type model_key: str
         :type base_url: str
         """
-        self._user_key = user_key
+        self._project_key = project_key
         self._model_key = model_key
         self._track_token = ""
         self._track_status = ""
@@ -96,8 +96,7 @@ class ParametricJob:
         # file_dir indicates the seed model
         url = self._base_url + 'ParametricSettingUploadModel_API'
         payload = {
-            'user_api_key': self._user_key,
-            'project_api_key': self._model_key,
+            'project_api_key': self._project_key,
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit
@@ -134,7 +133,7 @@ class ParametricJob:
                     time.sleep(request_time)
                 print(self._track_status)
                 print('Completed! You can retrieve results using the key: '+self._track_token)
-                res = ParametricModel(self._user_key, self._track_token, self._base_url)
+                res = ParametricModel(self._project_key, self._track_token, self._base_url)
                 return res
             else:
                 return True
@@ -147,7 +146,7 @@ class ParametricJob:
     # file_dir indicates the seed model
     #        url = ParametricJob.BASE_URL + 'CreateModel_API'
     #        payload = {
-    #            'user_api_key': self._user_key,
+    #            'project_api_key': self._project_key,
     #            'simulation_type': simulationType,
     #            'agents':1
     #        }
@@ -172,7 +171,7 @@ class ParametricJob:
 
     # for this method, it allows user to identify one seed model in a project.
     # This allows the parametric study performed under a project with a fixed weather file,
-    def submit_parametric_study(self, unit='ip', simulation_type='parametric', track=False, request_time=5):
+    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_key=None, track=False, request_time=5):
         """
         Select a model in the project as the seed model and do parametric study
 
@@ -183,18 +182,27 @@ class ParametricJob:
             new_pj.submit_parametric_study(track=True)
 
         :param unit:
+        :param model_key: optional
         :param simulation_type: deprecated
         :param track:
         :param request_time:
         :type unit: str
+        :type model_key: str
         :type simulation_type: str
         :type track: bool
         :type request_time: float
         :return: True if success, False otherwise
         """
+        if model_key is not None:
+            self._model_key = model_key
+
+        if self._model_key == '':
+            print('submit_parametric_study requires a valid model_key')
+            return False
+
         url = self._base_url + 'ParametricSettingCopyModel_API'
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'model_api_key': self._model_key,
             'simulation_type': simulation_type,
             'agents': 1,
@@ -226,7 +234,7 @@ class ParametricJob:
                     time.sleep(request_time)
                 print(self._track_status)
                 print('Completed! You can retrieve results using the key: '+self._track_token)
-                res = ParametricModel(self._user_key, self._track_token, self._base_url)
+                res = ParametricModel(self._project_key, self._track_token, self._base_url)
                 return res
             else:
                 return True
@@ -240,7 +248,7 @@ class ParametricJob:
 
         url = self._base_url + 'ParametricTracking_API'
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'folder_api_key': self._track_token
         }
 

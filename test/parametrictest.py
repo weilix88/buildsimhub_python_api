@@ -6,10 +6,13 @@ Sample code to demonstrate a parametric workflow
 import BuildSimHubAPI as bsh_api
 
 # 1. set your folder key
-model_key = '39ed84d0-062b-470d-96e6-b03abff9c31c'
+project_key = 'ad7e830f-b555-497c-ba22-c7949289a1ac'
+model_key = '82f244cf-adb6-4f69-9d5d-183ca5e89106'
+
+file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
 
 bsh = bsh_api.BuildSimHubAPIClient()
-new_pj = bsh.new_parametric_job(model_key)
+new_pj = bsh.new_parametric_job(project_key, model_key)
 
 # Define EEMs
 wwr = bsh_api.measures.WindowWallRatio()
@@ -30,13 +33,11 @@ new_pj.add_model_measure(lpd)
 new_pj.add_model_measure(heatEff)
 
 # Start!
-results = new_pj.submit_parametric_study(track=True)
+results = new_pj.submit_parametric_study_local(file_dir, track=True)
 
 if results:
 
     # Collect results
-    results = bsh.get_parametric_results(new_pj)
-
     result_dict = results.net_site_eui()
     result_unit = results.last_parameter_unit
 

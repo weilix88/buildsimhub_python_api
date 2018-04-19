@@ -11,21 +11,21 @@ class ParametricModel:
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, user_key, model_key, base_url=None):
+    def __init__(self, project_key, track_token, base_url=None):
         """
         Construct parametric result object
 
-        :param user_key:
-        :param model_key:
+        :param project_key: required
+        :param track_token: required
         :param base_url: optional
-        :type user_key: str
-        :type model_key: str
+        :type project_key: str
+        :type track_token: str
         :type base_url: str
 
         """
-        self._user_key = user_key
+        self._project_key = project_key
         self._last_parameter_unit = ""
-        self._model_key = model_key
+        self._track_token = track_token
         self._base_url = ParametricModel.BASE_URL
         if base_url is not None:
             self._base_url = base_url
@@ -38,13 +38,13 @@ class ParametricModel:
         """Open the online geometric viewer in browser"""
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._model_key.split('-')
+        test = self._track_token.split('-')
         if len(test) is 3:
             track = 'tracking'
 
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
         }
 
         r = make_url(url, payload)
@@ -135,8 +135,8 @@ class ParametricModel:
     def __call_api(self, request_data):
         url = self._base_url + 'ParametricResults_API'
         payload = {
-            'user_api_key': self._user_key,
-            'folder_api_key': self._model_key,
+            'project_api_key': self._project_key,
+            'folder_api_key': self._track_token,
             'request_data': request_data
         }
 
@@ -152,7 +152,6 @@ class ParametricModel:
         counter = 1
         if resp_json['status'] == 'success':
             datalist = resp_json['data']
-            print(datalist)
             for i in range(len(datalist)):
                 value.append(datalist[i]['value'])
                 model.append(datalist[i]['model'])
