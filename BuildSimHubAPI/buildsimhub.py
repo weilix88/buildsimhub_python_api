@@ -24,6 +24,7 @@ class BuildSimHubAPIClient:
     For examples and detailed use instructions, see:
         https://github.com/weilix88/buildsimhub_python_api
 
+
     """
     def __init__(self):
         """
