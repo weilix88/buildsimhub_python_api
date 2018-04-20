@@ -9,7 +9,6 @@ We appreciate your continued support, thank you!
 # Table of Contents
 * [Installation](#installation)
 * [Quick Start](#quick-start)
-  * [SimulationType](#simultion_type)
   * [SimulationJob](#simulation_job)
   * [Model](#energy_model)
   * [Parametric](#parametric_job)
@@ -36,13 +35,12 @@ Simply clone / download this repository and place in any folder you wish to buil
 ![picture alt](https://imgur.com/x60rk2O.png)
 
 ## Setup environment
-After you downloaded the whole package, the first you need to do is to reconfigure your user API in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
-You can find the API key associate with your account under the profile page:
-
-![picture alt](https://imgur.com/gHehDiN.png)
+There are no requirements for regular users to access BuildSim Cloud besides Python installation.
+However, for software vendors who would like to integrate the BuildSim Cloud, you can revise the vendor key in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
 
 Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
-`user_api_key:[YOUR_API_KEY]`
+`vendor_id:[Your name]`
+If you decided to use BuildSim Cloud, please send your specific vendor id to us: weili.xu@buildsimhub.net.
 
 ## Project / Model key (optional)
 If you want to do simulation under an exisiting project, you will need to retrieve the project or model keys to do it. These keys can be found under your buildsimhub project. After you set up a project on the platform, simply create an energy model in the project. You will then find the model key under the energy model tab (highlighted in the figure below)
@@ -123,18 +121,6 @@ If the simulation job is completed, you can get results by calling `get_simulati
 <a name="functions"></a>
 
 #Object and Functions
-<a name="simultion_type"></a>
-## simulationType
-[SimulationType](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationType.py) is a helper class that helps you configure the cloud simulation. Currently, there are two simulation types available, `regular` and `parametric`. This class also helps you control the number of agent you can use for one simulation job. The number of agents specify how you would like to speed up your simulations.
-You can increase the number of agent by calling the `increase_agents()` function.
-```python
-simulationType = bsh.get_simulation_type()
-num_of_agents = simulationType.increase_agents();
-print (num_of_agents)
-```
-It should be noted that the maximum number of agents working on one simulation job is limited to 4, and the more agents you assigned to one simulation job, the faster your simulation can be. You can also call `reset_agent()` function to reset the number of agent to 1.
-
-<a name="simulation_job"></a>
 ## SimulationJob
 The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
 
