@@ -322,7 +322,7 @@ paths:
             ,'InteriorEquipmentNaturalGas','InteriorLightingElectricity'
             ,'InteriorLightingNaturalGas','PumpsElectricity','PumpsNaturalGas'
             ,'NetSiteEUI','NotMetHoursCooling','NotMetHoursHeating'
-            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI']
+            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI','BuildingLPD','BuildingEPD']
       responses:
         '200':
           description: successfully received the request
