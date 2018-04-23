@@ -1,5 +1,9 @@
+"""
+Sample code to demonstrate a parametric workflow
+
+"""
+
 import BuildSimHubAPI as bsh_api
-import time
 
 # 1. set your folder key
 model_key = '39ed84d0-062b-470d-96e6-b03abff9c31c'
