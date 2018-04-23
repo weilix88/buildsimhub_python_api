@@ -1,6 +1,6 @@
 
 
-class ModelAction:
+class ModelAction(object):
 
     def __init__(self, name, unit='si'):
         """
@@ -25,9 +25,9 @@ class ModelAction:
 
     def get_data_string(self):
         if not self._list_data:
-            return "["+",".join(str(x) for x in self._default_list)+"]"
+            return "[" + ",".join(str(x) for x in self._default_list) + "]"
         else:
-            return "["+",".join(str(x) for x in self._list_data)+"]"
+            return "[" + ",".join(str(x) for x in self._list_data) + "]"
 
     def get_datalist(self):
         return self._list_data

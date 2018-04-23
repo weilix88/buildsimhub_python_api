@@ -7,7 +7,7 @@ from .httpurllib import make_url
 
 # potentially in the future, to write
 
-class ParametricModel:
+class ParametricModel(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
