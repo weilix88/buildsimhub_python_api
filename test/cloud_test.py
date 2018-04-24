@@ -8,7 +8,7 @@ import BuildSimHubAPI as bsh_api
 # model_key can be found in each model information bar
 model_key = "96d21c84-d17f-41a2-9da4-1d09ca43736e"
 # project_key can be found in every project (click the information icon next to project name)
-project_key = "ad7e830f-b555-497c-ba22-c7949289a1ac"
+project_key = "d43f2d17-7da6-4fd1-800c-62651001d453"
 
 file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
 wea_dir = "/Users/weilixu/Desktop/data/jsontest/in.epw"

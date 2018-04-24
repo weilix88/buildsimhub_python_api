@@ -181,6 +181,9 @@ class ParametricJob(object):
             new_pj = bsh.new_parametric_job(model_key)
             new_pj.submit_parametric_study(track=True)
 
+        When model key is empty, you must use submit_parametric_study_local method to upload the seed model
+        instead this method
+
         :param unit:
         :param model_key: optional
         :param simulation_type: deprecated

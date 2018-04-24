@@ -57,6 +57,39 @@ class SimulationJob(object):
             return "Cannot process more than one value for a single simulation job. Try parametric study."
         self._model_action_list.append(action)
 
+    def get_simulation_results(self, result_type="html", accept='file'):
+        """
+        This method is deprecated. It is suggested to call the same function in the result object
+        returned by a successful simulation call (or use: bsh_api.helpers.Model(project_key, track_token)
+
+        get a simulation result file (only use after the simulation is completed)
+        :param result_type: currently available option include html, err, eso, eio, rdd
+        :param accept:
+        :return: text of the file, or error code
+        :rtype: string
+        """
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        url = self._base_url + 'GetSimulationResult_API'
+        payload = {
+            'project_api_key': self._project_key,
+            'result_type': result_type,
+            'accept': accept,
+            track: self._track_token
+        }
+
+        r = request_post(url, params=payload, stream=True)
+
+        if r.status_code == 200:
+            return r.json()
+        else:
+            self._track_status = 'Code: ' + str(r.status_code)
+            print(self._track_status)
+            return False
+
     def track_batch_simulation(self):
         if self._track_token == "":
             return self._track_status
@@ -399,7 +432,6 @@ class SimulationJob(object):
             'agents': 1
         }
 
-        print(payload)
         files = dict()
 
         if is_py2:

@@ -9,7 +9,7 @@ project_key = "ad7e830f-b555-497c-ba22-c7949289a1ac"
 model_key = "39ed84d0-062b-470d-96e6-b03abff9c31c"
 
 # 1. define the absolute directory of your energy model
-#file_dir = ["/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON",
+# file_dir = ["/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON",
 #            "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled.idf",
 #            "/Users/weilixu/Desktop/data/jsontest/130NF.idf"]
 
