@@ -27,7 +27,7 @@ except ImportError:
     print('pandas is not installed')
 
 
-class ParametricPlot:
+class ParametricPlot(object):
 
     def __init__(self, data, unit=""):
         """
@@ -111,7 +111,7 @@ class ParametricPlot:
 
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         fig = dict(data=data, layout=layout)
-        plot(fig, filename=dir+'/' + image_name + '.html')
+        plot(fig, filename=dir + '/' + image_name + '.html')
 
     def parallel_coordinate_plotly(self, investigate=None, image_name="Plot"):
         """
@@ -149,5 +149,4 @@ class ParametricPlot:
 
         # fig = go.Figure(data=data)
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        plot(data, filename=dir+'/' + image_name + '.html')
-
+        plot(data, filename=dir + '/' + image_name + '.html')

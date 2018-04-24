@@ -12,7 +12,7 @@ This file provides the BuildSim API client
 from BuildSimHubAPI import helpers
 
 
-class BuildSimHubAPIClient:
+class BuildSimHubAPIClient(object):
     """
     This BuildSimHub API client
     use this object to interact with the BuildSim API. for example:
@@ -25,6 +25,7 @@ class BuildSimHubAPIClient:
         https://github.com/weilix88/buildsimhub_python_api
 
     """
+
     def __init__(self):
         """
         Construct BuildSimHub API object

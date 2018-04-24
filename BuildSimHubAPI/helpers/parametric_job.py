@@ -5,7 +5,7 @@ from .parametric_model import ParametricModel
 from .compat import is_py2
 
 
-class ParametricJob:
+class ParametricJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
@@ -133,7 +133,7 @@ class ParametricJob:
                     print(self._track_status)
                     time.sleep(request_time)
                 print(self._track_status)
-                print('Completed! You can retrieve results using the key: '+self._track_token)
+                print('Completed! You can retrieve results using the key: ' + self._track_token)
                 res = ParametricModel(self._user_key, self._track_token, self._base_url)
                 return res
             else:
@@ -225,7 +225,7 @@ class ParametricJob:
                     print(self._track_status)
                     time.sleep(request_time)
                 print(self._track_status)
-                print('Completed! You can retrieve results using the key: '+self._track_token)
+                print('Completed! You can retrieve results using the key: ' + self._track_token)
                 res = ParametricModel(self._user_key, self._track_token, self._base_url)
                 return res
             else:

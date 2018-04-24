@@ -1,5 +1,10 @@
 import re
-from html.parser import HTMLParser
+
+try:
+    from html.parser import HTMLParser
+except ImportError:
+    # python 2
+    from HTMLParser import HTMLParser
 
 
 class NumericValueParser(HTMLParser):
@@ -10,7 +15,7 @@ class NumericValueParser(HTMLParser):
         t = re.sub('\W', '', table)
         rf = re.sub('\W', '', report_for)
 
-        self._tableId = r+":" + rf + ":" + t
+        self._tableId = r + ":" + rf + ":" + t
         self._column = column_name
         self._row = row_name
         self._in_table = False
@@ -90,7 +95,7 @@ class NumericValueParser(HTMLParser):
         # reform the string & separate the unit
         if index > -1:
             unit = data[index:]
-            data = data[:index-1]
+            data = data[:index - 1]
 
         if self._in_header & (data == self._column):
             self._in_header = False

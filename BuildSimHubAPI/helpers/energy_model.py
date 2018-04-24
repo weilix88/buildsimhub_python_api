@@ -3,7 +3,7 @@ from .httpurllib import request_get
 from .httpurllib import make_url
 
 
-class Model:
+class Model(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
