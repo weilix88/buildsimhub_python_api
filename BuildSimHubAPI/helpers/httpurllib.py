@@ -9,8 +9,7 @@ import urllib
 from .bldgsim_info import MetaInfo
 
 
-
-class HTTPConnect:
+class HTTPConnect(object):
     def __init__(self, status_code, response_obj):
         """
         Construct HTTP connection object
@@ -87,10 +86,17 @@ def __split_path(path):
         host = path[:slash_idx]
         req_path = path[slash_idx:]
 
-    if is_ssl:
-        conn = httplib.HTTPSConnection(host, context=ssl._create_unverified_context())
-    else:
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        # Python < 2.7.9 doesn't support ssl
         conn = httplib.HTTPConnection(host)
+    else:
+        if is_ssl:
+            conn = httplib.HTTPSConnection(host,
+                                           context=_create_unverified_https_context)
+        else:
+            conn = httplib.HTTPConnection(host)
 
     return {'status': 'success', 'conn': conn, 'req_path': req_path}
 
@@ -142,9 +148,11 @@ def request_get(path, params, stream=False):
         header = {'vendor_key': info.vendor_id}
         # check 2.x and 3.x differences in using urllib
         try:
-            conn.request("GET", process['req_path'] + "?" + urllib.urlencode(params), headers=header)
+            conn.request("GET", process['req_path'] + "?" +
+                         urllib.urlencode(params), headers=header)
         except AttributeError:
-            conn.request("GET", process['req_path'] + "?" + urllib.parse.urlencode(params), headers=header)
+            conn.request("GET", process['req_path'] + "?" +
+                         urllib.parse.urlencode(params), headers=header)
 
         resp = conn.getresponse()
 
@@ -167,7 +175,8 @@ def request_post(path, params, files=None, stream=False):
         if files:
             boundary, body = __encode_multipart_formdata(params, files)
             info = MetaInfo()
-            header = {'content-type': 'multipart/form-data; boundary=' + boundary, 'vendor_key': info.vendor_id}
+            header = {'content-type': 'multipart/form-data; boundary=' +
+                      boundary, 'vendor_key': info.vendor_id}
 
             conn.request("POST", process['req_path'], body, header)
         else:
@@ -189,7 +198,7 @@ def request_post(path, params, files=None, stream=False):
 
 def make_url(path, params):
     try:
-        url = path+"?"+urllib.urlencode(params)
+        url = path + "?" + urllib.urlencode(params)
     except:
-        url = path+"?"+urllib.parse.urlencode(params)
+        url = path + "?" + urllib.parse.urlencode(params)
     return url

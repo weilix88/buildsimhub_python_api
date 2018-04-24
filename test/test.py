@@ -13,7 +13,7 @@ model_key = "39ed84d0-062b-470d-96e6-b03abff9c31c"
 #            "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled.idf",
 #            "/Users/weilixu/Desktop/data/jsontest/130NF.idf"]
 
-file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled.idf"
+file_dir = "/Users/weilixu/Desktop/data/jsontest/expand/idf.idf"
 
 wea_dir = "/Users/weilixu/Desktop/data/jsontest/in.epw"
 

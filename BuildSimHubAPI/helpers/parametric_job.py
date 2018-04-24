@@ -5,7 +5,7 @@ from .parametric_model import ParametricModel
 from .compat import is_py2
 
 
-class ParametricJob:
+class ParametricJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 

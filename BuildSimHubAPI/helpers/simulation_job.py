@@ -6,7 +6,7 @@ from .compat import is_py2
 from .parametric_model import ParametricModel
 
 
-class SimulationJob:
+class SimulationJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
@@ -160,7 +160,7 @@ class SimulationJob:
         :rtype: bool or Model
 
         """
-        url = self._base_url+'RunSimulationCustomize_API'
+        url = self._base_url + 'RunSimulationCustomize_API'
         payload = {
             'simulation_type': simulation_type,
             'project_api_key': self._project_key,
@@ -212,7 +212,7 @@ class SimulationJob:
 
                     for i in range(1, len(file_dir)):
                         time.sleep(5)
-                        print("Submitting the model number: " + str(i+1))
+                        print("Submitting the model number: " + str(i + 1))
                         files = self._decode_model_and_epw(file_dir[i], None)
                         r = request_post(url, params=payload, files=files)
                         if self._http_code_check(r):
@@ -229,6 +229,7 @@ class SimulationJob:
                         print(self._track_status)
                         print('Completed! You can retrieve results using the key: '+self._track_token)
                         res = ParametricModel(self._track_token, self._project_key, self._base_url)
+
                         return res
                     else:
                         return True
@@ -296,7 +297,7 @@ class SimulationJob:
                 print(self.track_status)
                 if self.track_status == 'Simulation finished successfully':
                     print(self.track_status)
-                    print('Completed! You can retrieve results using the key: '+self._track_token)
+                    print('Completed! You can retrieve results using the key: ' + self._track_token)
                     # check whether there is requested data
                     res = Model(self._project_key, self._track_token, self._base_url)
                     return res
@@ -406,7 +407,7 @@ class SimulationJob:
         else:
             # py3 cannot decode incompatible utf-8 string
             files['file'] = open(file_dir, 'r', errors='ignore')
-        
+
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
             self._track_status = 'Code: ' + str(r.status_code)
@@ -414,7 +415,8 @@ class SimulationJob:
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            self._track_status = 'Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg']
+            self._track_status = 'Code: ' + str(r.status_code) + \
+                ' message: ' + resp_json['error_msg']
             print(self._track_status)
             return False
 
@@ -465,7 +467,8 @@ class SimulationJob:
             return False
         resp_json = resp.json()
         if resp.status_code > 200:
-            self._track_status = 'Code: ' + str(resp.status_code) + ' message: ' + resp_json['error_msg']
+            self._track_status = 'Code: ' + \
+                str(resp.status_code) + ' message: ' + resp_json['error_msg']
             print(self._track_status)
             return False
         # None of those code, then it should be 200

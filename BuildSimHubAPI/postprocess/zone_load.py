@@ -10,7 +10,7 @@ except ImportError:
     print('pandas is not installed')
 
 
-class ZoneLoad:
+class ZoneLoad(object):
     def __init__(self, load_profile):
         """
         Construct zoneload class
