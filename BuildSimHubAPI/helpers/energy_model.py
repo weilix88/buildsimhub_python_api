@@ -18,12 +18,8 @@ class Model(object):
         if response:
             print(results.net_site_eui())
 
-        2. get from BuildSim API client with a simulation job
-        results = bsh.get_simulation_results(new_sj)
-        print(results.net_site_eui())
-
-        3. get it by importing the class (you need to supply user api and either a model key or tracking token)
-        results = buildsimhub.helpers.Model(user_api, model_key)
+        2. get it by importing the class (you need to supply user api and either a model key or tracking token)
+        results = buildsimhub.helpers.Model(project_api_key, model_api_key)
         print(results.net_site_eui())
 
         :param project_key: required

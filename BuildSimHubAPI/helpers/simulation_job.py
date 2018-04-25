@@ -351,7 +351,7 @@ class SimulationJob(object):
 
         Example:
 
-        # key should be the project key
+        # key should be the project api key
         new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-df36d6d3dbc6")
         new_sj.create_run_model("local/usr/in.idf")
 

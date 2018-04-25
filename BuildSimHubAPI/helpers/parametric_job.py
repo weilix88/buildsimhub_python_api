@@ -76,9 +76,10 @@ class ParametricJob(object):
         """
         Submit an energy model from local as the seed model to a project for this parametric study
         Example:
-            project_key = "xxx"
+            project_api_key = "xxx"
             file_dir = "in.idf"
-            new_sj = buildsimhub.new_parametric_job(project_key)
+
+            new_sj = buildsimhub.new_parametric_job(project_api_key)
             new_sj.submit_parametric_study_local(file_dir, track=True)
 
         :param file_dir:
@@ -176,9 +177,10 @@ class ParametricJob(object):
         Select a model in the project as the seed model and do parametric study
 
         Example:
-            model_key = "xx"
+            project_api_key = "xx"
+            model_api_key = "xx"
 
-            new_pj = bsh.new_parametric_job(model_key)
+            new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
             new_pj.submit_parametric_study(track=True)
 
         When model key is empty, you must use submit_parametric_study_local method to upload the seed model
