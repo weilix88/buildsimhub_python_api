@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/weilix88/buildsimhub_python_api/blob/master/LICENSE.txt'
-host: my.buildsim.io
+host: develop.buildsimhub.net
 schemes:
   - https
 paths:
@@ -22,10 +22,10 @@ paths:
       consumes:
         - multipart/form-data
       parameters:
-        - name: user_api_key
+        - name: project_api_key
           in: query
           required: true
-          description: The user api key for accessing the service, can be found or updated in user profile page
+          description: The project api key which can be found under the project info tab
           type: string
         - name: unit
           in: query
@@ -111,10 +111,10 @@ paths:
       summary: Get a simulation status
       description: This API request allows user to receive the simulation status of a specific model
       parameters:
-        - name: user_api_key
+        - name: project_api_key
           in: query
           required: true
-          description: The user api key for accessing the service, can be found or updated in user profile page
+          description: The project api key which can be found under the project info tab
           type: string
         - name: track_token
           in: query
@@ -197,10 +197,10 @@ paths:
       summary: Get a model basic information
       description: API request to retrieve model information
       parameters:
-        - name: user_api_key
+        - name: project_api_key
           in: query
           required: true
-          description: The user api key for accessing the service, can be found or updated in user profile page
+          description: The project api key which can be found under the project info tab
           type: string
         - name: folder_api_key
           in: query
@@ -217,7 +217,7 @@ paths:
           required: true
           description: required data information
           type: string
-          enum: ['BuildingStories','ConditionedZoneNumber','ZoneFloorArea','ConditionedZoneFloorArea','TotalWindowWallRatio','TotalZoneNumber','Orientation']
+          enum: ['BuildingStories','ConditionedZoneNumber','ZoneFloorArea','ConditionedZoneFloorArea','TotalWindowToWallRatio','TotalZoneNumber','Orientation']
       responses:
         '200':
           description: Successfully received the request
@@ -296,10 +296,10 @@ paths:
       summary: Get simulation results
       description: API request to retrieve model simulation results
       parameters:
-        - name: user_api_key
+        - name: project_api_key
           in: query
           required: true
-          description: The user api key for accessing the service, can be found or updated in user profile page
+          description: The project api key which can be found under the project info tab
           type: string
         - name: folder_api_key
           in: query
@@ -322,7 +322,7 @@ paths:
             ,'InteriorEquipmentNaturalGas','InteriorLightingElectricity'
             ,'InteriorLightingNaturalGas','PumpsElectricity','PumpsNaturalGas'
             ,'NetSiteEUI','NotMetHoursCooling','NotMetHoursHeating'
-            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI','BuildingLPD','BuildingEPD']
+            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI','BuildingLPD','BuildingEPD','BuildingPPL']
       responses:
         '200':
           description: successfully received the request
@@ -412,10 +412,10 @@ paths:
       summary: retrieve a model's zone load information
       description: This API retrieves a list of zone load information including zone peak cooling and heating loads, time of the peak and load densities, if a zone name is given, then this API will retrieve the detail load component inside this zone
       parameters:
-        - name: user_api_key
+        - name: project_api_key
           in: query
           required: true
-          description: The user api key for accessing the service, can be found or updated in user profile page
+          description: The project api key which can be found under the project info tab
           type: string
         - name: folder_api_key
           in: query
