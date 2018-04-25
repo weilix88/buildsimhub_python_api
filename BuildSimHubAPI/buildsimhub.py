@@ -49,7 +49,7 @@ class BuildSimHubAPIClient(object):
         sj = helpers.simulation_job.SimulationJob(project_key, self._base_url)
         return sj
 
-    def new_parametric_job(self, project_key, model_key):
+    def new_parametric_job(self, project_key, model_key=""):
         """
         Generate a new parametric job
 
