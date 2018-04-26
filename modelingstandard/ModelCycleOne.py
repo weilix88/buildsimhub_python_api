@@ -11,6 +11,17 @@ b. Window-to-wall ratio, by orientation, and shading options
 c. Orientation
 d. Thermal performance of the envelope and structure
 
+How to use this python script:
+1. Get a BuildSimHub account - it is free of charge and you can get 2 free simulation hours
+    by following the walk-through. https://my.buildsim.io/register.html
+2. Download the API package from GITHUB
+3. Copy the project_api_key from your demo project /  any new projects and paste it to the project_api_key
+4. Copy a whole building model from the model library (List of PNNL reference and IECC models)
+5. Copy the model_api_key and paste to the variable: model_api_key
+6. Define parameters in the lists under model_api_key
+7. Run the script!
+You are done
+
 Author: Weili Xu
 Date: 4/25/2018
 
@@ -37,7 +48,9 @@ window_u_unit = "si"
 window_shgc = [0.3, 0.5]
 
 """
-Below are the standard API code
+Below are the standard API code - You don't need to touch the code below
+unless you want to process different types of results than this script.
+
 """
 # Create a new parametric job
 bsh = bsh_api.BuildSimHubAPIClient()
@@ -84,8 +97,15 @@ new_pj.add_model_measures(measures)
 # Now we start!
 results = new_pj.submit_parametric_study(track=True)
 
-if results:
+'''
+Below are post-processing code
+Results carries the API calls to retrieve your parametric simulations
 
+In this case, we showed two post-process methods:
+1. get the results in pandas dataframe
+2. plot it in a parallel coordinate chart.
+'''
+if results:
     # Collect results
     result_dict = results.net_site_eui()
     result_unit = results.last_parameter_unit
