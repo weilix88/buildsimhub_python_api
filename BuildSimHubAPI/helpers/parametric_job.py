@@ -72,7 +72,7 @@ class ParametricJob(object):
         return num_total
 
     def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric",
-                                      track=False, request_time=5):
+                                      track=False, request_time=5, customize='false'):
         """
         Submit an energy model from local as the seed model to a project for this parametric study
         Example:
@@ -87,11 +87,13 @@ class ParametricJob(object):
         :param simulation_type: deprecated
         :param track:
         :param request_time:
+        :param customize: keep it false if you are not a vendor / enterprise user
         :type file_dir: str
         :type unit: str (ip or si)
         :type simulation_type: str
         :type track: bool
         :type request_time: float
+        :type customize: str
         :return: True success, False otherwise
         """
         # file_dir indicates the seed model
@@ -101,12 +103,15 @@ class ParametricJob(object):
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit,
-            'customize': 'false'
+            'customize': customize
         }
 
         for i in range(len(self._model_action_list)):
-            measure = self._model_action_list[i]
-            payload[measure.get_api_name()] = measure.get_data_string()
+            action = self._model_action_list[i]
+            data_str = action.get_data_string()
+            if customize == 'true' and data_str == '[]':
+                data_str = 'default'
+            payload[action.get_api_name()] = data_str
 
         files = dict()
 
@@ -173,7 +178,8 @@ class ParametricJob(object):
 
     # for this method, it allows user to identify one seed model in a project.
     # This allows the parametric study performed under a project with a fixed weather file,
-    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_key=None, track=False, request_time=5):
+    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_key=None, track=False,
+                                request_time=5, customize='false'):
         """
         Select a model in the project as the seed model and do parametric study
 
@@ -192,11 +198,13 @@ class ParametricJob(object):
         :param simulation_type: deprecated
         :param track:
         :param request_time:
+        :param customize: keep it false if you are not a vendor / enterprise user
         :type unit: str
         :type model_key: str
         :type simulation_type: str
         :type track: bool
         :type request_time: float
+        :type customize: str
         :return: True if success, False otherwise
         """
         if model_key is not None:
@@ -213,14 +221,17 @@ class ParametricJob(object):
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit,
-            'customize': 'false'
+            'customize': customize
         }
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
-            payload[action.get_api_name()] = action.get_data_string()
+            data_str = action.get_data_string()
+            if customize == 'true' and data_str == '[]':
+                data_str = 'default'
+            payload[action.get_api_name()] = data_str
 
-        # return payload
+        return payload
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload)
         if r.status_code == 500:

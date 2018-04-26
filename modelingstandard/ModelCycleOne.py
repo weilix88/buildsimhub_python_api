@@ -19,10 +19,10 @@ Date: 4/25/2018
 import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
 
-# insert your BuildSimHub project api key here:
-project_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
-# energy model in your local directory
-model_dir = '/Users/weilixu/Desktop/data/5ZoneAirCooled.idf'
+# paste your BuildSimHub project api key here:
+project_api_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
+# paste your BuildSimHub model api key here:
+model_api_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
 # fill in your investigation values
 wwr_south = [0.5, 0.6]
 wwr_north = [0.3, 0.4]
@@ -39,8 +39,9 @@ window_shgc = [0.3, 0.5]
 """
 Below are the standard API code
 """
+# Create a new parametric job
 bsh = bsh_api.BuildSimHubAPIClient()
-new_pj = bsh.new_parametric_job(project_key)
+new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
 
 measures = list()
 
@@ -80,7 +81,8 @@ measures.append(winshgc)
 # Add measures to the new parametric study
 new_pj.add_model_measures(measures)
 
-results = new_pj.submit_parametric_study_local(model_dir, track=True)
+# Now we start!
+results = new_pj.submit_parametric_study(track=True)
 
 if results:
 
