@@ -17,23 +17,24 @@ Date: 4/25/2018
 """
 
 import BuildSimHubAPI as bsh_api
+import BuildSimHubAPI.postprocess as pp
 
 # insert your BuildSimHub project api key here:
-project_key = '565fcbbc-f500-4548-afb2-b71b30490282'
+project_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
 # energy model in your local directory
-model_dir = '/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled.idf'
+model_dir = '/Users/weilixu/Desktop/data/5ZoneAirCooled.idf'
 # fill in your investigation values
 wwr_south = [0.5, 0.6]
 wwr_north = [0.3, 0.4]
-wwr_east = [0.4, 0.5]
-wwr_west = [0.4, 0.5]
+wwr_east = [0.3, 0.4]
+wwr_west = [0.3, 0.4]
 wall_rvalue = [20, 30]
-wall_unit = "si"
+wall_unit = "ip"
 roof_rvalue = [30, 40]
-roof_unit = "si"
+roof_unit = "ip"
 window_uvalue = [2.8, 1.4]
 window_u_unit = "si"
-window_shgc = [0.6, 0.4]
+window_shgc = [0.3, 0.5]
 
 """
 Below are the standard API code
@@ -87,8 +88,8 @@ if results:
     result_dict = results.net_site_eui()
     result_unit = results.last_parameter_unit
     # Plot
-    plot = bsh_api.postprocess.ParametricPlot(result_dict, result_unit)
-
+    plot = pp.ParametricPlot(result_dict, result_unit)
+    print(plot.pandas_df())
     plot.parallel_coordinate_plotly()
 
 

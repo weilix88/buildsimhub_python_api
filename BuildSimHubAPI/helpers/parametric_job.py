@@ -100,7 +100,8 @@ class ParametricJob(object):
             'project_api_key': self._project_key,
             'simulation_type': simulation_type,
             'agents': 1,
-            'unit': unit
+            'unit': unit,
+            'customize': 'false'
         }
 
         for i in range(len(self._model_action_list)):
@@ -211,7 +212,8 @@ class ParametricJob(object):
             'model_api_key': self._model_key,
             'simulation_type': simulation_type,
             'agents': 1,
-            'unit': unit
+            'unit': unit,
+            'customize': 'false'
         }
 
         for i in range(len(self._model_action_list)):

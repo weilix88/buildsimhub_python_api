@@ -14,7 +14,7 @@ class ModelAction(object):
         self._data = None
         self._unit = unit
         self._name = name
-        self._default_list = [-1, -2, -3]
+        self._default_list = []
 
     def unit(self):
         """Returns the unit system (si or ip)"""
