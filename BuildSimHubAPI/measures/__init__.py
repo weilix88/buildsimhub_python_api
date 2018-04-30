@@ -18,3 +18,7 @@ from .window_wall_ratio_south import WindowWallRatioSouth
 from .window_wall_ratio_west import WindowWallRatioWest
 from .window_wall_ratio_east import WindowWallRatioEast
 from .window_wall_ratio_north import WindowWallRatioNorth
+from .roof_solar_absorption import RoofSolarAbsorption
+from .equipment_epd import EquipmentEPD
+from .water_use_reduction import WaterUseReduction
+from .water_heater_efficiency import WaterHeaterEfficiency
