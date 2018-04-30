@@ -318,11 +318,13 @@ paths:
           type: string
           enum: ['CoolingElectricity','CoolingNaturalGas','DomesticHotWaterElectricity','DomesticHotWaterNaturalGas','ExteriorEquipmentElectricity','ExteriorEquipmentNaturalGas','ExteriorLightingElectricity','ExteriorLightingNaturalGas'
             ,'FansElectricity', 'FansNaturalGas','HeatingElectricity'
-            ,'HeatingNaturalGas','HeatRejectionElectricity','HeatRejectionNaturalGas', 'InteiorEquipmentElectricity'
+            ,'HeatingNaturalGas','HeatRejectionElectricity','HeatRejectionNaturalGas', 'InteriorEquipmentElectricity'
             ,'InteriorEquipmentNaturalGas','InteriorLightingElectricity'
             ,'InteriorLightingNaturalGas','PumpsElectricity','PumpsNaturalGas'
             ,'NetSiteEUI','NotMetHoursCooling','NotMetHoursHeating'
-            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI','BuildingLPD','BuildingEPD','BuildingPPL']
+            ,'TotalEndUseElectricity','TotalEndUseNaturalGas','TotalSiteEUI','BuildingLPD','BuildingEPD','BuildingPPL'
+            ,'WallRValue','RoofRValue','WindowUValue','WindowSHGC','RoofAbsorption','Infiltration','WaterHeaterEfficiency'
+            ,'DXCoolingCoilEfficiency','ChillerEfficiency','ElectricBoilerEfficiency','FuelBoilerEfficiency','ElectricHeatingDXCoils']
       responses:
         '200':
           description: successfully received the request

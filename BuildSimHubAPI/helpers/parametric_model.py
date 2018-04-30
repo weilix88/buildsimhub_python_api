@@ -132,6 +132,51 @@ class ParametricModel(object):
     def pumps_naturalgas(self):
         return self.__call_api('PumpsNaturalGas')
 
+    def bldg_lpd(self):
+        return self.__call_api('BuildingLPD')
+
+    def bldg_epd(self):
+        return self.__call_api('BuildingEPD')
+
+    def bldg_ppl(self):
+        return self.__call_api('BuildingPPL')
+
+    def wall_rvalue(self):
+        return self.__call_api('WallRValue')
+
+    def roof_rvalue(self):
+        return self.__call_api('RoofRValue')
+
+    def window_uvalue(self):
+        return self.__call_api('WindowUValue')
+
+    def window_shgc(self):
+        return self.__call_api('WindowSHGC')
+
+    def roof_absorption(self):
+        return self.__call_api('RoofAbsorption')
+
+    def bldg_infiltration(self):
+        return self.__call_api('Infiltration')
+
+    def bldg_water_heater_efficiency(self):
+        return self.__call_api('WaterHeaterEfficiency')
+
+    def bldg_dx_cooling_efficiency(self):
+        return self.__call_api('DXCoolingCoilEfficiency')
+
+    def bldg_chiller_efficiency(self):
+        return self.__call_api('ChillerEfficiency')
+
+    def bldg_electric_boiler_efficiency(self):
+        return self.__call_api('ElectricBoilerEfficiency')
+
+    def bldg_fuel_boiler_efficiency(self):
+        return self.__call_api('FuelBoilerEfficiency')
+
+    def bldg_dx_heating_efficiency(self):
+        return self.__call_api('ElectricHeatingDXCoils')
+
     def __call_api(self, request_data):
         url = self._base_url + 'ParametricResults_API'
         payload = {
