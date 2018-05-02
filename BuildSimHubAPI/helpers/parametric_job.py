@@ -231,7 +231,6 @@ class ParametricJob(object):
                 data_str = 'default'
             payload[action.get_api_name()] = data_str
 
-        return payload
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload)
         if r.status_code == 500:
