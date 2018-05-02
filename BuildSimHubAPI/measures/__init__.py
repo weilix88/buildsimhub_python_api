@@ -22,3 +22,14 @@ from .roof_solar_absorption import RoofSolarAbsorption
 from .equipment_epd import EquipmentEPD
 from .water_use_reduction import WaterUseReduction
 from .water_heater_efficiency import WaterHeaterEfficiency
+from .bldg_orientation import BuildingOrientation
+from .shade_overhang import ShadeOverhang
+from .shade_overhang_north import ShadeOverhangNorth
+from .shade_overhang_south import ShadeOverhangSouth
+from .shade_overhang_west import ShadeOverhangWest
+from .shade_overhang_east import ShadeOverhangEast
+from .shade_fin import ShadeFin
+from .shade_fin_n import ShadeFinNorth
+from .shade_fin_s import ShadeFinSouth
+from .shade_fin_e import ShadeFinEast
+from .shade_fin_w import ShadeFinWest
