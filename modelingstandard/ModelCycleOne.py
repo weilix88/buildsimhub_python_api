@@ -35,10 +35,19 @@ project_api_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
 # paste your BuildSimHub model api key here:
 model_api_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
 # fill in your investigation values
+bldg_orientation = []
 wwr_south = [0.5, 0.6]
 wwr_north = [0.3, 0.4]
 wwr_east = [0.3, 0.4]
 wwr_west = [0.3, 0.4]
+overhang_south = []
+overhang_north = []
+overhang_east = []
+overhang_west = []
+fin_south = []
+fin_north = []
+fin_west = []
+fin_east = []
 wall_rvalue = [20, 30]
 wall_unit = "ip"
 roof_rvalue = [30, 40]
@@ -59,6 +68,10 @@ new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
 measures = list()
 
 # Define EEMs
+orientation = bsh_api.measures.BuildingOrientation()
+orientation.set_datalist(bldg_orientation)
+measures.append(orientation)
+
 wwrs = bsh_api.measures.WindowWallRatioSouth()
 wwrs.set_datalist(wwr_south)
 measures.append(wwrs)
@@ -74,6 +87,38 @@ measures.append(wwrw)
 wwre = bsh_api.measures.WindowWallRatioEast()
 wwre.set_datalist(wwr_east)
 measures.append(wwre)
+
+overhangn = bsh_api.measures.ShadeOverhangNorth()
+overhangn.set_datalist(overhang_north)
+measures.append(overhangn)
+
+overhangs = bsh_api.measures.ShadeOverhangSouth()
+overhangs.set_datalist(overhang_south)
+measures.append(overhangs)
+
+overhangw = bsh_api.measures.ShadeOverhangWest()
+overhangw.set_datalist(overhang_west)
+measures.append(overhangw)
+
+overhange = bsh_api.measures.ShadeOverhangEast()
+overhange.set_datalist(overhang_east)
+measures.append(overhange)
+
+finn = bsh_api.measures.ShadeFinNorth()
+finn.set_datalist(fin_north)
+measures.append(finn)
+
+fins = bsh_api.measures.ShadeFinSouth()
+fins.set_datalist(fin_south)
+measures.append(fins)
+
+finw = bsh_api.measures.ShadeFinWest()
+finw.set_datalist(fin_west)
+measures.append(finw)
+
+fine = bsh_api.measures.ShadeFinEast()
+fine.set_datalist(fin_east)
+measures.append(fine)
 
 wallr = bsh_api.measures.WallRValue(wall_unit)
 wallr.set_datalist(wall_rvalue)
@@ -96,6 +141,7 @@ new_pj.add_model_measures(measures)
 
 # Now we start!
 results = new_pj.submit_parametric_study(track=True)
+print(results)
 
 '''
 Below are post-processing code
@@ -113,8 +159,3 @@ if results:
     plot = pp.ParametricPlot(result_dict, result_unit)
     print(plot.pandas_df())
     plot.parallel_coordinate_plotly()
-
-
-
-
-
