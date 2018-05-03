@@ -53,7 +53,7 @@ wall_unit = "ip"
 roof_rvalue = [30, 40]
 roof_unit = "ip"
 window_uvalue = [2.8, 1.4]
-window_u_unit = "si"
+window_u_unit = 'si'
 window_shgc = [0.3, 0.5]
 
 """
