@@ -23,7 +23,14 @@ We appreciate your continued support, thank you!
 * [License](#license)
 
 <a name="update"></a>
-The latest version is 1.3.0. Changes include:
+Latest Version 1.4.0:
+1. Initialize a simulation job / parametric job requires a project api key now.
+2. User API key is deleted
+3. Run function in simulation job supports multiple models submission.
+4. Include more standard measures: Building orientation, overhangs, fins, roof absorptions, water heater, water usage, equipment power
+5. Include more data retriving options at building level.
+
+Version 1.3.0:
 1. Fully support EnergyPlus 8.9 cloud simulation
 2. Fully support epJSON file upload & simulation
 3. add `eio` and `rdd` to extract .eio and .rdd result files
@@ -69,7 +76,7 @@ new_sj = bsh.new_simulation_job(project_api_key)
 ```
 
 ## Model key (optional)
-Some functions in the API library requires you to supply a `model_api_key`. These functions allows you to update a model's history or retrieve a specific model results under a project. The model_key can be found under every model (highlighted in the figure below).
+Some functions in the API library requires you to supply a `model_api_key`. These functions allows you to update a model's history or retrieve the simulation results from a model under a project. The model_key can be found in every model (highlighted in the figure below).
 ![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
@@ -89,7 +96,7 @@ new_sj.run("/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 The `BuildSimHubAPIClient` creates a [portal object](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py) that manages simulation workflow.
 From this object, you can initiate a [simulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) to conduct a cloud simulation. Call `run()` method with parameters can start the cloud simulation.
 
-## Retrieve Cloud simulation results
+## Retrieve simulation output files
 ```python
 from BuildSimHubAPI import buildsimhub
 bsh = buildsimhub.BuildSimHubAPIClient()
@@ -106,7 +113,12 @@ if results:
    html = results.get_simulation_results('html')
    print(html)
 ```
-If the simulation job is completed, you can get result files by calling `get_simulation_results(type)` function. The function will immediately return the requested results in text format.
+If the simulation job is completed, you can get simulation output files by calling `get_simulation_results(type)` function. The function will immediately return the requested results in text format. The list of the files that currently are available for retrieving:
+1. eso
+2. html
+3. err
+4. rdd
+5. eio
 
 <a name="functions"></a>
 #Object and Functions
@@ -117,7 +129,7 @@ The easiest way to generate a [SimulationJob](https://github.com/weilix88/builds
 Optionally, you can provide a `model_key` to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance. The `model_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
-Once you provide a `model_key` to instantiate the simulation job, then this job will link to the project, which contains the `model_key`.
+Once you provide a `model_key` to instantiate a simulation job, then this job will link to a model in your project.
 Lastly, a simulation job manages one type of cloud simulation. It contains six main functions for cloud simulations.
 
 ### run
@@ -197,7 +209,22 @@ model = bsh.helpers.Model(project_key, model_key)
 23. *interior_lighting_naturalgas()*: returns the natural gas consumption of the interior lighting. unit: kWh or GJ, IP is kBtu
 24. *pumps_electricity()*: returns the electricity consumption of the pumps. unit: kWh or GJ, IP is kBtu
 25. *pumps_naturalgas()*: returns the natural gas consumption of the pumps. unit: kWh or GJ, IP is kBtu
-26. *zone_load(zone_name)*: This method has two modes. 1. extract list of zones and their total heating / cooling load information. 2. extract one zone's detail load components information. The second mode can be activate by including the `zone_name` variable.
+26. *bldg_lpd()*: returns the lighting power density at building level. unit: W/m2, IP is Btu/ft2
+27. *bldg_epd()*: returns the equipment power density at building level. unit: W/m2, IP is Btu/ft2
+28. *bldg_ppl()*: returns the people density at building level.
+29. *wall_rvalue()*: returns the average wall r value. unit: m2-k/W
+30. *roof_rvalue()*: returns the average roof r value. unit: m3-k/W
+31. *window_uvalue()*: returns the average window u value.
+32. *window_shgc()*: returns the average window shgc.
+33. *roof_absorption()*: returns the roof absorption.
+34. *bldg_infiltration()*: returns the building infiltration level. unit: m3/s-m2
+35. *bldg_water_heater_efficiency()*: returns the average water heater efficiency (-1 if no such devices). unit: %
+36. *bldg_dx_cooling_efficiency()*: returns the average dx cooling coil efficiency (-1 if no such devices). unit: -
+37. *bldg_chiller_efficiency()*: returns the average chilller efficiency (-1 if no such devices). unit: -
+38. *bldg_electric_boiler_efficiency()*: returns the average electric heating devices efficiency (-1 if no such devices). unit: %
+39. *bldg_fuel_boiler_efficiency()*: returns the average fuel boilers efficiency (-1 if no such devices). unit: %
+40. *bldg_dx_heating_efficiency()*: returns the average dx heating coils efficiency (-1 if no such devices). unit: -
+41. *zone_load(zone_name)*: This method has two modes. 1. extract list of zones and their total heating / cooling load information. 2. extract one zone's detail load components information. The second mode can be activate by including the `zone_name` variable.
 For the first mode, below is the example code and output:
 ```python
 model_result = bsh.helpers.Model(project_api_key, model_api_key)
@@ -377,7 +404,10 @@ new_pj.add_model_measure(wr)
 # Roadmap
 1. We are working on a standard EEMs, which allows user to apply common energy efficiency measures to any IDF models. Open an issue if you did not see any desired EEMs in the standard EEM library!
 2. More simulation configurations and output results return will be added in the future!
-3. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
+3. CSV schedule uploads along with the model
+4. Deep integration with visualization tools in python & html
+5. Development will be focus on modeling cycles defined in Standard 209.
+6. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
 <a name="about"></a>
