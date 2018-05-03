@@ -87,7 +87,7 @@ def __split_path(path):
         req_path = path[slash_idx:]
 
     try:
-        _create_unverified_https_context = ssl._create_unverified_context
+        _create_unverified_https_context = ssl._create_unverified_context()
     except AttributeError:
         # Python < 2.7.9 doesn't support ssl
         conn = httplib.HTTPConnection(host)

@@ -7,7 +7,7 @@ class Model(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, user_key, model_key, base_url=None):
+    def __init__(self, project_key, track_token, base_url=None):
         """
         Construct Model object
 
@@ -18,24 +18,20 @@ class Model(object):
         if response:
             print(results.net_site_eui())
 
-        2. get from BuildSim API client with a simulation job
-        results = bsh.get_simulation_results(new_sj)
+        2. get it by importing the class (you need to supply user api and either a model key or tracking token)
+        results = buildsimhub.helpers.Model(project_api_key, model_api_key)
         print(results.net_site_eui())
 
-        3. get it by importing the class (you need to supply user api and either a model key or tracking token)
-        results = buildsimhub.helpers.Model(user_api, model_key)
-        print(results.net_site_eui())
-
-        :param user_key:
-        :param model_key:
+        :param project_key: required
+        :param track_token: required
         :param base_url: optional, this is only for testing purpose
-        :type user_key: str
-        :type model_key: str
+        :type project_key: str
+        :type track_token: str
 
         """
-        self._user_key = user_key
+        self._project_key = project_key
         self._last_parameter_unit = ""
-        self._model_key = model_key
+        self._track_token = track_token
         self._base_url = Model.BASE_URL
         # record all the messages in API calling
         self._log = ""
@@ -58,13 +54,13 @@ class Model(object):
         """
         url = self._base_url + 'IDF3DViewerSocket.html'
         track = 'model_api_key'
-        test = self._model_key.split('-')
+        test = self._track_token.split('-')
         if len(test) is 3:
             track = 'tracking'
 
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
         }
 
         r = make_url(url, payload)
@@ -74,13 +70,13 @@ class Model(object):
     def bldg_orientation(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'Orientation'
         }
 
@@ -106,13 +102,13 @@ class Model(object):
         """
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'BuildingStories'
         }
         r = request_get(url, params=payload)
@@ -132,12 +128,12 @@ class Model(object):
         """Total floor = above ground floors + below ground floors"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'BuildingStories'
         }
         r = request_get(url, params=payload)
@@ -157,12 +153,12 @@ class Model(object):
         """Include conditioned & unconditioned zones"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'TotalZoneNumber'
         }
 
@@ -183,12 +179,12 @@ class Model(object):
         """Conditioned zones only"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'ConditionedZoneNumber'
         }
         r = request_get(url, params=payload)
@@ -208,12 +204,12 @@ class Model(object):
         """Total conditioned floor area"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'ConditionedZoneFloorArea'
         }
         r = request_get(url, params=payload)
@@ -238,12 +234,12 @@ class Model(object):
         """Total floor area"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'ZoneFloorArea'
         }
         r = request_get(url, params=payload)
@@ -268,12 +264,12 @@ class Model(object):
         """Window to wall ratio"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': 'TotalWindowToWallRatio'
         }
         r = request_get(url, params=payload)
@@ -307,13 +303,13 @@ class Model(object):
         url = self._base_url + 'GetZoneLoadInfo_API'
         track = "folder_api_key"
 
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key
+            'project_api_key': self._project_key,
+            track: self._track_token
         }
 
         if zone_name is not None:
@@ -342,16 +338,16 @@ class Model(object):
 
         """
         track = "folder_api_key"
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
 
         url = self._base_url + 'GetSimulationResult_API'
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'result_type': result_type,
             'accept': accept,
-            track: self._model_key
+            track: self._track_token
         }
 
         r = request_get(url, params=payload)
@@ -430,10 +426,10 @@ class Model(object):
         return self.__call_api('HeatRejectionNaturalGas')
 
     def interior_equipment_electricity(self):
-        return self.__call_api('InteiorEquipmentElectricity')
+        return self.__call_api('InteriorEquipmentElectricity')
 
     def interior_equipment_naturalgas(self):
-        return self.__call_api('InteirorEquipmentNaturalGas')
+        return self.__call_api('InteriorEquipmentNaturalGas')
 
     def interior_lighting_electricity(self):
         return self.__call_api('InteriorLightingElectricity')
@@ -447,17 +443,62 @@ class Model(object):
     def pumps_naturalgas(self):
         return self.__call_api('PumpsNaturalGas')
 
+    def bldg_lpd(self):
+        return self.__call_api('BuildingLPD')
+
+    def bldg_epd(self):
+        return self.__call_api('BuildingEPD')
+
+    def bldg_ppl(self):
+        return self.__call_api('BuildingPPL')
+
+    def wall_rvalue(self):
+        return self.__call_api('WallRValue')
+
+    def roof_rvalue(self):
+        return self.__call_api('RoofRValue')
+
+    def window_uvalue(self):
+        return self.__call_api('WindowUValue')
+
+    def window_shgc(self):
+        return self.__call_api('WindowSHGC')
+
+    def roof_absorption(self):
+        return self.__call_api('RoofAbsorption')
+
+    def bldg_infiltration(self):
+        return self.__call_api('Infiltration')
+
+    def bldg_water_heater_efficiency(self):
+        return self.__call_api('WaterHeaterEfficiency')
+
+    def bldg_dx_cooling_efficiency(self):
+        return self.__call_api('DXCoolingCoilEfficiency')
+
+    def bldg_chiller_efficiency(self):
+        return self.__call_api('ChillerEfficiency')
+
+    def bldg_electric_boiler_efficiency(self):
+        return self.__call_api('ElectricBoilerEfficiency')
+
+    def bldg_fuel_boiler_efficiency(self):
+        return self.__call_api('FuelBoilerEfficiency')
+
+    def bldg_dx_heating_efficiency(self):
+        return self.__call_api('ElectricHeatingDXCoils')
+
     def __call_api(self, request_data):
         url = self._base_url + 'GetBuildingSimulationResults_API'
         track = "folder_api_key"
 
-        test = self._model_key.split("-")
+        test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
 
         payload = {
-            'user_api_key': self._user_key,
-            track: self._model_key,
+            'project_api_key': self._project_key,
+            track: self._track_token,
             'request_data': request_data
         }
 

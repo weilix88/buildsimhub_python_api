@@ -10,20 +10,17 @@ class SimulationJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, user_key, model_key="", base_url=None):
+    def __init__(self, project_key, base_url=None):
         """
         Create simulation job object.
 
         If parameters are supplied, all parameters must be present.
-        :param user_key: user api key
-        :param model_key: the model key
+        :param project_key: the project key, required
         :param base_url: api connection url
-        :type user_key: basestring
-        :type model_key: basestring
+        :type project_key: basestring
         :type base_url: basestring
         """
-        self._user_key = user_key
-        self._model_key = model_key
+        self._project_key = project_key
         self._track_token = ""
         self._track_status = "No simulation is running or completed in this Job - " \
                              "please start simulation using create_run_model method."
@@ -43,8 +40,8 @@ class SimulationJob(object):
         return self._track_token
 
     @property
-    def model_key(self):
-        return self._model_key
+    def project_key(self):
+        return self._project_key
 
     @track_token.setter
     def track_token(self, value):
@@ -60,23 +57,28 @@ class SimulationJob(object):
             return "Cannot process more than one value for a single simulation job. Try parametric study."
         self._model_action_list.append(action)
 
-    def get_simulation_results(self, result_type="html"):
+    def get_simulation_results(self, result_type="html", accept='file'):
         """
-        get a simulation result file (only use after the simulation is completed)
+        This method is deprecated. It is suggested to call the same function in the result object
+        returned by a successful simulation call (or use: bsh_api.helpers.Model(project_key, track_token)
 
+        get a simulation result file (only use after the simulation is completed)
         :param result_type: currently available option include html, err, eso, eio, rdd
+        :param accept:
         :return: text of the file, or error code
         :rtype: string
-
         """
-        if self._track_token == "":
-            return self._track_status
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
 
         url = self._base_url + 'GetSimulationResult_API'
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'result_type': result_type,
-            'track_token': self._track_token
+            'accept': accept,
+            track: self._track_token
         }
 
         r = request_post(url, params=payload, stream=True)
@@ -86,7 +88,6 @@ class SimulationJob(object):
         else:
             self._track_status = 'Code: ' + str(r.status_code)
             print(self._track_status)
-
             return False
 
     def track_batch_simulation(self):
@@ -95,8 +96,8 @@ class SimulationJob(object):
 
         url = self._base_url + 'ParametricTracking_API'
         payload = {
-            'user_api_key': self._user_key,
-            'folder_api_key': self._track_token
+            'folder_api_key': self._track_token,
+            'project_api_key': self._project_key,
         }
 
         r = request_get(url, params=payload)
@@ -144,12 +145,11 @@ class SimulationJob(object):
 
         url = self._base_url + 'TrackSimulation_API'
         payload = {
-            'user_api_key': self._user_key,
-            'track_token': self._track_token
+            'track_token': self._track_token,
+            'project_api_key': self._project_key
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
-
         if 'severe_error' in resp_json:
             self._track_status = resp_json['severe_error']
             return False
@@ -195,8 +195,8 @@ class SimulationJob(object):
         """
         url = self._base_url + 'RunSimulationCustomize_API'
         payload = {
-            'user_api_key': self._user_key,
             'simulation_type': simulation_type,
+            'project_api_key': self._project_key,
             'agents': agent,
             'unit': unit
         }
@@ -217,12 +217,12 @@ class SimulationJob(object):
                     if self.track_status == 'Simulation finished successfully':
                         print(self.track_status)
                         # check whether there is requested data
-                        print('Completed! You can retrieve results using the key: ' + self._track_token)
-                        res = Model(self._user_key, self._track_token, self._base_url)
+                        print('Completed! You can retrieve results using the key: '+self._track_token)
+                        res = Model(self._project_key, self._track_token, self._base_url)
                         return res
                     else:
                         # print(self.track_status)
-                        return True
+                        return False
                 else:
                     print(resp_json['error_msg'])
                     return False
@@ -260,8 +260,9 @@ class SimulationJob(object):
                             print(self._track_status)
                             time.sleep(request_time)
                         print(self._track_status)
-                        print('Completed! You can retrieve results using the key: ' + self._track_token)
-                        res = ParametricModel(self._user_key, self._track_token, self._base_url)
+                        print('Completed! You can retrieve results using the key: '+self._track_token)
+                        res = ParametricModel(self._track_token, self._project_key, self._base_url)
+
                         return res
                     else:
                         return True
@@ -308,7 +309,7 @@ class SimulationJob(object):
             return 'error: no model is created in this simulation job. Please create a model use create_model method.'
 
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'track_token': self._track_token,
             'simulation_type': simulation_type,
             'agents': agent,
@@ -319,6 +320,7 @@ class SimulationJob(object):
         r = request_post(url, params=payload)
         if self._http_code_check(r):
             resp_json = r.json()
+            print(resp_json)
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['tracking']
                 if track:
@@ -330,7 +332,7 @@ class SimulationJob(object):
                     print(self.track_status)
                     print('Completed! You can retrieve results using the key: ' + self._track_token)
                     # check whether there is requested data
-                    res = Model(self._user_key, self._track_token, self._base_url)
+                    res = Model(self._project_key, self._track_token, self._base_url)
                     return res
                 else:
                     # print(self.track_status)
@@ -349,7 +351,7 @@ class SimulationJob(object):
 
         Example:
 
-        # key should be the project key
+        # key should be the project api key
         new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-df36d6d3dbc6")
         new_sj.create_run_model("local/usr/in.idf")
 
@@ -365,15 +367,13 @@ class SimulationJob(object):
         """
         url = self._base_url + 'CreateModel_API'
         payload = {
-            'user_api_key': self._user_key,
-            'folder_api_key': self._model_key,
-            'project_api_key': self._model_key,
+            'folder_api_key': self._project_key,
+            'project_api_key': self._project_key,
             'comment': comment,
             'simulation_type': simulation_type,
             'agents': agent,
             'unit': unit
         }
-
         files = dict()
 
         if is_py2:
@@ -386,6 +386,7 @@ class SimulationJob(object):
         r = request_post(url, params=payload, files=files)
         if self._http_code_check(r):
             resp_json = r.json()
+
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['tracking']
                 if track:
@@ -395,12 +396,13 @@ class SimulationJob(object):
                 if self.track_status == 'Simulation finished successfully':
                     print(self.track_status)
                     # check whether there is requested data
-                    print('Completed! You can retrieve results using the key: ' + self._track_token)
-                    res = Model(self._user_key, self._track_token, self._base_url)
+                    print('Completed! You can retrieve results using the key: '+self._track_token)
+                    res = Model(self._project_key, self._track_token, self._base_url)
                     return res
                 else:
                     # print(self.track_status)
-                    return True
+                    # results are not produced
+                    return False
             else:
                 return resp_json['error_msg']
         else:
@@ -424,9 +426,7 @@ class SimulationJob(object):
         """
         url = self._base_url + 'CreateModel_API'
         payload = {
-            'user_api_key': self._user_key,
-            'folder_api_key': self._model_key,
-            'project_api_key': self._model_key,
+            'project_api_key': self._project_key,
             'comment': comment,
             'simulation_type': '',
             'agents': 1
@@ -452,11 +452,13 @@ class SimulationJob(object):
             print(self._track_status)
             return False
 
-        if resp_json['status'] == 'success':
+        if resp_json['status'] == 'no_simulation':
             self._track_token = resp_json['tracking']
-            return resp_json['status']
+            print(self._track_token)
+            return True
         else:
-            return resp_json['error_msg']
+            print(resp_json['error_msg'])
+            return False
 
     def _track_info(self, resp_json):
         if 'has_more' not in resp_json:

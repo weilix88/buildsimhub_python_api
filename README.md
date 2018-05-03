@@ -44,33 +44,35 @@ Simply clone / download this repository and place in any folder you wish to buil
 ![picture alt](https://imgur.com/x60rk2O.png)
 
 ## Setup environment
-After you downloaded the whole package, the first you need to do is to reconfigure your user API in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
-You can find the API key associate with your account under the profile page:
-
-![picture alt](https://imgur.com/gHehDiN.png)
+There are no requirements for regular users to access BuildSim Cloud besides Python installation.
+However, for software vendors who would like to integrate the BuildSim Cloud, you can revise the vendor key in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
 
 Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
-`user_api_key:[YOUR_API_KEY]`
-and the `base_url` should be: https://my.buildsim.io/
-You can leave the `vendor_id=BuildSimHub` as it is. A sample of a complete info.config file is:
-`user_api_key=00268f8c-e538-41bc-8927-a2ba96a639b3
-base_url=https://my.buildsim.io/
-vendor_id=BuildSimHub`
+`vendor_id:[Your name]`
+If you decided to use BuildSim Cloud, please send your specific vendor id to us: weili.xu@buildsimhub.net.
 
-## Dependencies
-- There is no dependecy requirements for using API calls.
-- However, if you'd like to utilize our plotly integration function, [plotly python](https://plot.ly/python/getting-started/) is required along with numpy, pandas.
+## Project key (required)
+To activate a simulation through API client, you need to supply a project key - a key that helps BuildSim connect your local application to your project.
+The project key can be found in two places.
+1. Project list page: Simply click the "Copy Key" button and paste it in you application.
+![picture alt](https://imgur.com/61cyNlE.png)
+2. In the project tab under every model: Under every model, search for project api key field in the project tab.
+![picture alt](https://imgur.com/hndWwBI.png)
 
-## Project / Model key (optional)
-If you want to do simulations under an exisiting project, you will need to retrieve the project or model keys to do it. 
-Differences between a project key and a model key:
-1. project_key can be found under a project. If this key is supplied, then the API will create a new model under the project.
-2. model_key can be found under every model. If a model key is supplied, then the API will create a new model history under the model.
-You will then find the model key under the energy model tab (highlighted in the figure below)
+```python
+'''
+Example of how to innitialize API client
+'''
+project_api_key = 'abcdef-ghijkl-mnopqrst'
+bsh = buildsimhub.BuildSimHubAPIClient()
+new_sj = bsh.new_simulation_job(project_api_key)
+```
+
+## Model key (optional)
+Some functions in the API library requires you to supply a `model_api_key`. These functions allows you to update a model's history or retrieve a specific model results under a project. The model_key can be found under every model (highlighted in the figure below).
 ![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
-
 # Quick Start
 ### Hello BuildSim
 ```python
@@ -78,7 +80,7 @@ from BuildSimHubAPI import buildsimhub
 ###############NOW, START THE CODE########################
 
 bsh = buildsimhub.BuildSimHubAPIClient()
-new_sj = bsh.new_simulation_job()
+new_sj = bsh.new_simulation_job('abcdef-ghijkl-mnopqrst')
 new_sj.run("/Users/weilixu/Desktop/5ZoneAirCooled.idf"
           ,"/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
           , track=True)
@@ -96,19 +98,19 @@ bsh = buildsimhub.BuildSimHubAPIClient()
 file_dir = "/Users/weilixu/Desktop/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/USA_CO_Golden-NREL.724666_TMY3.epw"
 
-new_sj = bsh.new_simulation_job()
-new_sj.run(file_dir, wea_dir, track=True)
+new_sj = bsh.new_simulation_job('abcdef-ghijkl-mnopqrst')
+results = new_sj.run(file_dir, wea_dir, track=True)
 
 ######BELOW ARE THE CODE TO RETRIEVE SIMULATION RESULTS#########
-response = new_sj.get_simulation_results('html')
-print(response)
+if results:
+   html = results.get_simulation_results('html')
+   print(html)
 ```
-If the simulation job is completed, you can get results by calling `get_simulation_results(type)` function. The function will immediately return the requested results in text format.
+If the simulation job is completed, you can get result files by calling `get_simulation_results(type)` function. The function will immediately return the requested results in text format.
 
 <a name="functions"></a>
 #Object and Functions
 
-<a name="simulation_job"></a>
 ## SimulationJob
 The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
 
@@ -124,6 +126,8 @@ The `run()` function allows you to upload an energy model and weather file to th
 2. `epw_dir`(required): the absolute local director of the simulation epw weather file (it should be .epw file)
 3. `unit` (optional): provide either `'ip'` or `'si'` unit system for your simulation job.
 4. `agent` (optional): The agent number should be selected among 1, 2 or 4 agents. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
+5. `track` (optional): True will enable the function to track simulation progress, false otherwise.
+6. `request_time` (optional): This variable defines the tracking intervals. Default is 5 seconds. This will only be useful if `track` is True.
 
 ### create_run_model
 The `create_run_model()` function allows you to upload an energy model to the platform and run simulaiton. It has in total 4 parameters.
@@ -135,8 +139,9 @@ The `create_run_model()` function allows you to upload an energy model to the pl
 ### get_simulation_results
 The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`), html file (`html`), eio file(`eio`) and rdd file(`rdd`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
 ```python
-response = newSimulationJob.get_simulation_results('err')
-print (response)
+if results:
+   text = results.get_simulation_results('err')
+print (text)
 ```
 ### Misc. methods and variables:
 Besides the above functions, you can also retrieve some properties of the simulation job:
@@ -149,8 +154,7 @@ The model class contains a set of methods that provides the model information an
 
 ```python
 bsh = buildsimhub.BuildSimHubAPIClient()
-newSj = bsh.new_simulation_job(model_key)
-model = bsh.get_model(newSj)
+model = bsh.helpers.Model(project_key, model_key)
 ```
 
 ### Pre-simulation methods
@@ -158,10 +162,10 @@ model = bsh.get_model(newSj)
 2. *num_zones()*: can be called before simulation is completed. It returns the total number of thermal zones, or -1 if there is an error.
 3. *num_condition_zones()*: can be called before simulation is completed. It returns the total number of conditioned zones, or -1 if there is an error.
 4. *conditioned_floor_area (unit)*: can be called before simulation is completed. It returns the floor areas of conditioned spaces, or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
-`  m.condition_floor_area("ip")
+`  model.condition_floor_area("ip")
 `
 5. *gross_floor_area(unit)*: can be called before simulation is completed. It returns the total floor areas (including plenum spaces), or -1 if there is an error. This method has an optional input: unit. If you wish to get ft2 unit, then you need to specify 'ip' for the unit parameter:
-`  m.gross_floor_area("ip")
+`  model.gross_floor_area("ip")
 `
 6. *window_wall_ratio()*: can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
 7. *bldg_orientation()*: can be called before simulation is completed. It returns the orientation of the building.
@@ -196,7 +200,7 @@ model = bsh.get_model(newSj)
 26. *zone_load(zone_name)*: This method has two modes. 1. extract list of zones and their total heating / cooling load information. 2. extract one zone's detail load components information. The second mode can be activate by including the `zone_name` variable.
 For the first mode, below is the example code and output:
 ```python
-model_result = bsh.get_model(new_sj)
+model_result = bsh.helpers.Model(project_api_key, model_api_key)
 load_profile = model_result.zone_load()
 
 #Output:
@@ -206,7 +210,7 @@ load_profile = model_result.zone_load()
 ### Misc. methods and variables
 1. last_parameter_unit: You can check the value of the variable requested by the most recent API call.
 ```python
-m = new_sj.model
+m = bsh.helpers.Model(project_api_key, model_api_key)
 print(str(m.net_site_eui())+ " " + m.lastParameterUnit)
 #Output: 242.98 MJ/m2
 print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
@@ -217,10 +221,10 @@ print(str(m.total_end_use_electricity())+ " " + m.lastParameterUnit)
 Similar to simulation job, the parametric job is another type of cloud simulation. The difference is this class handles batch processings by applying energy efficiency measures from our standard EEMs library. The easiest way to initiate a parametric job is calling the `new_parametric_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
 The method requires user to provide a `model_key`. The `model_key` ties to a model on the platform which we call it as the seed model. Below is the sample code for demonstration purpose.
 ```python
-model_key = 'ec76b257-5dc2-470a-846e-b8897530d'
-
+model_api_key = 'ec76b257-5dc2-470a-846e-b8897530d'
+project_api_key = 'abcdefg-hijk-lmnopqrst-uvwxyz'
 bsh = bshapi.BuildSimHubAPIClient()
-new_pj = bsh.new_parametric_job(model_key)
+new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
 
 # apply EEMs
 # window U value
@@ -258,8 +262,8 @@ The eplusHTMLParser provides a set of methods to help users finding data in the 
 ```python
 from BuildSimHubAPI import eplusHTMLParser
 ...
-  response = new_sj.get_simulation_results('html')
-  value_dict = eplusHTMLParser.extract_a_value_from_table(response, 'Annual Building Utility Performance Summary',
+  html = results.get_simulation_results('html')
+  value_dict = eplusHTMLParser.extract_a_value_from_table(html, 'Annual Building Utility Performance Summary',
     'Site and Source Energy', 'Energy Per Total Building Area', 'Net Site Energy')
   print(value_dict['value] + " " + value_dict['unit'])
   
@@ -287,7 +291,7 @@ The post-processing functions help post-processing the simulation data extracted
 The parametric plot class helps organizing parametric data into the popular pandas dataframe (pandas, numpy are required), and offer basic plotting functions for retriving simple and quick plots. With this class, you can either request for the pandas dataframe:
 ```python
 ##have user key and model key ready here
-results = bsh_api.helpers.ParametricModel(usr_key, model_key)
+results = bsh_api.helpers.ParametricModel(project_api_key, model_api_key)
 ##request for parametric EUI list
 result_dict = results.net_site_eui()
 result_unit = results.lastParameterUnit
@@ -353,8 +357,9 @@ Standard EEMs library allows user to upload any IDF models (early stage, schemat
 import BuildSimHubAPI as bsh_api
 
 #you can get model_key from your project
-model_key = '66667-6sd8-4dff-a51d-4a13ddef5f39'
-new_pj = bsh.new_parametric_job(model_key)
+model_api_key = '66667-6sd8-4dff-a51d-4a13ddef5f39'
+project_api_key = 'abcdefg-hijk-lmnopqrst-uvwxyz'
+new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
 
 #1. for wall insulation measure
 wr = bsh_api.measures.WallRValue('ip')

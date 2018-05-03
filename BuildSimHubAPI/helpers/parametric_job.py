@@ -9,20 +9,20 @@ class ParametricJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, user_key, model_key, base_url=None):
+    def __init__(self, project_key, model_key='', base_url=None):
         """
         Construct a parametric job
 
         Specify EEM and do parametrics
 
-        :param user_key:
-        :param model_key:
+        :param project_key: required
+        :param model_key: optional
         :param base_url: optional - use for testing only
-        :type user_key: str
+        :type project_key: str
         :type model_key: str
         :type base_url: str
         """
-        self._user_key = user_key
+        self._project_key = project_key
         self._model_key = model_key
         self._track_token = ""
         self._track_status = ""
@@ -72,13 +72,14 @@ class ParametricJob(object):
         return num_total
 
     def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric",
-                                      track=False, request_time=5):
+                                      track=False, request_time=5, customize='false'):
         """
         Submit an energy model from local as the seed model to a project for this parametric study
         Example:
-            project_key = "xxx"
+            project_api_key = "xxx"
             file_dir = "in.idf"
-            new_sj = buildsimhub.new_parametric_job(project_key)
+
+            new_sj = buildsimhub.new_parametric_job(project_api_key)
             new_sj.submit_parametric_study_local(file_dir, track=True)
 
         :param file_dir:
@@ -86,26 +87,31 @@ class ParametricJob(object):
         :param simulation_type: deprecated
         :param track:
         :param request_time:
+        :param customize: keep it false if you are not a vendor / enterprise user
         :type file_dir: str
         :type unit: str (ip or si)
         :type simulation_type: str
         :type track: bool
         :type request_time: float
+        :type customize: str
         :return: True success, False otherwise
         """
         # file_dir indicates the seed model
         url = self._base_url + 'ParametricSettingUploadModel_API'
         payload = {
-            'user_api_key': self._user_key,
-            'project_api_key': self._model_key,
+            'project_api_key': self._project_key,
             'simulation_type': simulation_type,
             'agents': 1,
-            'unit': unit
+            'unit': unit,
+            'customize': customize
         }
 
         for i in range(len(self._model_action_list)):
-            measure = self._model_action_list[i]
-            payload[measure.get_api_name()] = measure.get_data_string()
+            action = self._model_action_list[i]
+            data_str = action.get_data_string()
+            if customize == 'true' and data_str == '[]':
+                data_str = 'default'
+            payload[action.get_api_name()] = data_str
 
         files = dict()
 
@@ -133,8 +139,8 @@ class ParametricJob(object):
                     print(self._track_status)
                     time.sleep(request_time)
                 print(self._track_status)
-                print('Completed! You can retrieve results using the key: ' + self._track_token)
-                res = ParametricModel(self._user_key, self._track_token, self._base_url)
+                print('Completed! You can retrieve results using the key: '+self._track_token)
+                res = ParametricModel(self._project_key, self._track_token, self._base_url)
                 return res
             else:
                 return True
@@ -147,7 +153,7 @@ class ParametricJob(object):
     # file_dir indicates the seed model
     #        url = ParametricJob.BASE_URL + 'CreateModel_API'
     #        payload = {
-    #            'user_api_key': self._user_key,
+    #            'project_api_key': self._project_key,
     #            'simulation_type': simulationType,
     #            'agents':1
     #        }
@@ -172,40 +178,59 @@ class ParametricJob(object):
 
     # for this method, it allows user to identify one seed model in a project.
     # This allows the parametric study performed under a project with a fixed weather file,
-    def submit_parametric_study(self, unit='ip', simulation_type='parametric', track=False, request_time=5):
+    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_key=None, track=False,
+                                request_time=5, customize='false'):
         """
         Select a model in the project as the seed model and do parametric study
 
         Example:
-            model_key = "xx"
+            project_api_key = "xx"
+            model_api_key = "xx"
 
-            new_pj = bsh.new_parametric_job(model_key)
+            new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
             new_pj.submit_parametric_study(track=True)
 
+        When model key is empty, you must use submit_parametric_study_local method to upload the seed model
+        instead this method
+
         :param unit:
+        :param model_key: optional
         :param simulation_type: deprecated
         :param track:
         :param request_time:
+        :param customize: keep it false if you are not a vendor / enterprise user
         :type unit: str
+        :type model_key: str
         :type simulation_type: str
         :type track: bool
         :type request_time: float
+        :type customize: str
         :return: True if success, False otherwise
         """
+        if model_key is not None:
+            self._model_key = model_key
+
+        if self._model_key == '':
+            print('submit_parametric_study requires a valid model_key')
+            return False
+
         url = self._base_url + 'ParametricSettingCopyModel_API'
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'model_api_key': self._model_key,
             'simulation_type': simulation_type,
             'agents': 1,
-            'unit': unit
+            'unit': unit,
+            'customize': customize
         }
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
-            payload[action.get_api_name()] = action.get_data_string()
+            data_str = action.get_data_string()
+            if customize == 'true' and data_str == '[]':
+                data_str = 'default'
+            payload[action.get_api_name()] = data_str
 
-        # return payload
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload)
         if r.status_code == 500:
@@ -225,8 +250,8 @@ class ParametricJob(object):
                     print(self._track_status)
                     time.sleep(request_time)
                 print(self._track_status)
-                print('Completed! You can retrieve results using the key: ' + self._track_token)
-                res = ParametricModel(self._user_key, self._track_token, self._base_url)
+                print('Completed! You can retrieve results using the key: '+self._track_token)
+                res = ParametricModel(self._project_key, self._track_token, self._base_url)
                 return res
             else:
                 return True
@@ -240,7 +265,7 @@ class ParametricJob(object):
 
         url = self._base_url + 'ParametricTracking_API'
         payload = {
-            'user_api_key': self._user_key,
+            'project_api_key': self._project_key,
             'folder_api_key': self._track_token
         }
 
