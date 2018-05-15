@@ -4,6 +4,8 @@ from .httpurllib import request_get
 from .httpurllib import request_post
 from .compat import is_py2
 from .parametric_model import ParametricModel
+import os
+import zipfile
 
 
 class SimulationJob(object):
@@ -26,6 +28,7 @@ class SimulationJob(object):
                              "please start simulation using create_run_model method."
         self._model_action_list = list()
         self._base_url = SimulationJob.BASE_URL
+        self._model_api_key = ""
 
         # base_url can be reset if not None
         if base_url is not None:
@@ -38,6 +41,10 @@ class SimulationJob(object):
     @property
     def track_token(self):
         return self._track_token
+
+    @property
+    def model_api_key(self):
+        return self._model_api_key
 
     @property
     def project_key(self):
@@ -170,7 +177,7 @@ class SimulationJob(object):
             resp_json = sim_json
         return self._track_info(resp_json)
 
-    def run(self, file_dir, epw_dir, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
+    def run(self, file_dir, epw_dir, add_files=None, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
         Use this method when an empty model key is supplied.
@@ -191,8 +198,8 @@ class SimulationJob(object):
         :type request_time: float
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
-
         """
+
         url = self._base_url + 'RunSimulationCustomize_API'
         payload = {
             'simulation_type': simulation_type,
@@ -204,6 +211,15 @@ class SimulationJob(object):
         if type(file_dir) is str:
 
             files = self._decode_model_and_epw(file_dir, epw_dir)
+
+            if add_files is not None:
+                # parent parent dir
+                directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                zipf = zipfile.ZipFile(directory+'/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
+                self._zip_dir(add_files, zipf)
+                zipf.close()
+                files['schedule_csv'] = open(directory+'/add_folder.zip', 'r')
+
             print("Submitting simulation request...")
             r = request_post(url, params=payload, files=files)
             if self._http_code_check(r):
@@ -234,6 +250,15 @@ class SimulationJob(object):
                 return False
             print("Submitting the model number: 1")
             files = self._decode_model_and_epw(file_dir[0], epw_dir)
+
+            if add_files is not None:
+                # parent parent dir
+                directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                zipf = zipfile.ZipFile(directory+'/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
+                self._zip_dir(add_files, zipf)
+                zipf.close()
+                files['schedule_csv'] = open(directory+'/add_folder.zip', 'r')
+
             r = request_post(url, params=payload, files=files)
             if self._http_code_check(r):
                 resp_json = r.json()
@@ -343,7 +368,8 @@ class SimulationJob(object):
             # http code check error
             return False
 
-    def create_run_model(self, file_dir,  unit='ip', agent=1, comment="Python API", simulation_type="regular",
+    def create_run_model(self, file_dir,  add_files=None, unit='ip', agent=1,
+                         comment="Python API", simulation_type="regular",
                          track=False, request_time=5):
         """
         this method requires supplying a project key
@@ -376,6 +402,14 @@ class SimulationJob(object):
         }
         files = dict()
 
+        if add_files is not None:
+            # parent parent dir
+            directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            zipf = zipfile.ZipFile(directory + '/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
+            self._zip_dir(add_files, zipf)
+            zipf.close()
+            files['schedule_csv'] = open(directory + '/add_folder.zip', 'r')
+
         if is_py2:
             files['file'] = open(file_dir, 'r')
         else:
@@ -389,6 +423,7 @@ class SimulationJob(object):
 
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['tracking']
+                self._model_api_key = resp_json['model_api_key']
                 if track:
                     while self.track_simulation():
                         print(self.track_status)
@@ -491,6 +526,12 @@ class SimulationJob(object):
             if epw is not None:
                 files['weather_file'] = open(epw, 'r', errors='ignore')
         return files
+
+    @staticmethod
+    def _zip_dir(path, ziph):
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                ziph.write(os.path.join(root, file), arcname=file)
 
     def _http_code_check(self, resp):
         if resp.status_code == 500:

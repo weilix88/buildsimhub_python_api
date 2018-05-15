@@ -33,3 +33,4 @@ from .shade_fin_n import ShadeFinNorth
 from .shade_fin_s import ShadeFinSouth
 from .shade_fin_e import ShadeFinEast
 from .shade_fin_w import ShadeFinWest
+from .heating_dx_efficiency import HeatingDXEfficiency

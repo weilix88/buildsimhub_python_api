@@ -9,6 +9,9 @@ class WindowSHGC(ModelAction):
     def get_num_value(self):
         return ModelAction.num_of_value(self)
 
+    def set_datalist(self, datalist):
+        ModelAction.set_datalist(self, datalist)
+
 #########TEST CODE###############
 # wp = WindowProperty('ip')
 # a = [1.1,2.2,3.3]

@@ -31,14 +31,14 @@ import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
 
 # paste your BuildSimHub project api key here:
-project_api_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
+project_api_key = '7e140eec-b37f-4213-8640-88b5f96c0065'
 # paste your BuildSimHub model api key here:
-model_api_key = '565fcbbc-f500-4548-afb2-bxxxxxxxxx'
+model_api_key = 'a69753b9-c8f5-40e3-9aa5-e8ac283b1cb4'
 # fill in your investigation values
 bldg_orientation = []
 wwr_south = [0.5, 0.6]
-wwr_north = [0.3, 0.4]
-wwr_east = [0.3, 0.4]
+wwr_north = []
+wwr_east = []
 wwr_west = [0.3, 0.4]
 overhang_south = []
 overhang_north = []
@@ -48,13 +48,13 @@ fin_south = []
 fin_north = []
 fin_west = []
 fin_east = []
-wall_rvalue = [20, 30]
+wall_rvalue = []
 wall_unit = "ip"
-roof_rvalue = [30, 40]
+roof_rvalue = []
 roof_unit = "ip"
-window_uvalue = [2.8, 1.4]
+window_uvalue = []
 window_u_unit = 'si'
-window_shgc = [0.3, 0.5]
+window_shgc = []
 
 """
 Below are the standard API code - You don't need to touch the code below
