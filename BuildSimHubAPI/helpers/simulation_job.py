@@ -218,7 +218,7 @@ class SimulationJob(object):
                 zipf = zipfile.ZipFile(directory+'/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
                 self._zip_dir(add_files, zipf)
                 zipf.close()
-                files['schedule_csv'] = open(directory+'/add_folder.zip', 'r')
+                files['schedule_csv'] = open(directory+'/add_folder.zip', 'rb')
 
             print("Submitting simulation request...")
             r = request_post(url, params=payload, files=files)
@@ -257,7 +257,7 @@ class SimulationJob(object):
                 zipf = zipfile.ZipFile(directory+'/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
                 self._zip_dir(add_files, zipf)
                 zipf.close()
-                files['schedule_csv'] = open(directory+'/add_folder.zip', 'r')
+                files['schedule_csv'] = open(directory+'/add_folder.zip', 'rb')
 
             r = request_post(url, params=payload, files=files)
             if self._http_code_check(r):
@@ -408,7 +408,7 @@ class SimulationJob(object):
             zipf = zipfile.ZipFile(directory + '/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
             self._zip_dir(add_files, zipf)
             zipf.close()
-            files['schedule_csv'] = open(directory + '/add_folder.zip', 'r')
+            files['schedule_csv'] = open(directory + '/add_folder.zip', 'rb')
 
         if is_py2:
             files['file'] = open(file_dir, 'r')
