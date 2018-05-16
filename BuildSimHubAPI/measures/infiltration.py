@@ -14,7 +14,4 @@ class Infiltration(ModelAction):
         return ModelAction.num_of_value(self)
 
     def set_datalist(self, datalist):
-        for i in range(len(datalist)):
-            if datalist[i] > 1:
-                return False
         ModelAction.set_datalist(self, datalist)

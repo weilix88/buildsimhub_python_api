@@ -361,6 +361,27 @@ class Model(object):
             print('Code: ' + str(r.status_code) + ' message: ' + r['error_msg'])
             return False
 
+    def download_model(self, model_key):
+        """
+        Help download a model from the a project
+        the model will be the latest history of the model
+
+        :param model_key:
+        :return:
+        """
+        url = self._base_url + 'GetModel_API'
+
+        payload = {
+            'project_api_key': self._project_key,
+            'model_api_key': model_key,
+        }
+        r = request_get(url, params=payload)
+        if r.status_code == 200:
+            return r.json()
+        else:
+            print('Code: ' + str(r.status_code) + ' message: ' + r['error_msg'])
+            return False
+
     # Below are the methods use for retrieving results
     def net_site_eui(self):
         return self.__call_api('NetSiteEUI')
