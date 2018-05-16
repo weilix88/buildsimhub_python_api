@@ -31,7 +31,7 @@ results = new_sj_project.create_run_model(file_dir, track=True)
 if results:
     print(new_sj_project.model_api_key)
     print(str(results.not_met_hour_heating()) + " " + results.last_parameter_unit)
-    results.bldg_geo()
+    # print(results.download_model(new_sj_project.model_api_key))
 
 """
 Upload your model with a specific model_key and run simulation
