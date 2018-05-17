@@ -8,6 +8,7 @@ except ImportError:
 import urllib
 from .bldgsim_info import MetaInfo
 
+import uuid
 
 class HTTPConnect(object):
     def __init__(self, status_code, response_obj):
