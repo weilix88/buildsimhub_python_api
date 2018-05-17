@@ -101,6 +101,7 @@ def __split_path(path):
     return {'status': 'success', 'conn': conn, 'req_path': req_path}
 
 
+"""
 def __encode_multipart_formdata(fields, files):
     boundary = 'BuildSimHub_boundary_string'
     crlf = '\r\n'
@@ -129,7 +130,43 @@ def __encode_multipart_formdata(fields, files):
     form.append('')
     body = crlf.join(form)
     return boundary, body
+"""
 
+def __encode_multipart_formdata(params, files):
+    boundry = uuid.uuid4().hex
+    lines = list()
+    for key, val in params.items():
+        if val is None:
+            continue
+
+        lines.append('--' + boundry)
+        lines.append('Content-Disposition: form-data; name="%s"' % key)
+        lines.extend(['', val])
+
+    for key, f in files.items():
+        filename = f.name
+        slash = max(filename.rfind('/'), filename.rfind('\\'))
+        if slash >= 0:
+            filename = filename[slash + 1:]
+
+        lines.append('--' + boundry)
+        lines.append('Content-Disposition: form-data; name="{0}"; filename="{1}"'.format(key, filename))
+        lines.append('Content-Type: application/octet-stream')
+        lines.append('')
+        lines.append(f.read())
+
+    lines.append('--%s--' % boundry)
+
+    body = bytes()
+    for l in lines:
+        if isinstance(l, bytes):
+            body += l + b'\r\n'
+        else:
+            body += bytes(l, encoding='utf8') + b'\r\n'
+
+    headers = {'Content-Type' : 'multipart/form-data; boundary=' + boundry}
+
+    return headers, body
 
 def request_get(path, params, stream=False):
     """
@@ -173,10 +210,9 @@ def request_post(path, params, files=None, stream=False):
         conn = process['conn']
 
         if files:
-            boundary, body = __encode_multipart_formdata(params, files)
+            header, body = __encode_multipart_formdata(params, files)
             info = MetaInfo()
-            header = {'content-type': 'multipart/form-data; boundary=' +
-                      boundary, 'vendor_key': info.vendor_id}
+            header['vendor_key'] = info.vendor_id
 
             conn.request("POST", process['req_path'], body, header)
         else:
