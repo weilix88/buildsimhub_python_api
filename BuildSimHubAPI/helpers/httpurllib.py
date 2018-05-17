@@ -180,10 +180,12 @@ def request_post(path, params, files=None, stream=False):
 
             conn.request("POST", process['req_path'], body, header)
         else:
+            info = MetaInfo()
+            header = {'vender_key': info.vendor_id}
             try:
-                conn.request("POST", process['req_path'] + "?" + urllib.urlencode(params))
+                conn.request("POST", process['req_path'] + "?" + urllib.urlencode(params), headers=header)
             except AttributeError:
-                conn.request("POST", process['req_path'] + "?" + urllib.parse.urlencode(params))
+                conn.request("POST", process['req_path'] + "?" + urllib.parse.urlencode(params), headers=header)
 
         resp = conn.getresponse()
 
