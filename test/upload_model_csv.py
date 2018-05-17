@@ -1,5 +1,9 @@
 """
-8.9 test
+This example shows how to upload a model with customized csv schedules
+
+Put all the relevant schedules under one folder
+and then add the folder directory to the add_files parameter.
+
 """
 import BuildSimHubAPI as bshapi
 import BuildSimHubAPI.postprocess as pp
@@ -7,7 +11,6 @@ import time
 
 bsh = bshapi.BuildSimHubAPIClient()
 project_key = ""
-# model_key = "39ed84d0-062b-470d-96e6-b03abff9c31c"
 
 # 1. define the absolute directory of your energy model
 file_dir = '/Users/weilixu/Desktop/data/schedule/5ZoneTDV.idf'

@@ -10,6 +10,7 @@ from .bldgsim_info import MetaInfo
 
 import uuid
 
+
 class HTTPConnect(object):
     def __init__(self, status_code, response_obj):
         """
@@ -163,7 +164,7 @@ def __encode_multipart_formdata(params, files):
         if isinstance(l, bytes):
             body += l + b'\r\n'
         else:
-            body += bytes(l, encoding='utf8') + b'\r\n'
+            body += bytes(str(l), encoding='utf8') + b'\r\n'
 
     headers = {'Content-Type' : 'multipart/form-data; boundary=' + boundry}
 
