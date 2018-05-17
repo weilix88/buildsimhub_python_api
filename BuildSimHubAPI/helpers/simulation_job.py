@@ -177,7 +177,8 @@ class SimulationJob(object):
             resp_json = sim_json
         return self._track_info(resp_json)
 
-    def run(self, file_dir, epw_dir, add_files=None, unit='ip', agent=1, simulation_type='regular', track=False, request_time=5):
+    def run(self, file_dir, epw_dir, add_files=None, unit='ip', agent=1, simulation_type='regular', track=False,
+            request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
         Use this method when an empty model key is supplied.
@@ -189,6 +190,7 @@ class SimulationJob(object):
         :param simulation_type: - deprecated variable - phase out soon
         :param track: true will enable tracking, also will make this function return Model object
         :param request_time: only used when tracking is true, intermittent time between each tracking request
+        :param add_files: directory of a folder that contains all the additional simulation files
         :type file_dir: str
         :type epw_dir: str
         :type unit: str
@@ -196,6 +198,7 @@ class SimulationJob(object):
         :type simulation_type: str
         :type track: bool
         :type request_time: float
+        :type add_files: str
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
         """
@@ -388,6 +391,7 @@ class SimulationJob(object):
         :param simulation_type:
         :param track:
         :param request_time:
+        :param add_files: directory of a folder that contains all the additional simulation files
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
         """
@@ -517,14 +521,14 @@ class SimulationJob(object):
     def _decode_model_and_epw(model, epw):
         files = dict()
         if is_py2:
-            files['model'] = open(model, 'r')
+            files['model'] = open(model, 'rb')
             if epw is not None:
-                files['weather_file'] = open(epw, 'r')
+                files['weather_file'] = open(epw, 'rb')
         else:
             # py3 cannot decode incompatible utf-8 string
-            files['model'] = open(model, 'r', errors='ignore')
+            files['model'] = open(model, 'rb')
             if epw is not None:
-                files['weather_file'] = open(epw, 'r', errors='ignore')
+                files['weather_file'] = open(epw, 'rb')
         return files
 
     @staticmethod

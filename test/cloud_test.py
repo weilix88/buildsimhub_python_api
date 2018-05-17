@@ -4,6 +4,7 @@ This sample file demonstrate three ways of running a single model simulation
 """
 
 import BuildSimHubAPI as bsh_api
+import BuildSimHubAPI.postprocess as pp
 
 # model_key can be found in each model information bar
 model_key = "96d21c84-d17f-41a2-9da4-1d09ca43736e"
@@ -43,5 +44,5 @@ results = new_sj.run_model_simulation(track=True)
 if results:
     print(str(results.not_met_hour_cooling()) + " " + results.last_parameter_unit)
     load_data = results.zone_load()
-    load = bsh_api.postprocess.ZoneLoad(load_data)
+    load = pp.ZoneLoad(load_data)
     print(load.get_df())
