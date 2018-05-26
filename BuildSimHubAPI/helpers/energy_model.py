@@ -351,14 +351,14 @@ class Model(object):
         }
 
         r = request_get(url, params=payload)
-
         if r.status_code == 200:
             if accept == 'string':
                 return r.json()['data']
             else:
                 return r.json()
         else:
-            print('Code: ' + str(r.status_code) + ' message: ' + r['error_msg'])
+            js = r.json()
+            print('Code: ' + str(r.status_code) + ' message: ' + js['error_msg'])
             return False
 
     def download_model(self, model_key):
