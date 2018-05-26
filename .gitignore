@@ -1,1 +1,3 @@
 BuildSimHubAPI/info.config
+
+*.pyc
