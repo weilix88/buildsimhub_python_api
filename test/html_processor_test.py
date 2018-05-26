@@ -19,4 +19,5 @@ bsh = bshapi.BuildSimHubAPIClient()
 results = bshapi.helpers.Model(project_key, model_key)
 
 html = results.get_simulation_results('html')
-print(bshapi.htmlParser.extract_value_from_table(html, report, table, column_name, row_name))
+net_total_eui = bshapi.htmlParser.extract_value_from_table(html, report, table, column_name, row_name)
+print(net_total_eui)
