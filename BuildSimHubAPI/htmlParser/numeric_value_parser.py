@@ -94,7 +94,7 @@ class NumericValueParser(HTMLParser):
         unit = ''
         # reform the string & separate the unit
         if index > -1:
-            unit = data[index:]
+            unit = data[index+1:-1]
             data = data[:index - 1]
 
         if self._in_header & (data == self._column):

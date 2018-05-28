@@ -15,6 +15,7 @@ file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.e
 wea_dir = "/Users/weilixu/Desktop/data/jsontest/in.epw"
 # initialize the client
 bsh = bsh_api.BuildSimHubAPIClient()
+
 """
 The most straightforward way to do simulation
 """
