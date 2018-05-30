@@ -361,25 +361,66 @@ class Model(object):
             print('Code: ' + str(r.status_code) + ' message: ' + js['error_msg'])
             return False
 
-    def download_model(self, model_key):
+    def download_model(self):
         """
         Help download a model from the a project
         the model will be the latest history of the model
 
-        :param model_key:
         :return:
         """
         url = self._base_url + 'GetModel_API'
 
+        track = "model_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
         payload = {
             'project_api_key': self._project_key,
-            'model_api_key': model_key,
+            track: self._track_token,
         }
+
         r = request_get(url, params=payload)
         if r.status_code == 200:
             return r.json()
         else:
             print('Code: ' + str(r.status_code) + ' message: ' + r['error_msg'])
+            return False
+
+    def hourly_data(self, data=None):
+
+        variable_list_request = False
+
+        if data is None:
+            variable_list_request = True
+
+        url = self._base_url + 'GetHourlyVariableFromEso_API';
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_key,
+            track: self._track_token,
+        }
+
+        if not variable_list_request:
+            payload['variable'] = data
+
+        r = request_get(url, params=payload)
+        if r.status_code == 200:
+            data_array = r.json()['data']
+
+            if variable_list_request:
+                variable_list = data_array['variableList']
+            else:
+                variable_list = data_array['value'][data]
+
+            return variable_list
+        else:
+            r_json = r.json()
+            print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
             return False
 
     # Below are the methods use for retrieving results

@@ -23,5 +23,3 @@ print(zone_level_load.get_df())
 one_zone_load_data = results.zone_load('CORE_TOP')
 one_zone_load = pp.OneZoneLoad(one_zone_load_data)
 print(one_zone_load.heating_load_components())
-
-
