@@ -13,13 +13,12 @@ model_key = "e5326462-447e-4cb6-bb77-cb886b80408b"
 bsh = bshapi.BuildSimHubAPIClient()
 results = bshapi.helpers.Model(project_key, model_key)
 
-
 zone_load_data = results.zone_load()
 zone_level_load = pp.ZoneLoad(zone_load_data)
 
 print(zone_level_load.get_df())
-
+zone_level_load.load_bar_chart('density')
 
 one_zone_load_data = results.zone_load('CORE_TOP')
 one_zone_load = pp.OneZoneLoad(one_zone_load_data)
-print(one_zone_load.heating_load_components())
+print(one_zone_load.heating_load_component_detail())

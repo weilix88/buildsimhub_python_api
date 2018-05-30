@@ -115,7 +115,7 @@ class HourlyPlot(object):
         heat_map_df['time'] = [d.time() for d in heat_map_df['timestamp']]
 
         data = list()
-        trace = go.Heatmap(z=heat_map_df['value'],
+        trace = go.Heatmap(z=heat_map_df[self._variable_name],
                            x=heat_map_df['time'],
                            y=heat_map_df['date'],
                            colorscale=color_scale)
