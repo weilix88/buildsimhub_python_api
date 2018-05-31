@@ -2,6 +2,7 @@
 OneZoneLoad class - post-process a zone load's data
 and form it into a pandas dataframe
 """
+import os
 
 try:
     import pandas as pd
@@ -182,3 +183,83 @@ class OneZoneLoad(object):
             data_dict['Latent'] = d_dict['Latent']
             data.append(data_dict)
         return pd.DataFrame(data, index=index_list)
+
+    def load_component_plot(self, load_type='cooling', image_name='test'):
+        """Plotly bar chart plot
+            plots all the zone's cooling and heating load components
+            this plot x-axis will be load components (such as people, ventilation etc)
+            y-axis will be load value
+            legends shows different load types
+        """
+        try:
+            from plotly.offline import plot
+            from plotly import tools
+            import plotly.graph_objs as go
+        except ImportError:
+            print('plotly is not installed')
+            return
+
+        data = list()
+
+        if load_type == 'cooling':
+            df = self.cooling_load_component_detail()
+        elif load_type == 'heating':
+            df = self.heating_load_component_detail()
+        else:
+            print("invalid load type - only cooling or heating are accepted")
+            return
+
+        for column in df:
+            trace = go.Bar(
+                x=df.index,
+                y=df[column],
+                name=column,
+            )
+            data.append(trace)
+
+        layout = dict(
+            title='Test',
+            barmode='relative'
+        )
+        dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        fig = dict(data=data, layout=layout)
+        plot(fig, filename=dir + '/' + image_name + '.html')
+
+    def load_type_plot(self, load_type='cooling', image_name='test'):
+        """Plotly bar chart plot
+            plots all the zone's cooling and heating load components
+
+        """
+        try:
+            from plotly.offline import plot
+            from plotly import tools
+            import plotly.graph_objs as go
+        except ImportError:
+            print('plotly is not installed')
+            return
+
+        data = list()
+
+        if load_type == 'cooling':
+            df = self.cooling_load_component_detail().transpose()
+        elif load_type == 'heating':
+            df = self.heating_load_component_detail().transpose()
+        else:
+            print("invalid load type - only cooling or heating are accepted")
+            return
+
+        for column in df:
+            trace = go.Bar(
+                x=df.index,
+                y=df[column],
+                name=column,
+            )
+            data.append(trace)
+
+        layout = dict(
+            title='Test',
+            barmode='relative'
+        )
+        dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        fig = dict(data=data, layout=layout)
+        plot(fig, filename=dir + '/' + image_name + '.html')

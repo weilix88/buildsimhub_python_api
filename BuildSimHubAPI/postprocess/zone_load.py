@@ -2,6 +2,7 @@
 ZoneLoad class - post-process zone load data
 and form it into a pandas dataframe
 """
+import os
 
 try:
     import pandas as pd
@@ -82,3 +83,66 @@ class ZoneLoad(object):
     def get_zone_cool_load_time(self, zone):
         zone_name = zone.upper()
         return self._df.at[zone_name, 'cooling_peak_load_time']
+
+    def load_bar_chart(self, mode='default', image_name='test'):
+        """Plotly bar chart plot
+            plots all the zone's cooling and heating load components
+        """
+        try:
+            from plotly.offline import plot
+            from plotly import tools
+            import plotly.graph_objs as go
+        except ImportError:
+            print('plotly is not installed')
+            return
+
+        data = list()
+
+        if mode == 'density':
+            heat_trace = go.Bar(
+                x=self._df.index,
+                y=self._df['heating_load_density'],
+                name='Heating Load' + ' (' + self._heating_density_unit + ')',
+                marker=dict(
+                    color='rgb(178,34,34)'
+                )
+            )
+
+            cool_trace = go.Bar(
+                x=self._df.index,
+                y=self._df['cooling_load_density'],
+                name='Cooling Load' + ' (' + self._cooling_density_unit + ')',
+                marker=dict(
+                    color='rgb(26, 118, 255)'
+                )
+            )
+            data.append(heat_trace)
+            data.append(cool_trace)
+        else:
+            heat_trace = go.Bar(
+                x=self._df.index,
+                y=self._df['heating_load'],
+                name='Heating Load' + ' (' + self._heating_unit + ')',
+                marker=dict(
+                    color='rgb(178,34,34)'
+                )
+            )
+
+            cool_trace = go.Bar(
+                x=self._df.index,
+                y=self._df['cooling_load'],
+                name='Cooling Load' + ' (' + self._cooling_unit + ')',
+                marker=dict(
+                    color='rgb(26, 118, 255)'
+                )
+            )
+            data.append(heat_trace)
+            data.append(cool_trace)
+
+        layout = dict(
+            title='Test',
+            barmode='relative'
+        )
+        dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        fig = dict(data=data, layout=layout)
+        plot(fig, filename=dir + '/' + image_name + '.html')
