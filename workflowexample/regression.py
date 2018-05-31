@@ -1,15 +1,57 @@
+"""
+This example shows how to use scikit-learn
+with BuildSimHub parametric study object
+to train a regression model
 
-try:
-    import numpy as np
-except ImportError:
-    np = None
-    print('numpy is not installed')
+"""
+import BuildSimHubAPI as bsh_api
+import BuildSimHubAPI.postprocess as pp
+import numpy as np
+import pandas as pd
 
-try:
-    import pandas as pd
-except ImportError:
-    pd = None
-    print('pandas is not installed')
+# Parametric Study
+
+# 1. set your folder key
+project_key = '7e140eec-b37f-4213-8640-88b5f96c0065'
+model_key = '48003d7a-143f-45c1-b175-4ab4d1968bbd'
+
+file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
+
+bsh = bsh_api.BuildSimHubAPIClient()
+new_pj = bsh.new_parametric_job(project_key, model_key)
+
+# Define EEMs
+wwr = bsh_api.measures.WindowWallRatio()
+wwr_ratio = [0.6, 0.4]
+wwr.set_datalist(wwr_ratio)
+
+lpd = bsh_api.measures.LightLPD('ip')
+lpdValue = [1.2, 0.9]
+lpd.set_datalist(lpdValue)
+
+heatEff = bsh_api.measures.HeatingEfficiency()
+cop = [0.8, 0.86]
+heatEff.set_datalist(cop)
+
+# Add EEMs to parametric job
+new_pj.add_model_measure(wwr)
+new_pj.add_model_measure(lpd)
+new_pj.add_model_measure(heatEff)
+
+# Start!
+results = new_pj.submit_parametric_study(track=True)
+
+if results:
+
+    # Collect results
+    result_dict = results.net_site_eui()
+    result_unit = results.last_parameter_unit
+
+    # Plot
+    plot = pp.ParametricPlot(result_dict, result_unit)
+    df = plot.pandas_df()
+
+
 
 
 class Regression(object):
@@ -74,9 +116,3 @@ class Regression(object):
             print("Sci-kit learn package is required for model training. Please install the package at: "
                   "http://scikit-learn.org/stable/index.html")
             return
-
-        
-
-
-
-
