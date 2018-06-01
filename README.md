@@ -23,20 +23,21 @@ We appreciate your continued support, thank you!
 * [License](#license)
 
 <a name="update"></a>
-Latest Version 1.4.0:
+Latest Version 1.5.0:
+1. API library is now supporting model download. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/download_model_test.py)
+2. Model upload support customize (.CSV) schedules. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/simulation_csv_test.py)
+3. Supports hourly data extract from a single model. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/hourly_data_retrieve.py)
+4. Support extracting a single table from HTML. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/html_table_test.py)
+5. Open 3D geometry viewer using API. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/model_geo_test.py)
+6. Zone Load / Load component Extraction. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/zone_load_test.py)
+7. Add post-processing functions - convert data to pandas dataframe, and utilize plotly for plotting.
+
+Version 1.4.0
 1. Initialize a simulation job / parametric job requires a project api key now.
 2. User API key is deleted
 3. Run function in simulation job supports multiple models submission.
 4. Include more standard measures: Building orientation, overhangs, fins, roof absorptions, water heater, water usage, equipment power
 5. Include more data retriving options at building level.
-
-Version 1.3.0:
-1. Fully support EnergyPlus 8.9 cloud simulation
-2. Fully support epJSON file upload & simulation
-3. add `eio` and `rdd` to extract .eio and .rdd result files
-4. Use the developed httpurllib to take out the requests dependency
-5. Address compatibility issues with Python 2.7
-6. Run method in a SimulationJob supports batch model uploading with one epw file.
 
 <a name="installation"></a>
 
@@ -45,6 +46,7 @@ Version 1.3.0:
 ## Prerequisites
 - The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
 - Python version 3.4, 3.5 or 3.6, Python 2.7 is undere-testing.
+- If you wish to use the Built-in plotting function, you will then need the latest Plotly python package. The installation instruction can be found in this [link](https://plot.ly/python/getting-started/)
 
 ## Install Package
 Simply clone / download this repository and place in any folder you wish to build your application on. Examples:
