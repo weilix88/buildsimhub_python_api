@@ -15,5 +15,4 @@ table_data = results.html_table('Annual Building Utility Performance Summary', '
 data = pp.HTMLTable(table_data)
 df = data.pandas_df()
 
-data.table_pie_chart_plot(orientation='column', skip_rows=['Total End Uses'], skip_cols=['Water'], title='End Uses')
-
+data.table_bar_chart_plot(orientation='row', skip_rows=['Total End Uses'], title='End Uses', image_name='bar_table')
