@@ -1,3 +1,4 @@
+import re
 import webbrowser
 from .httpurllib import request_get
 from .httpurllib import make_url
@@ -384,7 +385,8 @@ class Model(object):
         if r.status_code == 200:
             return r.json()
         else:
-            print('Code: ' + str(r.status_code) + ' message: ' + r['error_msg'])
+            rj = r.json()
+            print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
             return False
 
     def hourly_data(self, data=None):
@@ -421,6 +423,41 @@ class Model(object):
         else:
             r_json = r.json()
             print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            return False
+
+    def html_table(self, report, table, report_for='EntireFacility'):
+        """
+        get an HTML table for plot
+        :param report: report name e.g. Annual Building Utility Performance Summary
+        :param table: table name e.g. End Uses
+        :param reportFor: typically it is EntireFacility, but with some exceptions
+        :return:
+        """
+        url = self._base_url + 'GetTableFromHTML_API'
+
+        r = re.sub('\W', '', report)
+        t = re.sub('\W', '', table)
+        rf = re.sub('\W', '', report_for)
+
+        table_id = r + ":" + rf + ":" + t
+
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_key,
+            track: self._track_token,
+            'table_name': table_id
+        }
+
+        r = request_get(url, params=payload)
+        if r.status_code == 200:
+            return r.json()
+        else:
+            rj = r.json()
+            print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
             return False
 
     # Below are the methods use for retrieving results

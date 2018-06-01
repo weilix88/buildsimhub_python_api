@@ -9,20 +9,6 @@ import os
 import datetime as datetime
 
 try:
-    import matplotlib.pyplot as plt
-    from matplotlib import ticker
-except ImportError:
-    plt = None
-    ticker = None
-    print('matplotlib is not installed')
-
-try:
-    import numpy as np
-except ImportError:
-    np = None
-    print('numpy is not installed')
-
-try:
     import pandas as pd
 except ImportError:
     pd = None

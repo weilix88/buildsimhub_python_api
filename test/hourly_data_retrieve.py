@@ -35,4 +35,4 @@ hourly_plot.heat_map_plotly()
 # retrieve more hourly data and combine into one dataframe
 variable_data = results.hourly_data('Site Outdoor Air Drybulb Temperature:Environment')
 hourly_plot.add_column(variable_data, 'Site Outdoor Air Drybulb Temperature:Environment')
-hourly_plot.line_chart_plot() # line plot
+hourly_plot.line_chart_plot()
