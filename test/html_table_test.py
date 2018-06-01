@@ -14,6 +14,6 @@ results = bshapi.helpers.Model(project_key, model_key)
 table_data = results.html_table('Annual Building Utility Performance Summary', 'End Uses')
 data = pp.HTMLTable(table_data)
 df = data.pandas_df()
-print(df)
-data.table_pie_chart_plot(orientation='column', skip_row='Total End Uses', title='End Uses')
+
+data.table_pie_chart_plot(orientation='column', skip_rows=['Total End Uses'], skip_cols=['Water'], title='End Uses')
 
