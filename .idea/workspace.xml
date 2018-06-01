@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d975d362-de7b-42a3-8c65-b8680decdec1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/postprocess/html_table_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/postprocess/html_table_plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pie_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/pie_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/html_table_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/html_table_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +16,8 @@
       <file leaf-file-name="html_table_plot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/postprocess/html_table_plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="309" column="47" lean-forward="true" selection-start-line="309" selection-start-column="47" selection-end-line="309" selection-end-column="47" />
+            <state relative-caret-position="135">
+              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
               <folding>
                 <element signature="e#234#243#0" expanded="true" />
               </folding>
@@ -775,8 +773,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/postprocess/html_table_plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="309" column="47" lean-forward="true" selection-start-line="309" selection-start-column="47" selection-end-line="309" selection-end-column="47" />
+        <state relative-caret-position="135">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
           <folding>
             <element signature="e#234#243#0" expanded="true" />
           </folding>

@@ -7,7 +7,6 @@ It is required to have the latest plotly python package in your python.
 """
 import os
 import math
-import copy
 
 try:
     import pandas as pd
@@ -23,7 +22,6 @@ class HTMLTable(object):
         Construct parametric plot
 
         :param data: returned from the parametric result call
-        :param unit:
         """
 
         self._data = data['data']['array']
@@ -61,8 +59,8 @@ class HTMLTable(object):
     def pandas_df(self):
         return self._df
 
-    def table_bar_chart_plot(self, orientation='column', title='Table bar plot', image_name='bar_table', skip_rows=[],
-                             skip_cols=[]):
+    def table_bar_chart_plot(self, orientation='column', title='Table bar plot', image_name='bar_table', skip_rows=None,
+                             skip_cols=None):
         try:
             from plotly.offline import plot
             from plotly import tools
@@ -76,7 +74,7 @@ class HTMLTable(object):
         if orientation == 'column':
             for col in self._df:
                 # skip this column
-                if col in skip_cols:
+                if skip_cols is not None and col in skip_cols:
                     continue
 
                 col_sum = 0
@@ -86,7 +84,7 @@ class HTMLTable(object):
 
                 for index, row in self._df.iterrows():
                     # skip this row
-                    if index in skip_rows:
+                    if skip_rows is not None and index in skip_rows:
                         continue
                     # only include the none zero values
                     if row[col] > 0:
@@ -116,7 +114,7 @@ class HTMLTable(object):
         elif orientation == 'row':
             for index, row in self._df.iterrows():
                 # skip this row
-                if index in skip_rows:
+                if skip_rows is not None and index in skip_rows:
                     continue
 
                 row_sum = 0
@@ -125,7 +123,7 @@ class HTMLTable(object):
                 row_val_list = []
 
                 for col in self._df:
-                    if col in skip_cols:
+                    if skip_cols is not None and col in skip_cols:
                         continue
 
                     # only include the none zero values
@@ -173,8 +171,8 @@ class HTMLTable(object):
         fig = dict(data=data, layout=layout)
         plot(fig, filename=dir + '/' + image_name + '.html')
 
-    def table_pie_chart_plot(self, orientation='column', title='Table pie plot', image_name='pie_table', skip_rows=[],
-                             skip_cols=[]):
+    def table_pie_chart_plot(self, orientation='column', title='Table pie plot', image_name='pie_table', skip_rows=None,
+                             skip_cols=None):
         """
         plots rows and cols in pie chart -
         orientation indicates whether the legend of the chart is by column or by row
@@ -201,7 +199,7 @@ class HTMLTable(object):
         if orientation == 'column':
             for col in self._df:
                 # skip the column
-                if col in skip_cols:
+                if skip_cols is not None and col in skip_cols:
                     continue
 
                 col_sum = 0
@@ -211,7 +209,7 @@ class HTMLTable(object):
 
                 for index, row in self._df.iterrows():
                     # skip this row
-                    if index in skip_rows:
+                    if skip_rows is not None and index in skip_rows:
                         continue
                     # only include the none zero values
                     if row[col] > 0:
@@ -251,7 +249,7 @@ class HTMLTable(object):
         elif orientation == 'row':
             for index, row in self._df.iterrows():
                 # skip this row
-                if index in skip_rows:
+                if skip_rows is not None and index in skip_rows:
                     continue
 
                 row_sum = 0
@@ -260,7 +258,7 @@ class HTMLTable(object):
                 row_val_list = []
 
                 for col in self._df:
-                    if col in skip_cols:
+                    if skip_cols is not None and col in skip_cols:
                         continue
 
                     # only include the none zero values
@@ -323,6 +321,7 @@ class HTMLTable(object):
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         fig = dict(data=data, layout=layout)
         plot(fig, filename=dir + '/' + image_name + '.html')
+
 
 
 
