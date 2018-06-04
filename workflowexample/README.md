@@ -8,4 +8,4 @@ To use this file:
 3. Copy and paste the two keys
 4. Run the script.
 This shows the exported results:
-![picture alt](https://imgur.com/JZPn0ql)
+![picture alt](https://imgur.com/JZPn0ql.png)
