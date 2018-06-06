@@ -2,7 +2,7 @@ from .numeric_value_parser import NumericValueParser
 
 
 def save_html(content, directory):
-    text_file = open(directory, 'w')
+    text_file = open(directory, 'w+')
     text_file.write(content)
     text_file.close()
 
