@@ -19,5 +19,9 @@ bsh = bshapi.BuildSimHubAPIClient()
 results = bshapi.helpers.Model(project_key, model_key)
 
 html = results.get_simulation_results('html')
+
+# to save the html in your local directory
+# bshapi.htmlParser.save_html(html, 'YOUR LOCAL DIRECTORY')
+
 net_total_eui = bshapi.htmlParser.extract_value_from_table(html, report, table, column_name, row_name)
 print(net_total_eui)
