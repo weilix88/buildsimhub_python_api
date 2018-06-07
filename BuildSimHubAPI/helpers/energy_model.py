@@ -1,5 +1,6 @@
 import re
 import webbrowser
+import json
 from .httpurllib import request_get
 from .httpurllib import make_url
 
@@ -354,7 +355,8 @@ class Model(object):
         r = request_get(url, params=payload)
         if r.status_code == 200:
             if accept == 'string':
-                return r.json()['data']
+                res = json.loads(r.json())
+                return (res['file_name'], res['data'])
             else:
                 return r.json()
         else:
