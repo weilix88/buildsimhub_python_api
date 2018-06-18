@@ -7,13 +7,13 @@ import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
 
 # 1. set your folder key
-project_key = '7e140eec-b37f-4213-8640-88b5f96c0065'
-model_key = '48003d7a-143f-45c1-b175-4ab4d1968bbd'
+project_key = 'f698ff06-4388-4549-8a29-e227dbc7b696'
+# model_key = '48003d7a-143f-45c1-b175-4ab4d1968bbd'
 
 file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
 
 bsh = bsh_api.BuildSimHubAPIClient()
-new_pj = bsh.new_parametric_job(project_key, model_key)
+new_pj = bsh.new_parametric_job(project_key)
 
 # Define EEMs
 wwr = bsh_api.measures.WindowWallRatio()

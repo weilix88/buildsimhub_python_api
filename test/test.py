@@ -1,33 +1,53 @@
-"""
-8.9 test
-"""
-import BuildSimHubAPI as bshapi
+import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
-import time
+import os
+from sklearn.model_selection import cross_val_predict
+from sklearn import linear_model
+from plotly.offline import plot
+import plotly.graph_objs as go
 
-bsh = bshapi.BuildSimHubAPIClient()
-project_key = "7e140eec-b37f-4213-8640-88b5f96c0065"
-# model_key = "39ed84d0-062b-470d-96e6-b03abff9c31c"
+project_api_key = "f698ff06-4388-4549-8a29-e227dbc7b696"
+model_api_key = "96cee83c-682a-4e84-972e-fc21560d4cf5"
+results = bsh_api.helpers.ParametricModel(project_api_key, model_api_key)
 
-# 1. define the absolute directory of your energy model
-file_dir = ["/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON",
-           "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled.idf"]
+# Collect results
+result_dict = results.net_site_eui()
+result_unit = results.last_parameter_unit
 
-# file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled.idf"
+print(result_dict)
+# Plot
+param_plot = pp.ParametricPlot(result_dict, result_unit)
+df = param_plot.pandas_df()
 
-wea_dir = "/Users/weilixu/Desktop/data/jsontest/in.epw"
+# Training code starts from here
+y = df.loc[:, 'Value']
+x = df.loc[:, df.columns != 'Value']
+lr = linear_model.LinearRegression()
+# default is 3 fold
+predicted = cross_val_predict(lr, x, y)
 
-new_sj = bsh.new_simulation_job(project_key)
-results = new_sj.run(file_dir, wea_dir, track=True)
+trace1 = go.Scatter(x=y, y=predicted, mode='markers',
+                    marker=dict(size=8,
+                                color='rgb(0, 0, 255)',
+                                line=dict(
+                                    width=2,
+                                    color='rgb(0, 0, 0)'))
+                    )
+trace2 = go.Scatter(x=[y.min(), y.max()], y=[y.min(), y.max()],
+                    line=dict(color=('rgb(0, 0, 0)'),
+                              width=5, dash='dash')
+                    )
+layout = go.Layout(showlegend=False,
+                   yaxis=dict(
+                       zeroline=False,
+                       title='Predicted'),
+                   xaxis=dict(
+                       title='Measured', )
+                   )
 
-if results:
-    load_data = results.zone_load()
-    print(load_data)
-    zl = pp.ZoneLoad(load_data)
-    print(zl.get_df())
-    # results.bldg_geo()
-# if results:
-#    print(str(results.not_met_hour_cooling()) + " " + results.last_parameter_unit)
-#    load_data = results.zone_load()
-#    load = bshapi.postprocess.ZoneLoad(load_data)
-#    print(load.get_df())
+fig = go.Figure(data=[trace1, trace2], layout=layout)
+# layout['annotations'] = annotation
+dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+fig = dict(data=[trace1, trace2], layout=layout)
+plot(fig, filename=dir + '/' + 'test.html')
+

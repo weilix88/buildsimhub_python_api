@@ -36,7 +36,7 @@ project_api_key = "b2809d88-847d-474e-91a5-8763b6b81a27"
 model_api_key = "babac3ee-9fd0-4d62-8f5d-6fd706492607"
 # fill in your investigation values
 bldg_orientation = []
-wwr_south = [0.5, 0.6]
+wwr_south = [0.2, 0.6]
 wwr_north = []
 wwr_east = []
 wwr_west = [0.3, 0.4]
@@ -48,7 +48,7 @@ fin_south = []
 fin_north = []
 fin_west = []
 fin_east = []
-wall_rvalue = [20, 30]
+wall_rvalue = [10, 30]
 wall_unit = "ip"
 roof_rvalue = []
 roof_unit = "ip"

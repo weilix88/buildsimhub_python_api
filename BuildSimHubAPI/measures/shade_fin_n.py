@@ -18,7 +18,7 @@ class ShadeFinNorth(ModelAction):
     # if unit is 'ip', then multiply this rate.
     # for ft to meter
     # The conversion will change ft to m if ip shows
-    CONVERSION_RATE = 0.3048
+    CONVERSION_RATE = 3.28084
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'window_fin_n', unit)

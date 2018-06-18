@@ -17,8 +17,8 @@ class ShadeOverhangEast(ModelAction):
     # this shows the ip to si conversion rate
     # if unit is 'ip', then multiply this rate.
     # for ft to meter
-    # The conversion will change w/m2 to w/ft2 if ip shows
-    CONVERSION_RATE = 0.3048
+    # The conversion will change ft to m if ip shows
+    CONVERSION_RATE = 3.28084
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'window_overhang_e', unit)
