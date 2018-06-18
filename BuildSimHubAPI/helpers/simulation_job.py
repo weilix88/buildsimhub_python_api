@@ -110,7 +110,10 @@ class SimulationJob(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except:
+                print(resp_json)
             return False
 
         if 'error_msg' in resp_json:
@@ -243,7 +246,10 @@ class SimulationJob(object):
                         # print(self.track_status)
                         return False
                 else:
-                    print(resp_json['error_msg'])
+                    try:
+                        print(resp_json['error_msg'])
+                    except:
+                        print(resp_json)
                     return False
             else:
                 return False
@@ -295,7 +301,10 @@ class SimulationJob(object):
                     else:
                         return True
                 else:
-                    print(resp_json['error_msg'])
+                    try:
+                        print(resp_json['error_msg'])
+                    except:
+                        print(resp_json)
                     return False
             else:
                 # code check failed
@@ -486,8 +495,11 @@ class SimulationJob(object):
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            self._track_status = 'Code: ' + str(r.status_code) + \
-                ' message: ' + resp_json['error_msg']
+            try:
+                self._track_status = 'Code: ' + str(r.status_code) + \
+                    ' message: ' + resp_json['error_msg']
+            except:
+                print(resp_json)
             print(self._track_status)
             return False
 
@@ -544,8 +556,11 @@ class SimulationJob(object):
             return False
         resp_json = resp.json()
         if resp.status_code > 200:
-            self._track_status = 'Code: ' + \
-                str(resp.status_code) + ' message: ' + resp_json['error_msg']
+            try:
+                self._track_status = 'Code: ' + \
+                    str(resp.status_code) + ' message: ' + resp_json['error_msg']
+            except:
+                print(resp_json)
             print(self._track_status)
             return False
         # None of those code, then it should be 200
