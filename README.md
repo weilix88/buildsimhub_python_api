@@ -32,6 +32,7 @@ Latest Version 1.5.0:
 6. Zone Load / Load component Extraction. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/zone_load_test.py)
 7. Add post-processing functions - convert data to pandas dataframe, and utilize plotly for plotting.
 
+Previous update:
 Version 1.4.0
 1. Initialize a simulation job / parametric job requires a project api key now.
 2. User API key is deleted
@@ -45,7 +46,7 @@ Version 1.4.0
 
 ## Prerequisites
 - The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
-- Python version 3.4, 3.5 or 3.6, Python 2.7 is undere-testing.
+- Python version 3.4, 3.5 or 3.6, Python 2.7 is under-testing.
 - If you wish to use the Built-in plotting function, you will then need the latest Plotly python package. The installation instruction can be found in this [link](https://plot.ly/python/getting-started/)
 
 ## Install Package
@@ -53,10 +54,10 @@ Simply clone / download this repository and place in any folder you wish to buil
 ![picture alt](https://imgur.com/x60rk2O.png)
 
 ## Setup environment
-There are no requirements for regular users to access BuildSim Cloud besides Python installation.
+There are no requirements for regular users to access BuildSim Cloud besides a Python installation.
 However, for software vendors who would like to integrate the BuildSim Cloud, you can revise the vendor key in the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config) file.
 
-Simply add the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
+Edit the [info.config](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/info.config)
 `vendor_id:[Your name]`
 If you decided to use BuildSim Cloud, please send your specific vendor id to us: weili.xu@buildsimhub.net.
 
@@ -78,7 +79,7 @@ new_sj = bsh.new_simulation_job(project_api_key)
 ```
 
 ## Model key (optional)
-Some functions in the API library requires you to supply a `model_api_key`. These functions allows you to update a model's history or retrieve the simulation results from a model under a project. The model_key can be found in every model (highlighted in the figure below).
+Some functions in the API library requires you to supply a `model_api_key`. These functions allow you to update a model's history or retrieve the simulation results from a model under the specified project. The `model_api_key` can be found in every model (highlighted in the figure below).
 ![picture alt](https://imgur.com/gO4elTT.png)
 
 <a name="quick-start"></a>
@@ -123,25 +124,25 @@ If the simulation job is completed, you can get simulation output files by calli
 5. eio
 
 <a name="functions"></a>
-#Object and Functions
-
+# Object and Functions
 ## SimulationJob
 The easiest way to generate a [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) class is calling the `new_simulation_job()` method in the [BuildSimHubAPIClient](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/buildsimhub.py).
 
-Optionally, you can provide a `model_key` to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance. The `model_key` can be found under each folder of your project
+Optionally, you can provide a `model_api_key` to create a new [SimulationJob](https://github.com/weilix88/buildsimhub_python_api/blob/master/BuildSimHubAPI/helpers/simulationJob.py) instance. The `model_api_key` can be found under each folder of your project
 ![picture alt](https://imgur.com/jNrghIZ.png)
 
-Once you provide a `model_key` to instantiate a simulation job, then this job will link to a model in your project.
+Once you provide a `model_api_key` to instantiate a simulation job, then this job will link to a model in your project.
 Lastly, a simulation job manages one type of cloud simulation. It contains six main functions for cloud simulations.
 
 ### run
 The `run()` function allows you to upload an energy model and weather file to the platform for cloud simulation (project creation is not required for this method). It has in total 2 parameters.
-1. `file_dir` (required): the absolute local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
+1. `file_dir` (required): the absolute local directory or list of local directory of your EnergyPlus / OpenStudio model (e.g., "/Users/weilixu/Desktop/5ZoneAirCooled.idf")
 2. `epw_dir`(required): the absolute local director of the simulation epw weather file (it should be .epw file)
 3. `unit` (optional): provide either `'ip'` or `'si'` unit system for your simulation job.
 4. `agent` (optional): The agent number should be selected among 1, 2 or 4 agents. The more agents use for one simulation job, the faster this one simulation job can be finished. The default agent number is 1.
 5. `track` (optional): True will enable the function to track simulation progress, false otherwise.
 6. `request_time` (optional): This variable defines the tracking intervals. Default is 5 seconds. This will only be useful if `track` is True.
+7. `add_files` (optional): This variable allows the function to extract all the .csv files under a folder and submit them along with the IDF file.
 
 ### create_run_model
 The `create_run_model()` function allows you to upload an energy model to the platform and run simulaiton. It has in total 4 parameters.
@@ -150,13 +151,6 @@ The `create_run_model()` function allows you to upload an energy model to the pl
 3. `agent` (optional)
 4. `comment`(optional): The description of the model version that will be uploaded to your folder. The default message is `Upload through Python API`
 
-### get_simulation_results
-The `get_simulation_results(type)` function requires 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`), html file (`html`), eio file(`eio`) and rdd file(`rdd`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
-```python
-if results:
-   text = results.get_simulation_results('err')
-print (text)
-```
 ### Misc. methods and variables:
 Besides the above functions, you can also retrieve some properties of the simulation job:
 1. *track_token*: get the tracking token used for connecting the cloud simulation.
@@ -184,6 +178,7 @@ model = bsh.helpers.Model(project_key, model_key)
 6. *window_wall_ratio()*: can be called before simulation is completed. It returns the total window to wall ratio (above floor surface area) or -1 if there is an error.
 7. *bldg_orientation()*: can be called before simulation is completed. It returns the orientation of the building.
 8. *bldg_geo()*: open the browser to view the model 3D geometry
+9. *download_model()*: download the model to the local folder.
 
 ### Post-simulation methods
 1. *new_site_eui()*: It returns the net site eui of the simulation (includes generators such as PV). The unit should be based on model specification: SI (kWh/m2 or MJ/m2), IP(kWh/m2).
@@ -235,7 +230,31 @@ load_profile = model_result.zone_load()
 #Output:
 #[{'zone_name': 'SPACE1-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': -7804.11, 'cooling_load': 7461.61, #'heating_load_density': -78.70219846712384, 'cooling_load_density': 75.2481847519161, 'heating_load_density_unit': 'W/m2', #'cooling_load_density_unit': 'W/m2', 'cooling_peak_load_time': '7/21 15:45:00', 'heating_peak_load_time': '1/21 24:00:00'}, {'zone_name': #'SPACE5-1', 'heating_unit': 'W', 'cooling_unit': 'W', 'heating_load': -6165.32, 'cooling_load': 8356.869999999999, #'heating_load_density': -33.78442654392021, 'cooling_load_density': 45.793577730286586, 'heating_load_density_unit': 'W/m2', #'cooling_load_density_unit': 'W/m2', 'cooling_peak_load_time': '7/21 15:00:00', 'heating_peak_load_time': '1/21 24:00:00'}]
 ```
+### hourly_data
+The `hourly_data(data)` function requires a data variable name (optional). If the data variable name is not given, then this function will return a list of available hourly results. If the data variable name is supplied, then a JSON object with hourly data will be returned.
+```python
+variable_list = results.hourly_data()
 
+# output a list: ['Heating Coil Heating Rate:SPACE1-1 ZONE COIL', 'Pump Mass Flow Rate:HW CIRC PUMP', 'Cooling Coil Total Cooling Rate:MAIN COOLING COIL 1', 'Heating Coil Heating Rate:SPACE2-1 ZONE COIL', 'Zone Air Temperature:SPACE1-1', 'Zone Air System Sensible Cooling Rate:PLENUM-1', 'Cooling Coil Sensible Cooling Rate:MAIN]
+
+variable_data = results.hourly_data('Site Outdoor Air Drybulb Temperature:Environment')
+
+# output a jsonobject: {'resolution': 'Hourly', 'category': 'Value', 'unit': 'C', 'data': [{'timestamp': '1/1/2018 01:00:00', 'value': '-8.2625'}, {'timestamp': '1/1/2018 02:00:00', 'value': '-11.8875'}, {'timestamp': '1/1/2018 03:00:00', 'value': '-11.325'}, {'timestamp': '1/1/2018 04:00:00', 'value': '-11.1'}, {'timestamp': '1/1/2018 05...
+```
+### get_simulation_results
+The `get_simulation_results(type)` function has 1 parameter, the result type. Currently, you can retrieve three types of results: the error file (`err`), eso file (`eso`), html file (`html`), eio file(`eio`) and rdd file(`rdd`), generated from EnergyPlus simulation. This method will return the results in text, which you can directly write out into a file.
+```python
+if results:
+   text = results.get_simulation_results('err')
+print (text)
+```
+### html_table
+The `html_table()` function has 3 parameters: `report`, `table` and `report_for`. This function retrieves an HTML table from the HTML result file. The `report` parameter is the name of the report in the HTML table (e.g. Annual Building Utility Performance Summary). The `table` requires for the table name (e.g. End Uses). The `report_for` is an optional field. Typically, the report is for "Entire Facility". However,in some rare cases, the report could be for other purposes which requires user to check.
+```python
+table_data = results.html_table('Annual Building Utility Performance Summary', 'End Uses')
+
+# output:{'data': {'array': [{'unit': 'GJ', 'col': 'Electricity', 'row': 'Heating', 'value': '144.46'}, {'unit': 'GJ', 'col': 'Electricity', 'row': 'Cooling', 'value': '236.73'}, {'unit': 'GJ', 'col': 'Electricity', 'row': 'Interior Lighting', 'value': '331.16'}, {'unit': 'GJ', 'col': ...
+```
 ### Misc. methods and variables
 1. last_parameter_unit: You can check the value of the variable requested by the most recent API call.
 ```python
@@ -406,10 +425,9 @@ new_pj.add_model_measure(wr)
 # Roadmap
 1. We are working on a standard EEMs, which allows user to apply common energy efficiency measures to any IDF models. Open an issue if you did not see any desired EEMs in the standard EEM library!
 2. More simulation configurations and output results return will be added in the future!
-3. CSV schedule uploads along with the model
-4. Deep integration with visualization tools in python & html
-5. Development will be focus on modeling cycles defined in Standard 209.
-6. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
+3. BuildSim Plot: This is the new project which we are integrating plotly package with our standard API library to provide the capability of visualizations.
+4. BuildSim Learn: This is a new project which we are working on integrating scikit-learn into the current workflow to enhance the parametric workflow.
+5. If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/weilix88/buildsimhub_python_api/issues) and [pull requests](https://github.com/weilix88/buildsimhub_python_api/pulls). We would love to hear your feedback.
 
 
 <a name="about"></a>
