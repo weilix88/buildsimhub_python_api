@@ -30,7 +30,7 @@ variable_data = results.hourly_data(variable_name)
 hourly_plot = pp.HourlyPlot(variable_data, variable_name)
 # pandas framework can be retrieved: hourly_plot.pandas_df()
 # Heat map plot
-hourly_plot.heat_map_plotly()
+# hourly_plot.heat_map_plotly()
 
 # retrieve more hourly data and combine into one dataframe
 variable_data = results.hourly_data('Site Outdoor Air Drybulb Temperature:Environment')

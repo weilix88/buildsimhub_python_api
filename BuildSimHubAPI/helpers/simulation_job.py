@@ -314,7 +314,8 @@ class SimulationJob(object):
             print("Error: file_dir should be either a str or a list of str")
             return False
 
-    def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular", track=False, request_time=5):
+    def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular",
+                             track=False, request_time=5):
         """
         Use this method to run a model on the BuildSimHub platform.
         Use it with create_model function
@@ -457,7 +458,7 @@ class SimulationJob(object):
             # http code check error
             return False
 
-    def create_model(self, file_dir, comment="Upload through Python API"):
+    def create_model(self, file_dir, add_files=None, comment="Upload through Python API"):
         """
         Upload an energy model but no simulation
         use it with run_model_simulation() function to do simulation
@@ -470,6 +471,7 @@ class SimulationJob(object):
 
         :param file_dir:
         :param comment:
+        :param add_files: directory of a folder that contains all the additional simulation files
         :return: True, upload success or False, otherwise
         """
         url = self._base_url + 'CreateModel_API'
@@ -487,6 +489,14 @@ class SimulationJob(object):
         else:
             # py3 cannot decode incompatible utf-8 string
             files['file'] = open(file_dir, 'r', errors='ignore')
+
+        if add_files is not None:
+            # parent parent dir
+            directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            zipf = zipfile.ZipFile(directory + '/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
+            self._zip_dir(add_files, zipf)
+            zipf.close()
+            files['schedule_csv'] = open(directory + '/add_folder.zip', 'rb')
 
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:

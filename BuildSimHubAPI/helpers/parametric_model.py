@@ -50,6 +50,47 @@ class ParametricModel(object):
         r = make_url(url, payload)
         webbrowser.open(r)
 
+    def zone_load(self, zone_name=None):
+        """
+        Zone load list. If a zone_name is provided, then a detail
+        zone load components will be returned
+
+        If zone_name is not supplied, then a list of zone and their
+        load info (including total heating & cooling load) will be supplied.
+
+        Note: There will be no component load information included if zone_name is not provided
+
+        :param zone_name:
+        :return:
+        """
+        url = self._base_url + 'GetZoneLoadInfo_API'
+        track = "folder_api_key"
+
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_key,
+            track: self._track_token,
+            'type': 'parametric'
+        }
+
+        if zone_name is not None:
+            payload['zone_name'] = zone_name
+
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            return False
+
+        if resp_json['status'] == 'success':
+            zone_list = resp_json['data']
+            return zone_list
+        else:
+            return -1
+
     # Below are the methods use for retrieving results
     def net_site_eui(self):
         return self.__call_api('NetSiteEUI')

@@ -7,6 +7,7 @@ if the model has overhang, it will change the overhangs depth
 to the specified values
 if the mode has no overhang, it will add overhang with the specified 
 depth.
+if the model has overhang, but overhang depth is set to 0, it will 
 
 This measure applies to windows for all orientations
 
@@ -17,8 +18,8 @@ class ShadeOverhang(ModelAction):
     # this shows the ip to si conversion rate
     # if unit is 'ip', then multiply this rate.
     # for ft to meter
-    # The conversion will change w/m2 to w/ft2 if ip shows
-    CONVERSION_RATE = 0.3048
+    # The conversion will change ft to m if ip shows
+    CONVERSION_RATE = 3.28084
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'window_overhang', unit)
