@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d975d362-de7b-42a3-8c65-b8680decdec1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/test/model_parameter_batch_modification.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/retrieve_parametric_results.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/httpurllib.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/httpurllib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/simulation_job.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/simulation_job.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
