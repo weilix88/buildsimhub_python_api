@@ -134,6 +134,7 @@ def __encode_multipart_formdata(fields, files):
     return boundary, body
 """
 
+
 def __encode_multipart_formdata(params, files):
     boundry = uuid.uuid4().hex
     lines = list()
@@ -169,6 +170,7 @@ def __encode_multipart_formdata(params, files):
     headers = {'Content-Type' : 'multipart/form-data; boundary=' + boundry}
 
     return headers, body
+
 
 def request_get(path, params, stream=False):
     """
@@ -219,7 +221,7 @@ def request_post(path, params, files=None, stream=False):
             conn.request("POST", process['req_path'], body, header)
         else:
             info = MetaInfo()
-            header = {'vender_key': info.vendor_id}
+            header = {'vendor_key': info.vendor_id}
             try:
                 conn.request("POST", process['req_path'] + "?" + urllib.urlencode(params), headers=header)
             except AttributeError:

@@ -27,7 +27,7 @@ class BuildSimHubAPIClient(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, base_url=None):
         """
         Construct BuildSimHub API object
 
@@ -35,7 +35,11 @@ class BuildSimHubAPIClient(object):
         in the API package
         """
         info = helpers.bldgsim_info.MetaInfo()
-        self._base_url = info.base_url
+
+        if base_url == None:
+            self._base_url = info.base_url
+        else:
+            self._base_url = base_url
 
     def new_simulation_job(self, project_key):
         """

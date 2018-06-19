@@ -54,15 +54,116 @@ class SimulationJob(object):
     def track_token(self, value):
         self._track_token = value
 
-    def add_model_action(self, action):
+    def parameter_batch_modification(self, class_label, field_label, value, class_name=None):
         """
-        future feature... TBD
-        :param action:
-        :return:
+        This method allows user to modify an uploaded model's parameter
+        Specify the class_label and field label to identify the class in the model
+        if the class name is specified, then the field of class that matches the class name
+        will be modified.
+        :param class_label: String, class label, e.g. buildingsurface:detailed
+        :param field_label:  String, field label, e.g. Zone Name
+        :param class_name: String, the name of the class: e.g. class name: ceiling_101 in field_label:name,
+         under the class: buildingsurface:detail
+        :return: false or new model api key
         """
-        if action.get_num_value() > 0:
-            return "Cannot process more than one value for a single simulation job. Try parametric study."
-        self._model_action_list.append(action)
+
+        if self._track_token == "" and self._model_api_key == "":
+            print("Error: Cannot modify the model if the model is not uploaded. use:"
+                  " create_model() or run() or create_run_model() to upload a model")
+            return False
+
+        url = self._base_url + 'BasicModelModification_API'
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_key,
+            'class_label': class_label,
+            'field_key': field_label,
+            'target_value': value,
+            track: self._track_token
+        }
+
+        if class_name is not None:
+            payload['class_name'] = class_name
+
+        r = request_get(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['message'])
+            return data['tracking']
+        else:
+            r_json = r.json()
+            print(r_json)
+            print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            return False
+
+    def apply_measures(self, measure_list, agent=1, unit='ip', simulation_type='regular',
+                       track=False, request_time=5):
+        """
+        Apply energy measures on a seed model and simulate the new model.
+        It should be noted that once this method is called, the simulation job class will
+        update its track_token to the new model.
+
+        :param measure_list: list of model actions
+        :param agent: number of agent
+        :param unit: unit: si or ip
+        :param simulation_type: regular and parametric
+        :param track: true will enable tracking, also will make this function return Model object
+        :param request_time: only used when tracking is true, intermittent time between each tracking request
+        :return: model result class
+
+        """
+        if self._track_token == "" and self._model_api_key == "":
+            print("Error: Cannot modify the model if the model is not uploaded. use:"
+                  " create_model() or run() or create_run_model() to upload a model")
+            return False
+
+        url = self._base_url + 'ModifyModel_API'
+        track_label = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track_label = "track_token"
+
+        payload = {
+            track_label: self._track_token,
+            'project_api_key': self._project_key,
+            'simulation_type': simulation_type,
+            'agents': agent,
+            'unit': unit
+        }
+
+        for i in range(len(measure_list)):
+            action = measure_list[i]
+            data_str = action.get_data()
+            payload[action.get_api_name()] = data_str
+
+        print('Applying measure to model: ' + self._track_token)
+        r = request_post(url, params=payload)
+        if self._http_code_check(r):
+            resp_json = r.json()
+            if resp_json['status'] == 'success':
+                self._track_token = resp_json['tracking']
+                if track:
+                    while self.track_simulation():
+                        print(self.track_status)
+                        time.sleep(request_time)
+                if self.track_status == 'Simulation finished successfully':
+                    print(self.track_status)
+                    # check whether there is requested data
+                    print('Completed! You can retrieve results using the key: ' + self._track_token)
+                    res = Model(self._project_key, self._track_token, self._base_url)
+                    return res
+                else:
+                    # print(self.track_status)
+                    return False
+            else:
+                print(resp_json['error_msg'])
+                return False
+        else:
+            return False
 
     def get_simulation_results(self, result_type="html", accept='file'):
         """
@@ -314,7 +415,7 @@ class SimulationJob(object):
             print("Error: file_dir should be either a str or a list of str")
             return False
 
-    def run_model_simulation(self, unit='ip', agent=1, simulation_type="regular",
+    def run_model_simulation(self, track_token=None, unit='ip', agent=1, simulation_type="regular",
                              track=False, request_time=5):
         """
         Use this method to run a model on the BuildSimHub platform.
@@ -327,7 +428,13 @@ class SimulationJob(object):
         new_sj.create_model("local/usr/in.idf")
         new_sj.run_model_simulation()
 
+        or:
+
+        new_sj = bsh.new_simulation_job("xxx-x-xxx-xx")
+        new_sj.run_model_simulation("xxx-xxx-xxx")
+
         :param unit: select between si and ip
+        :param track_token: If use for an exist model on the web platform
         :param agent: number of CPU used for this simulation job (only accept 1, 2, and 4)
         :param simulation_type: deprecated - phase out soon
         :param track: true will enable tracking, also will make this function return Model object
@@ -344,7 +451,11 @@ class SimulationJob(object):
         url = self._base_url + 'RunSimulation_API'
 
         if self._track_token == "":
-            return 'error: no model is created in this simulation job. Please create a model use create_model method.'
+            if track_token is None:
+                return 'error: no model is created in this simulation job. ' \
+                       'Please create a model use create_model method.'
+            else:
+                self._track_token = track_token
 
         payload = {
             'project_api_key': self._project_key,
