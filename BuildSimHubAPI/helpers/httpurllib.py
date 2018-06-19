@@ -194,18 +194,18 @@ def request_large_data(path, params):
                 conn.request("GET", process['req_path'] + "?" +
                              urllib.parse.urlencode(params), headers=header)
             resp = conn.getresponse()
-            print(resp.status)
 
             if resp.status != 200:
                 break
-            resp_obj = resp.read()
+            resp_obj_read = resp.read()
+            resp_obj = HTTPConnect(resp.status, resp_obj_read).json()
             if type(resp_obj) is str:
                 try:
                     resp_obj = json.loads(resp_obj)
                 except:
                     # return error msg
                     print("parse json str failed")
-                    print(resp_obj)
+                    # print(resp_obj)
                     break
             elif type(resp_obj) is dict:
                 try:
@@ -226,7 +226,6 @@ def request_large_data(path, params):
             print("Finish " + str(start) + " to " + str(next_start-1))
             start = next_start
             conn.close()
-
             if start == total:
                 break
     return result
