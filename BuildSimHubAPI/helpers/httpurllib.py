@@ -172,6 +172,66 @@ def __encode_multipart_formdata(params, files):
     return headers, body
 
 
+def request_large_data(path, params):
+    """
+    This function is used to request parametric data
+    :return:
+    """
+    start = 0
+    result = []
+    while True:
+        process = __split_path(path)
+        if process['status'] == 'success':
+            conn = process['conn']
+            info = MetaInfo()
+            header = {'vendor_key': info.vendor_id}
+            # check 2.x and 3.x differences in using urllib
+            params['start'] = str(start)
+            try:
+                conn.request("GET", process['req_path'] + "?" +
+                             urllib.urlencode(params), headers=header)
+            except AttributeError:
+                conn.request("GET", process['req_path'] + "?" +
+                             urllib.parse.urlencode(params), headers=header)
+            resp = conn.getresponse()
+            print(resp.status)
+
+            if resp.status != 200:
+                break
+            resp_obj = resp.read()
+            if type(resp_obj) is str:
+                try:
+                    resp_obj = json.loads(resp_obj)
+                except:
+                    # return error msg
+                    print("parse json str failed")
+                    print(resp_obj)
+                    break
+            elif type(resp_obj) is dict:
+                try:
+                    resp_obj = json.loads(json.dumps(resp_obj))
+                except:
+                    print("parse dict failed")
+                    print(resp_obj)
+                    break
+            else:
+                print("result not str")
+                print(resp_obj)
+                break
+
+            total = int(resp_obj['total'])
+            next_start = int(resp_obj['next_start'])
+
+            result.extend(resp_obj['data'])
+            print("Finish " + str(start) + " to " + str(next_start-1))
+            start = next_start
+            conn.close()
+
+            if start == total:
+                break
+    return result
+
+
 def request_get(path, params, stream=False):
     """
     send GET request to server

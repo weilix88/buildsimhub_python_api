@@ -1,8 +1,8 @@
 import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
 
-project_api_key = ""
-model_api_key = ""
+project_api_key = "771"
+model_api_key = "1747"
 results = bsh_api.helpers.ParametricModel(project_api_key, model_api_key)
 if results:
     # Collect results

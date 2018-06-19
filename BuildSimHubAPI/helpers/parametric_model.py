@@ -1,5 +1,6 @@
 import webbrowser
 from .httpurllib import request_get
+from .httpurllib import request_large_data
 from .httpurllib import make_url
 # This is a class that contains all the model information for user
 # to read
@@ -226,29 +227,21 @@ class ParametricModel(object):
             'request_data': request_data
         }
 
-        r = request_get(url, params=payload)
-        resp_json = r.json()
-        if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
-            return False
+        data_list = request_large_data(url, params=payload)
 
         value = list()
         model = list()
         model_plot = list()
         counter = 1
-        if resp_json['status'] == 'success':
-            datalist = resp_json['data']
-            for i in range(len(datalist)):
-                value.append(datalist[i]['value'])
-                model.append(datalist[i]['model'])
-                model_plot.append('case' + str(counter))
-                counter += 1
-                if 'unit' in datalist[i]:
-                    self._last_parameter_unit = datalist[i]['unit']
-            result = dict()
-            result['value'] = value
-            result['model'] = model
-            result['model_plot'] = model_plot
-            return result
-        else:
-            return resp_json['error_msg']
+        for i in range(len(data_list)):
+            value.append(data_list[i]['value'])
+            model.append(data_list[i]['model'])
+            model_plot.append('case' + str(counter))
+            counter += 1
+            if 'unit' in data_list[i]:
+                self._last_parameter_unit = data_list[i]['unit']
+        result = dict()
+        result['value'] = value
+        result['model'] = model
+        result['model_plot'] = model_plot
+        return result

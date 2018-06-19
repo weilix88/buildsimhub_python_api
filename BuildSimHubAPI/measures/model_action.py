@@ -33,7 +33,7 @@ class ModelAction(object):
         return self._list_data
 
     def get_data(self):
-        return "[" + self._data + "]"
+        return "[" + str(self._data) + "]"
 
 #    def num_of_combinations(self):
 #        comb = 0
