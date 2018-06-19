@@ -89,7 +89,7 @@ class SimulationJob(object):
         if class_name is not None:
             payload['class_name'] = class_name
 
-        r = request_get(url, params=payload)
+        r = request_post(url, params=payload)
         if r.status_code == 200:
             data = r.json()
             print(data['message'])

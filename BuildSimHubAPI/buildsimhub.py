@@ -36,10 +36,34 @@ class BuildSimHubAPIClient(object):
         """
         info = helpers.bldgsim_info.MetaInfo()
 
-        if base_url == None:
+        if base_url is None:
             self._base_url = info.base_url
         else:
             self._base_url = base_url
+
+    def model_results(self, project_key, model_key):
+        """
+        retrieve a model's results based on project key and model key
+
+        :param project_key: the key to access the project e.g. f698f06-4388-549-8a29-e227d7b696
+        :param model_key: the key to access the model, it can be:
+        a7ce63-0e58-4efc-93f3-73b7ddaa0 or 111-111-111
+        :return: the model results
+        """
+        results = helpers.Model(project_key, model_key, self._base_url)
+        return results
+
+    def parametric_results(self, project_key, model_key):
+        """
+        retrieve a parametric study results based on project key and model key
+
+        :param project_key: the key to access the project e.g. f698f06-4388-549-8a29-e227d7b696
+        :param model_key: the key to access the model. e.g. a7ce63-0e58-4efc-93f3-73b7ddaa0
+        :return: the parametric results
+
+        """
+        results = helpers.ParametricModel(project_key, model_key, self._base_url)
+        return results
 
     def new_simulation_job(self, project_key):
         """
