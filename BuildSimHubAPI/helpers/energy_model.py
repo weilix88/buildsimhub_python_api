@@ -373,7 +373,7 @@ class Model(object):
         """
         url = self._base_url + 'GetModel_API'
 
-        track = "model_api_key"
+        track = "folder_api_key"
         test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"

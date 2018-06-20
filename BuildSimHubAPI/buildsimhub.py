@@ -10,6 +10,7 @@ This file provides the BuildSim API client
 """
 
 from BuildSimHubAPI import helpers
+from BuildSimHubAPI.helpers.httpurllib import request_large_data
 
 
 class BuildSimHubAPIClient(object):
@@ -89,3 +90,40 @@ class BuildSimHubAPIClient(object):
         """
         pj = helpers.parametric_job.ParametricJob(project_key, model_key, self._base_url)
         return pj
+
+    def model_list(self, project_key, model_key):
+        """
+        This method retrieves all the model history of one model
+        For parametric run, this means retrieve all the model information under one
+        parametric run.
+
+        :param project_key:
+        :param model_key:
+        :return:
+        """
+        url = self._base_url + 'GetModelHistoryKey_API'
+        payload = {
+            'project_api_key': project_key,
+            'folder_api_key': model_key
+        }
+
+        data_list = request_large_data(url, params=payload)
+        return data_list
+
+    def project_model_list(self, project_key):
+        """
+        This method retrieves all the model information under a project
+
+        :param project_key:
+        :return:
+        """
+        url = self._base_url + 'GetModelList_API'
+        payload = {
+            'project_api_key': project_key
+        }
+        data_list = request_large_data(url, params=payload)
+        return data_list
+
+
+
+

@@ -7,12 +7,12 @@ import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
 
 # 1. set your folder key
-project_key = 'f698ff06-4388-4549-8a29-e227dbc7b696'
+project_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 # model_key = '48003d7a-143f-45c1-b175-4ab4d1968bbd'
 
 file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
 
-bsh = bsh_api.BuildSimHubAPIClient()
+bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 new_pj = bsh.new_parametric_job(project_key)
 
 # Define EEMs

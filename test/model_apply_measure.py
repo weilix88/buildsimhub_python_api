@@ -16,4 +16,5 @@ light.set_data(6.0)
 measure_list.append(light)
 
 new_model_api = new_sj.apply_measures(measure_list)
+results = new_sj.run_model_simulation(new_model_api, unit='ip', track=True)
 print(str(results.net_site_eui()) + ' ' + results.last_parameter_unit)
