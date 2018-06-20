@@ -54,18 +54,24 @@ class SimulationJob(object):
     def track_token(self, value):
         self._track_token = value
 
-    def parameter_batch_modification(self, class_label, field_label, value, class_name=None):
+    def parameter_batch_modification(self, class_label, field_label, value, class_name=None, track_token=None):
         """
         This method allows user to modify an uploaded model's parameter
         Specify the class_label and field label to identify the class in the model
         if the class name is specified, then the field of class that matches the class name
+
         will be modified.
         :param class_label: String, class label, e.g. buildingsurface:detailed
         :param field_label:  String, field label, e.g. Zone Name
+        :param value: the value that you want to wish to change to
         :param class_name: String, the name of the class: e.g. class name: ceiling_101 in field_label:name,
          under the class: buildingsurface:detail
+        :param track_token: the model aip key or track token that point to the model that you want to modify
         :return: false or new model api key
         """
+
+        if track_token is not None:
+            self._track_token = track_token
 
         if self._track_token == "" and self._model_api_key == "":
             print("Error: Cannot modify the model if the model is not uploaded. use:"
@@ -441,12 +447,12 @@ class SimulationJob(object):
         """
         url = self._base_url + 'RunSimulation_API'
 
+        if track_token is not None:
+            self._track_token = track_token
+
         if self._track_token == "":
-            if track_token is None:
-                return 'error: no model is created in this simulation job. ' \
+            return 'error: no model is created in this simulation job. ' \
                        'Please create a model use create_model method.'
-            else:
-                self._track_token = track_token
 
         payload = {
             'project_api_key': self._project_key,

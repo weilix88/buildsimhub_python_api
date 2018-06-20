@@ -8,7 +8,8 @@ import plotly.graph_objs as go
 
 project_api_key = "f698ff06-4388-4549-8a29-e227dbc7b696"
 model_api_key = "96cee83c-682a-4e84-972e-fc21560d4cf5"
-results = bsh_api.helpers.ParametricModel(project_api_key, model_api_key)
+bsh = bsh_api.BuildSimHubAPIClient(base_url='http://my.buildsim.io:8080/IDFVersionControl/')
+results = bsh.parametric_results(project_api_key, model_api_key)
 
 # Collect results
 result_dict = results.net_site_eui()

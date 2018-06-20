@@ -196,6 +196,7 @@ def request_large_data(path, params):
             resp = conn.getresponse()
 
             if resp.status != 200:
+                print("Code: " + str(resp.status))
                 break
             resp_obj_read = resp.read()
             resp_obj = HTTPConnect(resp.status, resp_obj_read).json()
