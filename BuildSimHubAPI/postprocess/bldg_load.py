@@ -63,7 +63,7 @@ class BuildingLoad(object):
     def heating_load_density_unit(self):
         return self._heating_density_unit
 
-    def get_df(self):
+    def pandas_df(self):
         """get the dataframe"""
         return self._df
 

@@ -64,7 +64,7 @@ class ZoneLoad(object):
     def heating_load_density_unit(self):
         return self._heating_density_unit
 
-    def get_df(self):
+    def pandas_df(self):
         """get the dataframe"""
         return self._df
 
@@ -84,7 +84,7 @@ class ZoneLoad(object):
         zone_name = zone.upper()
         return self._df.at[zone_name, 'cooling_peak_load_time']
 
-    def load_bar_chart(self, mode='default', image_name='test'):
+    def load_bar_chart_plot(self, mode='default', image_name='test'):
         """Plotly bar chart plot
             plots all the zone's cooling and heating load components
         """

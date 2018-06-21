@@ -123,7 +123,3 @@ class BuildSimHubAPIClient(object):
         }
         data_list = request_large_data(url, params=payload)
         return data_list
-
-
-
-

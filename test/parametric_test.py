@@ -13,6 +13,7 @@ project_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
 
 bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+# if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
 new_pj = bsh.new_parametric_job(project_key)
 
 # Define EEMs
@@ -35,6 +36,8 @@ new_pj.add_model_measure(heatEff)
 
 # Start!
 results = new_pj.submit_parametric_study_local(file_dir, track=True)
+# if the seed model is on the Buildsim cloud - use this method:
+# results = new_pj.submit_parametric_study(track=True)
 
 if results:
 
@@ -46,5 +49,5 @@ if results:
     plot = pp.ParametricPlot(result_dict, result_unit)
     print(plot.pandas_df())
 
-    plot.scatter_chart_plotly("Scatter plot demo")
-    plot.parallel_coordinate_plotly('LPD')
+    plot.scatter_chart_plot("Scatter plot demo")
+    plot.parallel_coordinate_plot('LPD')

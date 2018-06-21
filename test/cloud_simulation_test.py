@@ -46,4 +46,4 @@ if results:
     print(str(results.not_met_hour_cooling()) + " " + results.last_parameter_unit)
     load_data = results.zone_load()
     load = pp.ZoneLoad(load_data)
-    print(load.get_df())
+    print(load.pandas_df())

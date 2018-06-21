@@ -83,7 +83,7 @@ class HourlyPlot(object):
         """get the data in pandas dataframe"""
         return self._df
 
-    def heat_map_plotly(self, image_name="test", color_scale='Viridis'):
+    def heat_map_plot(self, image_name="test", color_scale='Viridis'):
         """Plotly heat map plot
         Only plot the first column data
         on the heat map -

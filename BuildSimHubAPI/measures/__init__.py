@@ -34,3 +34,5 @@ from .shade_fin_s import ShadeFinSouth
 from .shade_fin_e import ShadeFinEast
 from .shade_fin_w import ShadeFinWest
 from .heating_dx_efficiency import HeatingDXEfficiency
+from .light_lpd_percent import LightLPDPercent
+from .equipment_epd_percent import EquipmentEPDPercent
