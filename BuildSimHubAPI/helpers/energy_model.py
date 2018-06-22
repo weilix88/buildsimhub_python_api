@@ -356,7 +356,7 @@ class Model(object):
         if r.status_code == 200:
             if accept == 'string':
                 res = json.loads(r.json())
-                return (res['file_name'], res['data'])
+                return res['file_name'], res['data']
             else:
                 return r.json()
         else:
@@ -373,7 +373,7 @@ class Model(object):
         """
         url = self._base_url + 'GetModel_API'
 
-        track = "model_api_key"
+        track = "folder_api_key"
         test = self._track_token.split("-")
         if len(test) is 3:
             track = "track_token"
@@ -398,7 +398,7 @@ class Model(object):
         if data is None:
             variable_list_request = True
 
-        url = self._base_url + 'GetHourlyVariableFromEso_API';
+        url = self._base_url + 'GetHourlyVariableFromEso_API'
         track = "folder_api_key"
         test = self._track_token.split("-")
         if len(test) is 3:
@@ -432,7 +432,7 @@ class Model(object):
         get an HTML table for plot
         :param report: report name e.g. Annual Building Utility Performance Summary
         :param table: table name e.g. End Uses
-        :param reportFor: typically it is EntireFacility, but with some exceptions
+        :param report_for: typically it is EntireFacility, but with some exceptions
         :return:
         """
         url = self._base_url + 'GetTableFromHTML_API'

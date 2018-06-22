@@ -9,7 +9,7 @@ model_key = "e5326462-447e-4cb6-bb77-cb886b80408b"
 
 # initialize the client
 bsh = bshapi.BuildSimHubAPIClient()
-results = bshapi.helpers.Model(project_key, model_key)
+results = bsh.model_results(project_key, model_key)
 
 table_data = results.html_table('Annual Building Utility Performance Summary', 'End Uses')
 data = pp.HTMLTable(table_data)

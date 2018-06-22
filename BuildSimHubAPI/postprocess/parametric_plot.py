@@ -56,7 +56,7 @@ class ParametricPlot(object):
         """get the data in pandas dataframe"""
         return self._df
 
-    def scatter_chart_plotly(self, title='line graph plot', image_name='line'):
+    def scatter_chart_plot(self, title='line graph plot', image_name='line'):
         """Plotly scatter plot"""
         try:
             from plotly.offline import plot
@@ -100,7 +100,7 @@ class ParametricPlot(object):
         fig = dict(data=data, layout=layout)
         plot(fig, filename=dir + '/' + image_name + '.html')
 
-    def parallel_coordinate_plotly(self, investigate=None, image_name="Plot"):
+    def parallel_coordinate_plot(self, investigate=None, image_name="Plot"):
         """
         Plotly parallel coordinate plot
 

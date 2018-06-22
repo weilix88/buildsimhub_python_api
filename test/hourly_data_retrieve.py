@@ -15,7 +15,7 @@ model_key = "00c81af2-6ca6-4f62-8d34-ea155e776512"
 
 # initialize the client
 bsh = bshapi.BuildSimHubAPIClient()
-results = bshapi.helpers.Model(project_key, model_key)
+results = bsh.model_results(project_key, model_key)
 
 # get the list of hourly variables
 variable_list = results.hourly_data()
@@ -30,7 +30,8 @@ variable_data = results.hourly_data(variable_name)
 hourly_plot = pp.HourlyPlot(variable_data, variable_name)
 # pandas framework can be retrieved: hourly_plot.pandas_df()
 # Heat map plot
-# hourly_plot.heat_map_plotly()
+# hourly_plot.heat_map_plot()
+# hourly_plot.line_chart_plot()
 
 # retrieve more hourly data and combine into one dataframe
 variable_data = results.hourly_data('Site Outdoor Air Drybulb Temperature:Environment')

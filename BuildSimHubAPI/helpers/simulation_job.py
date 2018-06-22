@@ -106,19 +106,13 @@ class SimulationJob(object):
             print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
             return False
 
-    def apply_measures(self, measure_list, agent=1, unit='ip', simulation_type='regular',
-                       track=False, request_time=5):
+    def apply_measures(self, measure_list):
         """
         Apply energy measures on a seed model and simulate the new model.
         It should be noted that once this method is called, the simulation job class will
         update its track_token to the new model.
 
         :param measure_list: list of model actions
-        :param agent: number of agent
-        :param unit: unit: si or ip
-        :param simulation_type: regular and parametric
-        :param track: true will enable tracking, also will make this function return Model object
-        :param request_time: only used when tracking is true, intermittent time between each tracking request
         :return: model result class
 
         """
@@ -135,10 +129,7 @@ class SimulationJob(object):
 
         payload = {
             track_label: self._track_token,
-            'project_api_key': self._project_key,
-            'simulation_type': simulation_type,
-            'agents': agent,
-            'unit': unit
+            'project_api_key': self._project_key
         }
 
         for i in range(len(measure_list)):
@@ -148,27 +139,14 @@ class SimulationJob(object):
 
         print('Applying measure to model: ' + self._track_token)
         r = request_post(url, params=payload)
-        if self._http_code_check(r):
-            resp_json = r.json()
-            if resp_json['status'] == 'success':
-                self._track_token = resp_json['tracking']
-                if track:
-                    while self.track_simulation():
-                        print(self.track_status)
-                        time.sleep(request_time)
-                if self.track_status == 'Simulation finished successfully':
-                    print(self.track_status)
-                    # check whether there is requested data
-                    print('Completed! You can retrieve results using the key: ' + self._track_token)
-                    res = Model(self._project_key, self._track_token, self._base_url)
-                    return res
-                else:
-                    # print(self.track_status)
-                    return False
-            else:
-                print(resp_json['error_msg'])
-                return False
+        if r.status_code == 200:
+            data = r.json()
+            print(data['message'])
+            return data['tracking']
         else:
+            r_json = r.json()
+            print(r_json)
+            print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
             return False
 
     def get_simulation_results(self, result_type="html", accept='file'):
@@ -291,7 +269,16 @@ class SimulationJob(object):
             request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
-        Use this method when an empty model key is supplied.
+        Use this method when an empty model key is supplied. It should be noted, although a project api key is required
+        for this method, however, this method is only use the CPUs from the linked project api key for simulation, but
+        the upload model does not associate with the project.
+        For example: user use a project api key a-b-c for simulation. This method will use one of the CPUs
+        in the project a-b-c. However, the submitted model does not belong to the project a-b-c.
+        If user wish to retrieve the model information. user can either use the python library:
+
+        bsh.model_results(project_api_key, track_token)
+
+        or go to the simulation dashboard on the web UI to manually retrieve the model results.
 
         :param file_dir: directory of the energy file (idf, osm, or gbXML) or list of directories
         :param epw_dir: directory of the .epw file
@@ -424,19 +411,22 @@ class SimulationJob(object):
     def run_model_simulation(self, track_token=None, unit='ip', agent=1, simulation_type="regular",
                              track=False, request_time=5):
         """
-        Use this method to run a model on the BuildSimHub platform.
-        Use it with create_model function
+        Use this method to run an un-simulated model under a project.
 
         Example:
 
         # key should be the model key
+        //this example firstly uploads a model to the project
+        //and then run the model under the project
         new_sj = bsh.new_simulation_job("xxx-x-xxx-xx")
         new_sj.create_model("local/usr/in.idf")
         new_sj.run_model_simulation()
 
         or:
+        //this example run the xxx-xxx-xxx model under the project:
+        abc-def-ghijk - the xxx-xxx-xxx model needs to be in the project and has not been simulated
 
-        new_sj = bsh.new_simulation_job("xxx-x-xxx-xx")
+        new_sj = bsh.new_simulation_job("abc-def-ghijk")
         new_sj.run_model_simulation("xxx-xxx-xxx")
 
         :param unit: select between si and ip
@@ -475,7 +465,6 @@ class SimulationJob(object):
         r = request_post(url, params=payload)
         if self._http_code_check(r):
             resp_json = r.json()
-            print(resp_json)
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['tracking']
                 if track:
@@ -484,7 +473,6 @@ class SimulationJob(object):
                         time.sleep(request_time)
                 print(self.track_status)
                 if self.track_status == 'Simulation finished successfully':
-                    print(self.track_status)
                     print('Completed! You can retrieve results using the key: ' + self._track_token)
                     # check whether there is requested data
                     res = Model(self._project_key, self._track_token, self._base_url)
@@ -508,8 +496,8 @@ class SimulationJob(object):
         Example:
 
         # key should be the project api key
-        new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-df36d6d3dbc6")
-        new_sj.create_run_model("local/usr/in.idf")
+        new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-d3dbc6")
+        new_sj.create_run_model("local/usr/in.idf", track=True) - this method will run the model
 
         :param file_dir: a str contains model directory or a list of str contains model directories
         :param unit:
