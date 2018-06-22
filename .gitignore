@@ -1,3 +1,13 @@
 BuildSimHubAPI/info.config
 
 *.pyc
+BuildSimHubAPI/helpers/__pycache__/energy_model.cpython-36.pyc
+BuildSimHubAPI/htmlParser/__pycache__/numeric_value_parser.cpython-36.pyc
+BuildSimHubAPI/postprocess/__pycache__/__init__.cpython-36.pyc
+BuildSimHubAPI/postprocess/__pycache__/bldg_load.cpython-36.pyc
+BuildSimHubAPI/postprocess/__pycache__/one_zone_load.cpython-36.pyc
+BuildSimHubAPI/helpers/__pycache__/energy_model.cpython-36.pyc
+BuildSimHubAPI/htmlParser/__pycache__/numeric_value_parser.cpython-36.pyc
+BuildSimHubAPI/postprocess/__pycache__/__init__.cpython-36.pyc
+BuildSimHubAPI/postprocess/__pycache__/bldg_load.cpython-36.pyc
+BuildSimHubAPI/postprocess/__pycache__/one_zone_load.cpython-36.pyc
