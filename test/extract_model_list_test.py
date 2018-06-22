@@ -24,7 +24,6 @@ This will rearrange the above data into a nicely pandas dataframe:
 import BuildSimHubAPI as bshapi
 
 project_api_key = "f98aadb3-254f-428d-a321-82a6e4b9424c"
-model_api_key = "1471ba46-2af4-4aa0-b046-e62d64900e35"
 
 bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 
