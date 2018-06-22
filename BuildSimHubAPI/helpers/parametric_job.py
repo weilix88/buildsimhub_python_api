@@ -269,8 +269,12 @@ class ParametricJob(object):
             'folder_api_key': self._track_token
         }
 
-        r = request_get(url, params=payload)
-        resp_json = r.json()
+        try:
+            r = request_get(url, params=payload)
+            resp_json = r.json()
+        except ConnectionResetError:
+            return "Reconnecting to server..."
+
         if r.status_code > 200:
             print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             return False
