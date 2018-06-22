@@ -189,11 +189,15 @@ class SimulationJob(object):
         url = self._base_url + 'ParametricTracking_API'
         payload = {
             'folder_api_key': self._track_token,
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_key
         }
 
-        r = request_get(url, params=payload)
-        resp_json = r.json()
+        try:
+            r = request_get(url, params=payload)
+            resp_json = r.json()
+        except ConnectionResetError:
+            return "Reconnecting to server..."
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -243,8 +247,13 @@ class SimulationJob(object):
             'track_token': self._track_token,
             'project_api_key': self._project_key
         }
-        r = request_get(url, params=payload)
-        resp_json = r.json()
+
+        try:
+            r = request_get(url, params=payload)
+            resp_json = r.json()
+        except ConnectionResetError:
+            return "Reconnecting to server..."
+
         if 'severe_error' in resp_json:
             self._track_status = resp_json['severe_error']
             return False
