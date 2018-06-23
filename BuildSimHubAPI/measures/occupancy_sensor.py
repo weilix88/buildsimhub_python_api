@@ -13,3 +13,8 @@ class OccupancySensor(ModelAction):
         # this is just a on off option
         ModelAction.set_datalist(self, self._default_list)
 
+    def set_min(self, min_val):
+        ModelAction.set_min(self, 0)
+
+    def set_max(self, max_val):
+        ModelAction.set_max(self, 1)

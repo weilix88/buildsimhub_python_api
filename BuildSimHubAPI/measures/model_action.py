@@ -15,6 +15,8 @@ class ModelAction(object):
         self._unit = unit
         self._name = name
         self._default_list = []
+        self._min = 0
+        self._max = 0
 
     def unit(self):
         """Returns the unit system (si or ip)"""
@@ -22,6 +24,12 @@ class ModelAction(object):
 
     def num_of_value(self):
         return len(self._list_data)
+
+    def set_min(self, min_val):
+        self._min = min_val
+
+    def set_max(self, max_val):
+        self._max = max_val
 
     def get_data_string(self):
         if not self._list_data:
@@ -34,6 +42,9 @@ class ModelAction(object):
 
     def get_data(self):
         return "[" + str(self._data) + "]"
+
+    def get_boundary(self):
+        return "[" + str(self._min) + "," + str(self._max) + "]"
 
 #    def num_of_combinations(self):
 #        comb = 0

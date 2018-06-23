@@ -509,7 +509,7 @@ class Model(object):
         return self.__call_api('ExteriorLightingNaturalGas')
 
     def fan_electricity(self):
-        return self.__call_api('FanElectricity')
+        return self.__call_api('FansElectricity')
 
     def fan_naturalgas(self):
         return self.__call_api('FansNaturalGas')

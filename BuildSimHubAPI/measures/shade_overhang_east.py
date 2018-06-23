@@ -31,3 +31,18 @@ class ShadeOverhangEast(ModelAction):
             for i in range(len(datalist)):
                 datalist[i] = datalist[i] / ShadeOverhangEast.CONVERSION_RATE
         ModelAction.set_datalist(self, datalist)
+
+    def set_data(self, data):
+        if ModelAction.unit(self) == 'ip':
+            data = data / ShadeOverhangEast.CONVERSION_RATE
+        ModelAction.set_data(self, data)
+
+    def set_min(self, min_val):
+        if ModelAction.unit(self) == 'ip':
+            min_val = min_val / ShadeOverhangEast.CONVERSION_RATE
+        ModelAction.set_min(self, min_val)
+
+    def set_max(self, max_val):
+        if ModelAction.unit(self) == 'ip':
+            max_val = max_val / ShadeOverhangEast.CONVERSION_RATE
+        ModelAction.set_max(self, max_val)

@@ -71,8 +71,9 @@ class ParametricJob(object):
                 num_total = num_total * self._model_action_list[i].get_num_value()
         return num_total
 
-    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric",
-                                      track=False, request_time=5, customize='false'):
+    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric"
+                                      , track=False, request_time=5, customize='false'
+                                      , algorithm='Default', size=200):
         """
         Submit an energy model from local as the seed model to a project for this parametric study
         Example:
@@ -88,12 +89,16 @@ class ParametricJob(object):
         :param track:
         :param request_time:
         :param customize: keep it false if you are not a vendor / enterprise user
+        :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
+        :param size: determine the size of the parametric study - does not work on the Default algorithm
         :type file_dir: str
         :type unit: str (ip or si)
         :type simulation_type: str
         :type track: bool
         :type request_time: float
         :type customize: str
+        :type algorithm: str
+        :type size: int
         :return: True success, False otherwise
         """
         # file_dir indicates the seed model
@@ -103,12 +108,18 @@ class ParametricJob(object):
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit,
-            'customize': customize
+            'customize': customize,
+            'algorithm': algorithm,
+            'size': size
         }
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
-            data_str = action.get_data_string()
+            if algorithm == 'montecarlo':
+                data_str = action.get_boundary()
+            else:
+                data_str = action.get_data_string()
+
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'
             payload[action.get_api_name()] = data_str
@@ -179,7 +190,7 @@ class ParametricJob(object):
     # for this method, it allows user to identify one seed model in a project.
     # This allows the parametric study performed under a project with a fixed weather file,
     def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_key=None, track=False,
-                                request_time=5, customize='false'):
+                                request_time=5, customize='false', algorithm='Default', size=200):
         """
         Select a model in the project as the seed model and do parametric study
 
@@ -199,12 +210,16 @@ class ParametricJob(object):
         :param track:
         :param request_time:
         :param customize: keep it false if you are not a vendor / enterprise user
+        :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
+        :param size: determine the size of the parametric study - does not work on the Default algorithm
         :type unit: str
         :type model_key: str
         :type simulation_type: str
         :type track: bool
         :type request_time: float
         :type customize: str
+        :type algorithm: str
+        :type size: int
         :return: True if success, False otherwise
         """
         if model_key is not None:
@@ -221,12 +236,19 @@ class ParametricJob(object):
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit,
-            'customize': customize
+            'customize': customize,
+            'algorithm': algorithm,
+            'size': size
         }
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
-            data_str = action.get_data_string()
+
+            if algorithm == 'montecarlo':
+                data_str = action.get_boundary()
+            else:
+                data_str = action.get_data_string()
+
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'
             payload[action.get_api_name()] = data_str
