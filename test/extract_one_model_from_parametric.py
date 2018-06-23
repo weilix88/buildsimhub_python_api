@@ -1,5 +1,5 @@
 """
-Sample code to demonstrate a parametric workflow
+This sample code demonstrates how to extract a single model from a parametric run
 
 """
 

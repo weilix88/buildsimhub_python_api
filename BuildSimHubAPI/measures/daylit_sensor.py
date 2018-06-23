@@ -18,3 +18,9 @@ class DaylightingSensor(ModelAction):
             return False
         else:
             ModelAction.set_data(self, data)
+
+    def set_min(self, min_val):
+        ModelAction.set_min(self, 0)
+
+    def set_max(self, max_val):
+        ModelAction.set_max(self, 1)

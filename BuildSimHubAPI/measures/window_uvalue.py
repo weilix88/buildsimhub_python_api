@@ -20,10 +20,17 @@ class WindowUValue(ModelAction):
                 datalist[i] = datalist[i] * WindowUValue.CONVERSION_RATE
         ModelAction.set_datalist(self, datalist)
 
-#########TEST CODE###############
-# wp = WindowProperty('ip')
-# a = [1.1,2.2,3.3]
-# wp.add_uvalue_list(a)
-# b = [0.2,0.3,0.4,0.6]
-# wp.add_shgc_list(b)
-# print(wp.get_num_combination())
+    def set_data(self, data):
+        if ModelAction.unit(self) == 'ip':
+            data = data / WindowUValue.CONVERSION_RATE
+        ModelAction.set_data(self, data)
+
+    def set_min(self, min_val):
+        if ModelAction.unit(self) == 'ip':
+            min_val = min_val / WindowUValue.CONVERSION_RATE
+        ModelAction.set_min(self, min_val)
+
+    def set_max(self, max_val):
+        if ModelAction.unit(self) == 'ip':
+            max_val = max_val / WindowUValue.CONVERSION_RATE
+        ModelAction.set_max(self, max_val)
