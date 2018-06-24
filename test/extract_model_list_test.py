@@ -25,7 +25,7 @@ import BuildSimHubAPI as bshapi
 
 project_api_key = "f98aadb3-254f-428d-a321-82a6e4b9424c"
 
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 
 project_list = bsh.project_model_list(project_api_key)
 print(project_list)
