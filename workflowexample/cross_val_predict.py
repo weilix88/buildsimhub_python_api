@@ -14,24 +14,24 @@ import plotly.graph_objs as go
 
 # Parametric Study
 # 1. set your folder key
-project_key = 'f698ff06-4388-4549-8a29-e227dbc7b696'
-model_key = '6ea4361d-5f8f-4f66-99e7-f0a4bb16be5b'
+project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
+model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 
 bsh = bsh_api.BuildSimHubAPIClient()
-new_pj = bsh.new_parametric_job(project_key, model_key)
+new_pj = bsh.new_parametric_job(project_api_key, model_api_key)
 
 # Define EEMs
 wwr = bsh_api.measures.WindowWallRatio()
-wwr_ratio = [0.6, 0.4, 0.2]
-wwr.set_datalist(wwr_ratio)
+wwr.set_min(0.3)
+wwr.set_max(0.7)
 
 lpd = bsh_api.measures.LightLPD('ip')
-lpdValue = [1.2, 0.9, 0.6]
-lpd.set_datalist(lpdValue)
+lpd.set_min(0.4)
+lpd.set_max(1.5)
 
 heatEff = bsh_api.measures.HeatingEfficiency()
-eff = [0.8, 0.86, 0.92]
-heatEff.set_datalist(eff)
+heatEff.set_min(0.8)
+heatEff.set_max(0.95)
 
 # Add EEMs to parametric job
 new_pj.add_model_measure(wwr)
@@ -39,8 +39,7 @@ new_pj.add_model_measure(lpd)
 new_pj.add_model_measure(heatEff)
 
 # Start!
-results = new_pj.submit_parametric_study(track=True)
-# results = bsh_api.helpers.ParametricModel(project_key, model_key)
+results = new_pj.submit_parametric_study(track=True, algorithm='montecarl', size=100)
 if results:
 
     # Collect results

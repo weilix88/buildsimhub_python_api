@@ -9,9 +9,9 @@ import pandas as pd
 
 # 1. set your folder key
 # paste your project api key
-project_api_key = ''
+project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 # paste your model api key
-model_api_key = ''
+model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 
 bsh = bsh_api.BuildSimHubAPIClient()
 param_list_raw = bsh.model_list(project_api_key, model_api_key)

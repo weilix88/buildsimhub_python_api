@@ -6,9 +6,9 @@ This sample file demonstrate how to download a model from BuildSimHub using API
 import BuildSimHubAPI as bshapi
 
 # project_key can be found in every project (click the information icon next to project name)
-project_key = "4fee37fd-f257-4ecb-a2eb-6ef31114048c"
+project_key = "f98aadb3-254f-428d-a321-82a6e4b9424c"
 # model_key can be found in each model information bar
-model_key = "876dcf54-42f1-4576-ab4a-be2d0f5052d7"
+model_key = "60952acf-bde2-44fa-9883-a0a78bf9eb56"
 
 # initialize the client
 bsh = bshapi.BuildSimHubAPIClient()

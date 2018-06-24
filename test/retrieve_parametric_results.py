@@ -6,9 +6,9 @@ from sklearn import linear_model
 from plotly.offline import plot
 import plotly.graph_objs as go
 
-project_api_key = "f698ff06-4388-4549-8a29-e227dbc7b696"
-model_api_key = "96cee83c-682a-4e84-972e-fc21560d4cf5"
-bsh = bsh_api.BuildSimHubAPIClient(base_url='http://my.buildsim.io:8080/IDFVersionControl/')
+project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
+model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
+bsh = bsh_api.BuildSimHubAPIClient()
 results = bsh.parametric_results(project_api_key, model_api_key)
 
 # Collect results

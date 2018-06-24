@@ -14,8 +14,8 @@ bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDF
 The most straightforward way to do simulation
 """
 new_sj_run = bsh.new_simulation_job(project_key)
-# results = new_sj_run.run(file_dir, wea_dir, track=True)
-results = bsh.model_results(project_key, '2-330-698')
+results = new_sj_run.run(file_dir, wea_dir, track=True)
+# results = bsh.model_results(project_key, '2-330-698')
 
 if results:
     assert(results.net_site_eui() == 21.43)
@@ -65,3 +65,115 @@ if results:
     assert(results.bldg_electric_boiler_efficiency() == -1)
     assert(results.bldg_fuel_boiler_efficiency() == 0.8)
     assert(results.bldg_dx_heating_efficiency() == -1)
+
+"""
+Upload your model to a project and run simulation
+"""
+new_sj_project = bsh.new_simulation_job(project_key)
+results = new_sj_project.create_run_model(file_dir, track=True)
+model_api_key = new_sj_project.model_api_key
+
+if results:
+    zone_load_data = results.zone_load()
+    zone_level_load = pp.ZoneLoad(zone_load_data)
+    df = zone_level_load.pandas_df()
+    assert(df['cooling_load'].sum() == 116198.59999999999)
+    assert(df['heating_load'].sum() == -96021.98)
+    one_zone_load_data = results.zone_load('SPACE1-1')
+    one_zone_load = pp.OneZoneLoad(one_zone_load_data)
+    assert(one_zone_load.cooling_load_table()['Total'].sum() == 12664.81)
+    assert(one_zone_load.heating_load_table()['Total'].sum() == -13313.98)
+    assert(one_zone_load.floor_area == 1067.45)
+    assert(one_zone_load.zone_name == 'SPACE1-1')
+    assert(len(results.hourly_data()) == 74)
+
+new_sj = bsh.new_simulation_job(project_key)
+response = new_sj.create_model(file_dir)
+results = new_sj.run_model_simulation(track=True)
+
+# new_sj = bsh.new_simulation_job(project_key)
+# response = new_sj.create_model(file_dir)
+# results = new_sj.run_model_simulation(track=True)
+
+# if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
+new_pj = bsh.new_parametric_job(project_key, model_api_key)
+
+# Define EEMs
+wwr = bsh_api.measures.WindowWallRatio()
+wwr_ratio = [0.6, 0.4]
+wwr.set_datalist(wwr_ratio)
+
+lpd = bsh_api.measures.LightLPD('ip')
+lpdValue = [1.2, 0.9]
+lpd.set_datalist(lpdValue)
+
+heatEff = bsh_api.measures.HeatingEfficiency()
+cop = [0.8, 0.86]
+heatEff.set_datalist(cop)
+
+# Add EEMs to parametric job
+new_pj.add_model_measure(wwr)
+new_pj.add_model_measure(lpd)
+new_pj.add_model_measure(heatEff)
+
+# Start!
+results = new_pj.submit_parametric_study(track=True)
+parametric_id = new_pj.track_token
+
+# parametric_id = '6aa21d68-42fd-442e-8bbf-74c32f159a8e'
+# results = bsh.parametric_results(project_key, '6aa21d68-42fd-442e-8bbf-74c32f159a8e')
+if results:
+
+    # Collect results
+    result_dict = results.net_site_eui()
+    result_unit = results.last_parameter_unit
+
+    # Plot
+    plot = pp.ParametricPlot(result_dict, result_unit)
+    pd = plot.pandas_df()
+    assert(pd['Value'].sum() == 159.02999999999997)
+
+model_list = pp.ModelList(bsh.model_list(project_key, parametric_id))
+pd = model_list.pandas_df()
+assert(len(pd) == 8)
+
+########## MONTE CARLO Procedure ######################
+
+new_pj = bsh.new_parametric_job(project_key)
+
+# Define EEMs
+measure_list = list()
+
+wwr = bsh_api.measures.WindowWallRatio()
+wwr.set_min(0.3)
+wwr.set_max(0.6)
+measure_list.append(wwr)
+
+lpd = bsh_api.measures.LightLPD('ip')
+lpd.set_min(0.6)
+lpd.set_max(1.2)
+measure_list.append(lpd)
+
+heatEff = bsh_api.measures.HeatingEfficiency()
+heatEff.set_min(0.8)
+heatEff.set_max(0.95)
+measure_list.append(heatEff)
+
+# Add EEMs to parametric job
+new_pj.add_model_measures(measure_list)
+
+# Start!
+results = new_pj.submit_parametric_study_local(file_dir, algorithm='montecarlo', size=10, track=True)
+# monte_carlo_id = new_pj.track_token
+# results = bsh.parametric_results(project_key, monte_carlo_id)
+
+if results:
+
+    # Collect results
+    result_dict = results.net_site_eui()
+    result_unit = results.last_parameter_unit
+
+    # Plot
+    plot = pp.ParametricPlot(result_dict, result_unit)
+    assert(plot.pandas_df()['Value'].sum() == 183.42999999999998)
+
