@@ -135,7 +135,6 @@ class ParametricJob(object):
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
-            print(r.json())
             print('Code: ' + str(r.status_code))
             return False
         resp_json = r.json()
@@ -260,7 +259,6 @@ class ParametricJob(object):
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload)
         if r.status_code == 500:
-            print(r.json())
             print('Code: ' + str(r.status_code))
             return False
         resp_json = r.json()

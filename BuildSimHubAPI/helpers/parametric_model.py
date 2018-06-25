@@ -1,5 +1,4 @@
 import webbrowser
-from .httpurllib import request_get
 from .httpurllib import request_large_data
 from .httpurllib import make_url
 # This is a class that contains all the model information for user
@@ -140,7 +139,7 @@ class ParametricModel(object):
         return self.__call_api('ExteriorLightingNaturalGas')
 
     def fan_electricity(self):
-        return self.__call_api('FanElectricity')
+        return self.__call_api('FansElectricity')
 
     def fan_naturalgas(self):
         return self.__call_api('FansNaturalGas')
