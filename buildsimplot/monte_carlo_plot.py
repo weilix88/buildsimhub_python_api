@@ -12,7 +12,7 @@ project_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 
 file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
 
-bsh = bsh_api.BuildSimHubAPIClient()
+bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
 new_pj = bsh.new_parametric_job(project_key)
 
