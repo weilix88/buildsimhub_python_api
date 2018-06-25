@@ -85,7 +85,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -116,7 +120,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -141,7 +149,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -167,7 +179,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -192,7 +208,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -217,7 +237,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -247,7 +271,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -277,7 +305,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -320,7 +352,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':
@@ -361,7 +397,11 @@ class Model(object):
                 return r.json()
         else:
             js = r.json()
-            print('Code: ' + str(r.status_code) + ' message: ' + js['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + js['error_msg'])
+            except TypeError:
+                print(js)
+                return
             return False
 
     def download_model(self):
@@ -388,7 +428,10 @@ class Model(object):
             return r.json()
         else:
             rj = r.json()
-            print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
+            except TypeError:
+                print(rj)
             return False
 
     def hourly_data(self, data=None):
@@ -423,8 +466,11 @@ class Model(object):
 
             return variable_list
         else:
-            r_json = r.json()
-            print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            rj = r.json()
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
+            except TypeError:
+                print(rj)
             return False
 
     def html_table(self, report, table, report_for='EntireFacility'):
@@ -459,7 +505,10 @@ class Model(object):
             return r.json()
         else:
             rj = r.json()
-            print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + rj['error_msg'])
+            except TypeError:
+                print(rj)
             return False
 
     # Below are the methods use for retrieving results
@@ -606,7 +655,11 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
             return False
 
         if resp_json['status'] == 'success':

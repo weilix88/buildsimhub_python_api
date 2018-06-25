@@ -51,7 +51,7 @@ class ParametricModel(object):
         r = make_url(url, payload)
         webbrowser.open(r)
 
-    def zone_load(self, zone_name=None):
+    def bldg_load(self, load_type='cooling'):
         """
         Zone load list. If a zone_name is provided, then a detail
         zone load components will be returned
@@ -61,36 +61,37 @@ class ParametricModel(object):
 
         Note: There will be no component load information included if zone_name is not provided
 
-        :param zone_name:
+        :param load_type: cooling or heating
         :return:
         """
-        url = self._base_url + 'GetZoneLoadInfo_API'
+        url = self._base_url + 'GetTotalLoadForParametric_API'
         track = "folder_api_key"
-
-        test = self._track_token.split("-")
-        if len(test) is 3:
-            track = "track_token"
 
         payload = {
             'project_api_key': self._project_key,
             track: self._track_token,
-            'type': 'parametric'
+            'type': 'parametric',
+            'load_type': load_type
         }
 
-        if zone_name is not None:
-            payload['zone_name'] = zone_name
+        data_list = request_large_data(url, params=payload)
 
-        r = request_get(url, params=payload)
-        resp_json = r.json()
-        if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
-            return False
-
-        if resp_json['status'] == 'success':
-            zone_list = resp_json['data']
-            return zone_list
-        else:
-            return -1
+        value = list()
+        model = list()
+        model_plot = list()
+        counter = 1
+        for i in range(len(data_list)):
+            value.append(data_list[i]['value'])
+            model.append(data_list[i]['model'])
+            model_plot.append('case' + str(counter))
+            counter += 1
+            if 'unit' in data_list[i]:
+                self._last_parameter_unit = data_list[i]['unit']
+        result = dict()
+        result['value'] = value
+        result['model'] = model
+        result['model_plot'] = model_plot
+        return result
 
     # Below are the methods use for retrieving results
     def net_site_eui(self):

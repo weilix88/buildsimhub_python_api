@@ -135,11 +135,15 @@ class ParametricJob(object):
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
+            print(r.json())
             print('Code: ' + str(r.status_code))
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
             return False
         print('Received server response')
 
@@ -261,7 +265,10 @@ class ParametricJob(object):
             return False
         resp_json = r.json()
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
             return False
         print('Received server response')
 
@@ -298,7 +305,10 @@ class ParametricJob(object):
             return "Reconnecting to server..."
 
         if r.status_code > 200:
-            print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
             return False
 
         if 'error_msg' in resp_json:

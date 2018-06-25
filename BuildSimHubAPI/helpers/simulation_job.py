@@ -102,8 +102,10 @@ class SimulationJob(object):
             return data['tracking']
         else:
             r_json = r.json()
-            print(r_json)
-            print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
             return False
 
     def apply_measures(self, measure_list):
@@ -145,8 +147,10 @@ class SimulationJob(object):
             return data['tracking']
         else:
             r_json = r.json()
-            print(r_json)
-            print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
             return False
 
     def get_simulation_results(self, result_type="html", accept='file'):
@@ -201,7 +205,7 @@ class SimulationJob(object):
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
-            except:
+            except TypeError:
                 print(resp_json)
             return False
 
@@ -683,7 +687,7 @@ class SimulationJob(object):
             try:
                 self._track_status = 'Code: ' + \
                     str(resp.status_code) + ' message: ' + resp_json['error_msg']
-            except:
+            except TypeError:
                 print(resp_json)
             print(self._track_status)
             return False
