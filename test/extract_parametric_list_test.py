@@ -27,6 +27,8 @@ This will rearrange the above data into a nicely pandas dataframe:
 
 import BuildSimHubAPI as bshapi
 
+
+# paste your project_api_key and model_api_key here
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 model_api_key = "60952acf-bde2-44fa-9883-a0a78bf9eb56"
 
@@ -40,5 +42,33 @@ except:
     print("No pandas installed")
 
 df = pd.DataFrame(data_list)
-print(df)
-print(df[['commit_msg', 'commit_id']])
+
+df = df[df.commit_msg != 'INIT']
+print(df.to_string())
+
+# function to reformat the model list
+
+
+def post_process_models(df):
+    param_list = list()
+    for index, row in df.iterrows():
+        msg = row['commit_msg']
+        parameters = msg.split(',')
+        data_dict = dict()
+        for k in range(len(parameters)):
+            title, val = parameters[k].split(':')
+            data_dict[title.strip()] = float(val.strip())
+        param_list.append(data_dict)
+    parameter_df = pd.DataFrame(param_list)
+    return pd.concat([df, parameter_df], axis=1)
+
+
+# filter and models and extract model id
+post_df = post_process_models(df)
+val = post_df.loc[(post_df['HeatingEff'] == 0.88) & (post_df['LPD'] == 0.858)]['commit_id']
+model_id = val.values[0]
+
+# extract the single model eui
+results = bsh.model_results(project_api_key, model_id)
+print(str(results.net_site_eui()) + ' ' + results.last_parameter_unit)
+

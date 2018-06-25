@@ -157,10 +157,10 @@ class ParametricModel(object):
         return self.__call_api('HeatRejectionNaturalGas')
 
     def interior_equipment_electricity(self):
-        return self.__call_api('InteiorEquipmentElectricity')
+        return self.__call_api('InteriorEquipmentElectricity')
 
     def interior_equipment_naturalgas(self):
-        return self.__call_api('InteirorEquipmentNaturalGas')
+        return self.__call_api('InteriorEquipmentNaturalGas')
 
     def interior_lighting_electricity(self):
         return self.__call_api('InteriorLightingElectricity')
@@ -228,7 +228,6 @@ class ParametricModel(object):
         }
 
         data_list = request_large_data(url, params=payload)
-
         value = list()
         model = list()
         model_plot = list()
