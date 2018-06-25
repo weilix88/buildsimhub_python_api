@@ -11,6 +11,7 @@ This file provides the BuildSim API client
 
 from BuildSimHubAPI import helpers
 from BuildSimHubAPI.helpers.httpurllib import request_large_data
+from BuildSimHubAPI.helpers.network_connectivity import internet
 
 
 class BuildSimHubAPIClient(object):
@@ -40,6 +41,13 @@ class BuildSimHubAPIClient(object):
             self._base_url = info.base_url
         else:
             self._base_url = base_url
+
+        if not internet():
+            print("Cannot connect with internet - please check your internet settings")
+            # force to stop process.
+            exit()
+        else:
+            print("Connected with internet - Lets start!")
 
     def model_results(self, project_key, model_key):
         """
