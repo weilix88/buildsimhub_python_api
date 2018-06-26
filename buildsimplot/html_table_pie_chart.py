@@ -1,14 +1,4 @@
-"""
-zone load test
 
-Make sure you have the latest python plotly installed
-pip: pip install plotly
-or update: pip install plotly --upgrade
-
-If you have python 2 and 3 installed on your computer, try:
-pip3 install plotly
-
-"""
 import BuildSimHubAPI as bshapi
 import BuildSimHubAPI.postprocess as pp
 
@@ -21,9 +11,8 @@ model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 
-zone_load_data = results.zone_load()
-zone_level_load = pp.ZoneLoad(zone_load_data)
+table_data = results.html_table('Annual Building Utility Performance Summary', 'End Uses')
+data = pp.HTMLTable(table_data)
+df = data.pandas_df()
 
-print(zone_level_load.pandas_df())
-zone_level_load.load_bar_chart_plot('density')
-
+data.table_pie_chart_plot(orientation='row', skip_rows=['Total End Uses'], title='End Uses', image_name='pie_table')

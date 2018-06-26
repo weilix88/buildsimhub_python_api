@@ -21,9 +21,8 @@ model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 
-zone_load_data = results.zone_load()
-zone_level_load = pp.ZoneLoad(zone_load_data)
-
-print(zone_level_load.pandas_df())
-zone_level_load.load_bar_chart_plot('density')
-
+# put zone name here
+one_zone_load_data = results.zone_load('CORE_TOP')
+one_zone_load = pp.OneZoneLoad(one_zone_load_data)
+# heating or cooling
+one_zone_load.load_type_plot('cooling')
