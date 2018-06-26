@@ -23,7 +23,13 @@ We appreciate your continued support, thank you!
 * [License](#license)
 
 <a name="update"></a>
-Latest Version 1.5.0:
+Latest Version 1.5.5:
+1. Package and distribution on PYPI
+2. New [monte carlo] algorithm is implemented in parametric study.
+3. New methods to modify energy efficiency measure and parameters in a single model.
+
+Previous update:
+Version 1.5.0:
 1. API library is now supporting model download. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/download_model_test.py)
 2. Model upload support customize (.CSV) schedules. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/simulation_csv_test.py)
 3. Supports hourly data extract from a single model. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/hourly_data_retrieve.py)
@@ -32,7 +38,6 @@ Latest Version 1.5.0:
 6. Zone Load / Load component Extraction. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/zone_load_test.py)
 7. Add post-processing functions - convert data to pandas dataframe, and utilize plotly for plotting.
 
-Previous update:
 Version 1.4.0
 1. Initialize a simulation job / parametric job requires a project api key now.
 2. User API key is deleted
@@ -46,12 +51,13 @@ Version 1.4.0
 
 ## Prerequisites
 - The BuildSimHub service, starting at the [free level](https://my.buildsim.io/register.html)
-- Python version 3.4, 3.5 or 3.6, Python 2.7 is under-testing.
-- If you wish to use the Built-in plotting function, you will then need the latest Plotly python package. The installation instruction can be found in this [link](https://plot.ly/python/getting-started/)
+- Python version 3.5 or 3.6, Python 2.7 is under-testing.
+- If you wish to use the Built-in plotting function, you will then need the latest Plotly python package. The installation instruction can be found in [here](https://plot.ly/python/getting-started/)
 
 ## Install Package
-Simply clone / download this repository and place in any folder you wish to build your application on. Examples:
-![picture alt](https://imgur.com/x60rk2O.png)
+```
+pip install BuildSimHubAPI
+```
 
 ## Setup environment
 There are no requirements for regular users to access BuildSim Cloud besides a Python installation.
