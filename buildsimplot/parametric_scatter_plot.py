@@ -63,7 +63,6 @@ new_pj.add_model_measures(measure_list)
 
 # Start!
 results = new_pj.submit_parametric_study_local(file_dir, algorithm='montecarlo', size=200, track=True)
-print(results)
 # if the seed model is on the Buildsim cloud - use this method:
 # results = new_pj.submit_parametric_study(track=True)
 
@@ -78,4 +77,3 @@ if results:
     print(plot.pandas_df())
 
     plot.scatter_chart_plot("Scatter plot demo")
-    plot.parallel_coordinate_plot('LPD')
