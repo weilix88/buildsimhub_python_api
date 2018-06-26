@@ -385,9 +385,9 @@ Standard EEMs library allows user to upload any IDF models (early stage, schemat
 
 3. WindowSHGC: This measure will change the window SHGC value to specified user inputs. It is required to apply this measure together with WindowUValue measure
 
-4. WallRValue(unit): This measure will change the exterior wall R-value construction to user inputs. The unit is optional with `si` as default.
+4. WallRValue(unit): This measure will change the exterior wall insulation R-value construction to user inputs. The unit is optional with `si` as default.
 
-5. RoofRValue(unit): This measure will change the exterior roof R-value construction to user inputs. The unit is optional with `si` as default.
+5. RoofRValue(unit): This measure will change the exterior roof insulation R-value construction to user inputs. The unit is optional with `si` as default.
 
 6. LightLPD(unit): This measure will change the lighting power density (basically all the lights objects) to the desired value (using the watts / floor area method). The unit is optional with `si` as default.
 
