@@ -8,7 +8,7 @@ project_key = "f98aadb3-254f-428d-a321-82a6e4b9424c"
 file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
 # initialize the client
-bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bsh_api.BuildSimHubAPIClient()
 
 """
 The most straightforward way to do simulation

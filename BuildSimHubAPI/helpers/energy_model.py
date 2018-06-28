@@ -69,6 +69,36 @@ class Model(object):
         self._log = r
         webbrowser.open(r)
 
+    def zone_list(self):
+        url = self._base_url + 'GetBuildingBasicInfo_API'
+        track = 'folder_api_key'
+        test = self._track_token.split('-')
+        if len(test) is 3:
+            track = 'track_token'
+        payload = {
+            'project_api_key': self._project_key,
+            track: self._track_token,
+            'request_data': 'ZoneList'
+        }
+
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+            return False
+
+        if resp_json['status'] == 'success':
+            data = resp_json['data']
+            value = data['array']
+            self._last_parameter_unit = ''
+            return value
+        else:
+            return -1
+
     def bldg_orientation(self):
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
@@ -664,9 +694,21 @@ class Model(object):
 
         if resp_json['status'] == 'success':
             data = resp_json['data']
-            value = data['value']
-            if 'unit' in data:
-                self._last_parameter_unit = data['unit']
-            return value
+
+            value_type = data['type']
+            collections = data['collection']
+
+            if value_type == 'Numeric':
+                value = data['value']
+                if 'unit' in data:
+                    self._last_parameter_unit = data['unit']
+                return value
+            elif value_type == 'JsonObject':
+                if collections == 'true':
+                    value = data['array']
+                    return value
+                else:
+                    value = data['value']
+                    return value
         else:
             return -1
