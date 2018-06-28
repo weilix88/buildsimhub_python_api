@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d975d362-de7b-42a3-8c65-b8680decdec1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/buildsimplot/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plot.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/Plot.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/Plot.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/bar_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/bar_table.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/bldg_level_load.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/bldg_level_load.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/heatmap.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/heatmap.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/line.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/line.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/line_one_variable.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/line_one_variable.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/line_two_variable.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/line_two_variable.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/pie_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/pie_table.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildsimplot/zone_component_plot.html" beforeDir="false" afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/zone_component_plot.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -61,8 +68,8 @@
       <file leaf-file-name="parametric_parallel_coordinate_plot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/buildsimplot/parametric_parallel_coordinate_plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
+            <state relative-caret-position="465">
+              <caret line="32" selection-start-line="32" selection-end-line="32" />
             </state>
           </provider>
         </entry>
@@ -258,6 +265,7 @@
       <recent name="$PROJECT_DIR$/BuildSimHubAPI/helpers" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/buildsimplot/plotexamples" />
       <recent name="$PROJECT_DIR$/buildsimplot" />
       <recent name="$PROJECT_DIR$/workflowexample" />
       <recent name="$PROJECT_DIR$/test" />
@@ -414,14 +422,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1861" y="-250" width="1786" height="1000" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13157895" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.30236796" side_tool="true" weight="0.29026845" />
       <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="bottom" id="Python Console" order="8" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6976321" visible="true" weight="0.07451404" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6976321" visible="true" weight="0.37041035" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.25686058" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -845,8 +852,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/buildsimplot/parametric_parallel_coordinate_plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
+        <state relative-caret-position="465">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
         </state>
       </provider>
     </entry>
