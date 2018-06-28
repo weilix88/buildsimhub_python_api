@@ -108,7 +108,7 @@ class SimulationJob(object):
                 print(r_json)
             return False
 
-    def apply_measures(self, measure_list):
+    def apply_measures(self, measure_list, model_key=""):
         """
         Apply energy measures on a seed model and simulate the new model.
         It should be noted that once this method is called, the simulation job class will
@@ -119,9 +119,12 @@ class SimulationJob(object):
 
         """
         if self._track_token == "" and self._model_api_key == "":
-            print("Error: Cannot modify the model if the model is not uploaded. use:"
-                  " create_model() or run() or create_run_model() to upload a model")
-            return False
+            if model_key == "":
+                print("Error: Cannot modify the model if the model is not uploaded. use:"
+                      " create_model() or run() or create_run_model() to upload a model")
+                return False
+            else:
+                self._track_token = model_key
 
         url = self._base_url + 'ModifyModel_API'
         track_label = "folder_api_key"
