@@ -30,7 +30,7 @@ import BuildSimHubAPI as bshapi
 
 # paste your project_api_key and model_api_key here
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
-model_api_key = "60952acf-bde2-44fa-9883-a0a78bf9eb56"
+model_api_key = "aa09eabf-693f-4437-88cc-a522a25fba01"
 
 bsh = bshapi.BuildSimHubAPIClient()
 
