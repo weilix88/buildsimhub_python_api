@@ -29,12 +29,35 @@ import BuildSimHubAPI as bshapi
 import BuildSimHubAPI.postprocess as pp
 
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
-model_api_key = 'aa09eabf-693f-4437-88cc-a522a25fba01'
+# model_key can be found in each model information bar
+model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
+
+file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
+wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
+
+# 1-372-1125
 
 bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 
-results = bsh.model_results(project_api_key, model_api_key)
-print(results.zone_list())
+file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
+wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
+
+#new_sj_run = bsh.new_simulation_job(project_api_key)
+#results = new_sj_run.run(file_dir, wea_dir, track=True)
+
+results = bsh.model_results(project_api_key, '2-381-1134')
+
+data = results.zone_load('SPACE1-1')
+print(data)
+
+
+
+#results = bsh.parametric_results(project_api_key, model_api_key)
+#result_val = results.net_site_eui()
+#result_unit = results.last_parameter_unit
+
+#pp_plot = pp.ParametricPlot(result_val, result_unit)
+#print(pp_plot.pandas_df())
 
 
 

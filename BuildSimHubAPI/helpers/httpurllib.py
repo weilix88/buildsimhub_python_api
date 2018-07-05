@@ -22,7 +22,7 @@ class HTTPConnect(object):
         self._status_code = status_code
         self._response_error = ""
         if type(response_obj) is bytes:
-            response_obj = response_obj.decode("utf-8")
+            response_obj = response_obj.decode("utf-8", errors='ignore')
 
         if type(response_obj) is str:
             try:
