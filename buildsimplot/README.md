@@ -36,6 +36,8 @@ The first two indicates who wrote this script and when this script was accepted 
 * Lastly, `Package required` indicates what packages a user should install with their python before running this script.
 
 That's it! Once you read this part, you should be good to go now!
+## Latest update:
+Sankey chart plot the zone load components in zone_load_component_sankey.py.
 
 ## How to contribute
 If you are a BuildSim Cloud user and you want to contribute to this project, you can follow the procedure below:

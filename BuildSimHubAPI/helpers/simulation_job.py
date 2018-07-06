@@ -54,7 +54,8 @@ class SimulationJob(object):
     def track_token(self, value):
         self._track_token = value
 
-    def parameter_batch_modification(self, class_label, field_label, value, class_name=None, track_token=None):
+    def parameter_batch_modification(self, class_label, field_label, value, class_name=None,
+                                     track_token=None):
         """
         This method allows user to modify an uploaded model's parameter
         Specify the class_label and field label to identify the class in the model
@@ -69,14 +70,13 @@ class SimulationJob(object):
         :param track_token: the model aip key or track token that point to the model that you want to modify
         :return: false or new model api key
         """
-
-        if track_token is not None:
-            self._track_token = track_token
-
         if self._track_token == "" and self._model_api_key == "":
-            print("Error: Cannot modify the model if the model is not uploaded. use:"
-                  " create_model() or run() or create_run_model() to upload a model")
-            return False
+            if track_token == "":
+                print("Error: Cannot modify the model if the model is not uploaded. use:"
+                      " create_model() or run() or create_run_model() to upload a model")
+                return False
+            else:
+                self._track_token = track_token
 
         url = self._base_url + 'BasicModelModification_API'
         track = "folder_api_key"
@@ -108,23 +108,25 @@ class SimulationJob(object):
                 print(r_json)
             return False
 
-    def apply_measures(self, measure_list, model_key=""):
+    def apply_measures(self, measure_list, track_token=""):
         """
         Apply energy measures on a seed model and simulate the new model.
         It should be noted that once this method is called, the simulation job class will
         update its track_token to the new model.
 
         :param measure_list: list of model actions
+        :param track_token: the model api key - if the model is existing model, then user
+            needs to specify this model api key
         :return: model result class
 
         """
         if self._track_token == "" and self._model_api_key == "":
-            if model_key == "":
+            if track_token == "":
                 print("Error: Cannot modify the model if the model is not uploaded. use:"
                       " create_model() or run() or create_run_model() to upload a model")
                 return False
             else:
-                self._track_token = model_key
+                self._track_token = track_token
 
         url = self._base_url + 'ModifyModel_API'
         track_label = "folder_api_key"
