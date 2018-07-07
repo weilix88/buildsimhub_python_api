@@ -223,7 +223,11 @@ class SimulationJob(object):
         error = float(resp_json['error'])
         queue = float(resp_json['queue'])
 
-        total_progress = (success + error) / (success + running + error + queue)
+        divider = success + running + error + queue
+        if divider == 0:
+            total_progress = 1
+        else:
+            total_progress = (success + error) / divider
 
         message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
         self._track_status = message % (total_progress * 100, success, error, running, queue)
@@ -388,7 +392,6 @@ class SimulationJob(object):
                     self._track_token = resp_json['branch_key']
 
                     payload['branch_key'] = self._track_token
-
                     for i in range(1, len(file_dir)):
                         time.sleep(5)
                         print("Submitting the model number: " + str(i + 1))
@@ -407,7 +410,7 @@ class SimulationJob(object):
                             time.sleep(request_time)
                         print(self._track_status)
                         print('Completed! You can retrieve results using the key: '+self._track_token)
-                        res = ParametricModel(self._track_token, self._project_key, self._base_url)
+                        res = ParametricModel(self._project_key, self._track_token, self._base_url)
 
                         return res
                     else:
