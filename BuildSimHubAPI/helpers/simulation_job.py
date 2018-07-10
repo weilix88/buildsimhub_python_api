@@ -488,6 +488,7 @@ class SimulationJob(object):
             resp_json = r.json()
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['tracking']
+                self._model_api_key = resp_json['model_api_key']
                 if track:
                     while self.track_simulation():
                         print(self.track_status)
@@ -641,6 +642,7 @@ class SimulationJob(object):
 
         if resp_json['status'] == 'no_simulation':
             self._track_token = resp_json['tracking']
+            self._model_api_key = resp_json['model_api_key']
             print(self._track_token)
             return True
         else:
