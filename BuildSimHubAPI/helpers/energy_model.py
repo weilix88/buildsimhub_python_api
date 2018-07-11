@@ -2,6 +2,7 @@ import re
 import webbrowser
 import json
 from .httpurllib import request_get
+from .httpurllib import request_post
 from .httpurllib import make_url
 
 
@@ -9,7 +10,7 @@ class Model(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, project_key, track_token, base_url=None):
+    def __init__(self, project_api_key, track_token, base_url=None):
         """
         Construct Model object
 
@@ -24,14 +25,14 @@ class Model(object):
         results = buildsimhub.helpers.Model(project_api_key, model_api_key)
         print(results.net_site_eui())
 
-        :param project_key: required
-        :param track_token: required
+        :param project_api_key: required
+        :param track_token: required - track_token and model_api_key can be used interchangeably
         :param base_url: optional, this is only for testing purpose
-        :type project_key: str
+        :type project_api_key: str
         :type track_token: str
 
         """
-        self._project_key = project_key
+        self._project_api_key = project_api_key
         self._last_parameter_unit = ""
         self._track_token = track_token
         self._base_url = Model.BASE_URL
@@ -40,6 +41,14 @@ class Model(object):
 
         if base_url is not None:
             self._base_url = base_url
+
+    @property
+    def project_api_key(self):
+        return self._project_api_key
+
+    @property
+    def track_token(self):
+        return self._track_token
 
     @property
     def last_parameter_unit(self):
@@ -61,13 +70,110 @@ class Model(object):
             track = 'tracking'
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
         }
 
         r = make_url(url, payload)
         self._log = r
         webbrowser.open(r)
+
+    def model_compare(self, target_key):
+        """
+        This method will open up your default browser to view the model comparison
+        :param target_key: target_key is the model track_token or model_api_key
+        :return:
+        """
+        url = self._base_url + 'ModelCompare_API'
+        payload = {
+            'base_model_api_key': self._track_token,
+            'cmp_model_api_key': target_key
+        }
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+        if resp_json['status'] == 'success':
+            compare_url = resp_json['url']
+            webbrowser.open(compare_url)
+
+    def model_merge(self, target_key):
+        url = self._base_url + 'ModelMerge_API'
+        payload = {
+            'base_model_api_key': self._track_token,
+            'cmp_model_api_key': target_key
+        }
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+        if resp_json['status'] == 'success':
+            merge_url = resp_json['url']
+            webbrowser.open(merge_url)
+
+    def model_copy(self, project_api_key=''):
+        url = self._base_url + 'ModelCopy_API'
+
+        payload = {
+            'src_model_api_key': self._track_token
+        }
+
+        if project_api_key != '':
+            payload['target_project_api_key'] = project_api_key
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+        if resp_json['status'] == 'success':
+            target_proj_id = resp_json['target_project_id']
+            target_branch_id = resp_json['target_branch_id']
+            target_commit_id = resp_json['target_commit_id']
+            track = target_proj_id + '-' + target_branch_id + '-' + target_commit_id
+            print("The copied model is in project: " + target_proj_id + ", You can retrieve it with key: " +
+                  track)
+            return track
+
+    def get_design_day_condition(self):
+        url = self._base_url + 'GetDesignDayData_API'
+        track = 'folder_api_key'
+        test = self._track_token.split('-')
+        if len(test) is 3:
+            track = 'track_token'
+        payload = {
+            'project_api_key': self._project_api_key,
+            track: self._track_token,
+        }
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+            return False
+        if resp_json['status'] == 'success':
+            cooling = resp_json['cooling_design_day']
+            heating = resp_json['heating_design_day']
+            self._last_parameter_unit = ''
+            design = dict()
+            design['cooling'] = cooling
+            design['heating'] = heating
+            return design
+        else:
+            return -1
 
     def zone_info(self, zone_name):
         url = self._base_url + 'GetBuildingBasicInfo_API'
@@ -76,12 +182,11 @@ class Model(object):
         if len(test) is 3:
             track = 'track_token'
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'ZoneInfo',
             'zone_name': zone_name
         }
-
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
@@ -106,7 +211,7 @@ class Model(object):
         if len(test) is 3:
             track = 'track_token'
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'ZoneList'
         }
@@ -137,7 +242,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'Orientation'
         }
@@ -173,7 +278,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'BuildingStories'
         }
@@ -202,7 +307,7 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'BuildingStories'
         }
@@ -231,7 +336,7 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'TotalZoneNumber'
         }
@@ -261,7 +366,7 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'ConditionedZoneNumber'
         }
@@ -290,7 +395,7 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'ConditionedZoneFloorArea'
         }
@@ -324,7 +429,7 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'ZoneFloorArea'
         }
@@ -358,7 +463,7 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': 'TotalWindowToWallRatio'
         }
@@ -402,7 +507,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token
         }
 
@@ -442,7 +547,7 @@ class Model(object):
 
         url = self._base_url + 'GetSimulationResult_API'
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             'result_type': result_type,
             'accept': accept,
             track: self._track_token
@@ -464,6 +569,90 @@ class Model(object):
                 return
             return False
 
+    def parameter_batch_modification(self, class_label, field_label, value, class_name=None):
+        """
+        This method allows user to modify an uploaded model's parameter
+        Specify the class_label and field label to identify the class in the model
+        if the class name is specified, then the field of class that matches the class name
+
+        will be modified.
+        :param class_label: String, class label, e.g. buildingsurface:detailed
+        :param field_label:  String, field label, e.g. Zone Name
+        :param value: the value that you want to wish to change to
+        :param class_name: String, the name of the class: e.g. class name: ceiling_101 in field_label:name,
+         under the class: buildingsurface:detail
+        :return: false or new model api key
+        """
+        url = self._base_url + 'BasicModelModification_API'
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_api_key,
+            'class_label': class_label,
+            'field_key': field_label,
+            'target_value': value,
+            track: self._track_token
+        }
+
+        if class_name is not None:
+            payload['class_name'] = class_name
+
+        r = request_post(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['message'])
+            return data['tracking']
+        else:
+            r_json = r.json()
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
+            return False
+
+    def apply_measures(self, measure_list):
+        """
+        Apply energy measures on a seed model and simulate the new model.
+        It should be noted that once this method is called, the simulation job class will
+        update its track_token to the new model.
+
+        :param measure_list: list of model actions
+        :return: new model API key
+
+        """
+        url = self._base_url + 'ModifyModel_API'
+        track_label = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track_label = "track_token"
+
+        payload = {
+            track_label: self._track_token,
+            'project_api_key': self._project_api_key
+        }
+
+        for i in range(len(measure_list)):
+            action = measure_list[i]
+            data_str = action.get_data()
+            payload[action.get_api_name()] = data_str
+
+        print('Applying measure to model: ' + self._track_token)
+        r = request_post(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['message'])
+            return data['tracking']
+        else:
+            r_json = r.json()
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
+            return False
+
     def download_model(self):
         """
         Help download a model from the a project
@@ -479,7 +668,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
         }
 
@@ -508,7 +697,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
         }
 
@@ -555,7 +744,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'table_name': table_id
         }
@@ -707,7 +896,7 @@ class Model(object):
             track = "track_token"
 
         payload = {
-            'project_api_key': self._project_key,
+            'project_api_key': self._project_api_key,
             track: self._track_token,
             'request_data': request_data
         }

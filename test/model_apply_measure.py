@@ -15,7 +15,7 @@ file_dir = "/Users/weilixu/Desktop/data/smalloffice.idf"
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 
 # start cloud client
-bsh = bshapi.BuildSimHubAPIClient()
+bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io/')
 new_sj = bsh.new_simulation_job(project_api_key)
 # upload and run the model under a project.
 results = new_sj.create_run_model(file_dir, track=True)
@@ -28,6 +28,8 @@ light.set_data(6.0)
 measure_list.append(light)
 
 # apply measure - you will get a new model key (e.g.: 1-11-111), rerun the new model
-new_model_api = new_sj.apply_measures(measure_list)
-results = new_sj.run_model_simulation(new_model_api, unit='ip', track=True)
-print(str(results.net_site_eui()) + ' ' + results.last_parameter_unit)
+new_model_api = results.apply_measures(measure_list)
+if new_model_api:
+    updated_sim = bsh.new_simulation_job(project_api_key)
+    updated_results = new_sj.run_model_simulation(new_model_api, unit='ip', track=True)
+    print(str(updated_results.net_site_eui()) + ' ' + updated_results.last_parameter_unit)

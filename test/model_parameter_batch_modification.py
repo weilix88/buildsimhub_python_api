@@ -21,6 +21,8 @@ results = new_sj.create_run_model(file_dir, track=True, comment='Test parameter 
 print(str(results.net_site_eui()) + ' ' + results.last_parameter_unit)
 
 # modify all the lights power density, and run the simulation on the modified model
-new_model_api = new_sj.parameter_batch_modification('Lights', 'Watts per Zone Floor Area', value=6.2)
-results = new_sj.run_model_simulation(new_model_api, unit='ip', track=True)
-print(str(results.net_site_eui()) + ' ' + results.last_parameter_unit)
+new_model_api = results.parameter_batch_modification('Lights', 'Watts per Zone Floor Area', value=6.2)
+
+updated_sj = bsh.new_simulation_job(project_api_key)
+updated_results = updated_sj.run_model_simulation(new_model_api, unit='ip', track=True)
+print(str(updated_results.net_site_eui()) + ' ' + updated_results.last_parameter_unit)
