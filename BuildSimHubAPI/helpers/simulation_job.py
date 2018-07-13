@@ -150,7 +150,7 @@ class SimulationJob(object):
             resp_json = sim_json
         return self._track_info(resp_json)
 
-    def run(self, file_dir, epw_dir, add_files=None, unit='ip', design_condition='no', agent=1,
+    def run(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
             simulation_type='regular', track=False, request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
@@ -166,7 +166,7 @@ class SimulationJob(object):
         or go to the simulation dashboard on the web UI to manually retrieve the model results.
 
         :param file_dir: directory of the energy file (idf, osm, or gbXML) or list of directories
-        :param epw_dir: directory of the .epw file
+        :param epw_dir: directory of the .epw file, only customized project supports this function
         :param unit: si or ip
         :param agent: the number of agents determines how many CPU use for this simulation
         :param simulation_type: - deprecated variable - phase out soon
@@ -208,7 +208,6 @@ class SimulationJob(object):
                 self._zip_dir(add_files, zipf)
                 zipf.close()
                 files['schedule_csv'] = open(directory+'/add_folder.zip', 'rb')
-
             print("Submitting simulation request...")
             r = request_post(url, params=payload, files=files)
             if self._http_code_check(r):
@@ -380,7 +379,7 @@ class SimulationJob(object):
             # http code check error
             return False
 
-    def create_run_model(self, file_dir,  add_files=None, unit='ip', design_condition='no', agent=1,
+    def create_run_model(self, file_dir,  epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
                          comment="Python API", simulation_type="regular",
                          track=False, request_time=5):
         """
@@ -394,6 +393,7 @@ class SimulationJob(object):
         new_sj.create_run_model("local/usr/in.idf", track=True) - this method will run the model
 
         :param file_dir: a str contains model directory or a list of str contains model directories
+        :param epw_dir: weather file - optional only customized project supports this function
         :param unit:
         :param agent:
         :param comment:
@@ -427,9 +427,15 @@ class SimulationJob(object):
 
         if is_py2:
             files['file'] = open(file_dir, 'r')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r')
         else:
             # py3 cannot decode incompatible utf-8 string
             files['file'] = open(file_dir, 'r', errors='ignore')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
+
+        print(files)
 
         print("Submitting simulation request...")
         r = request_post(url, params=payload, files=files)
@@ -459,7 +465,7 @@ class SimulationJob(object):
             # http code check error
             return False
 
-    def create_model(self, file_dir, add_files=None, comment="Upload through Python API"):
+    def create_model(self, file_dir, epw_dir=None, add_files=None, comment="Upload through Python API"):
         """
         Upload an energy model but no simulation
         use it with run_model_simulation() function to do simulation
@@ -473,6 +479,7 @@ class SimulationJob(object):
         :param file_dir:
         :param comment:
         :param add_files: directory of a folder that contains all the additional simulation files
+        :param epw_dir: weather file -optional only customized project supports this function
         :return: True, upload success or False, otherwise
         """
         url = self._base_url + 'CreateModel_API'
@@ -487,9 +494,13 @@ class SimulationJob(object):
 
         if is_py2:
             files['file'] = open(file_dir, 'r')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r')
         else:
             # py3 cannot decode incompatible utf-8 string
             files['file'] = open(file_dir, 'r', errors='ignore')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
 
         if add_files is not None:
             # parent parent dir
@@ -499,6 +510,8 @@ class SimulationJob(object):
             zipf.close()
             files['schedule_csv'] = open(directory + '/add_folder.zip', 'rb')
 
+        print(payload)
+        print(files)
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
             self._track_status = 'Code: ' + str(r.status_code)

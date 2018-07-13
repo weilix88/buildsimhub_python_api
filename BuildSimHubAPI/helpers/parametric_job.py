@@ -82,7 +82,7 @@ class ParametricJob(object):
                 num_total = num_total * self._model_action_list[i].get_num_value()
         return num_total
 
-    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric",
+    def submit_parametric_study_local(self, file_dir, epw_dir=None, unit='ip', simulation_type="parametric",
                                       track=False, request_time=5, customize='false',
                                       algorithm='Default', size=200):
         """
@@ -95,6 +95,7 @@ class ParametricJob(object):
             new_sj.submit_parametric_study_local(file_dir, track=True)
 
         :param file_dir:
+        :param epw_dir:
         :param unit:
         :param simulation_type: deprecated
         :param track:
@@ -103,6 +104,7 @@ class ParametricJob(object):
         :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
         :param size: determine the size of the parametric study - does not work on the Default algorithm
         :type file_dir: str
+        :type epw_dir: str
         :type unit: str (ip or si)
         :type simulation_type: str
         :type track: bool
@@ -139,10 +141,13 @@ class ParametricJob(object):
 
         if is_py2:
             files['model'] = open(file_dir, 'r')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r')
         else:
             # py3 cannot decode incompatible utf-8 string
             files['model'] = open(file_dir, 'r', errors='ignore')
-
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
@@ -173,8 +178,8 @@ class ParametricJob(object):
             print(resp_json['error_msg'])
             return False
 
-    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_api_key=None, track=False,
-                                request_time=5, customize='false', algorithm='Default', size=200):
+    def submit_parametric_study(self, epw_dir=None, unit='ip', simulation_type='parametric', model_api_key=None,
+                                track=False, request_time=5, customize='false', algorithm='Default', size=200):
         """
         Select a model in the project as the seed model and do parametric study
 
@@ -189,6 +194,7 @@ class ParametricJob(object):
         instead this method
 
         :param unit:
+        :param epw_dir: weather file optional
         :param model_api_key: optional
         :param simulation_type: deprecated
         :param track:
@@ -197,6 +203,7 @@ class ParametricJob(object):
         :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
         :param size: determine the size of the parametric study - does not work on the Default algorithm
         :type unit: str
+        :type epw_dir: str
         :type model_api_key: str
         :type simulation_type: str
         :type track: bool
@@ -225,6 +232,14 @@ class ParametricJob(object):
             'size': size
         }
 
+        files = dict()
+        if epw_dir is not None:
+            if is_py2:
+                files['weather_file'] = open(epw_dir, 'r')
+            else:
+                # py3 cannot decode incompatible utf-8 string
+                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
+
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
 
@@ -238,7 +253,7 @@ class ParametricJob(object):
             payload[action.get_api_name()] = data_str
 
         print('Submitting parametric simulation job request...')
-        r = request_post(url, params=payload)
+        r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
             print('Code: ' + str(r.status_code))
             return False
