@@ -178,7 +178,7 @@ class ParametricJob(object):
             print(resp_json['error_msg'])
             return False
 
-    def submit_parametric_study(self, epw_dir=None, unit='ip', simulation_type='parametric', model_api_key=None,
+    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_api_key=None,
                                 track=False, request_time=5, customize='false', algorithm='Default', size=200):
         """
         Select a model in the project as the seed model and do parametric study
@@ -232,14 +232,6 @@ class ParametricJob(object):
             'size': size
         }
 
-        files = dict()
-        if epw_dir is not None:
-            if is_py2:
-                files['weather_file'] = open(epw_dir, 'r')
-            else:
-                # py3 cannot decode incompatible utf-8 string
-                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
-
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
 
@@ -253,7 +245,7 @@ class ParametricJob(object):
             payload[action.get_api_name()] = data_str
 
         print('Submitting parametric simulation job request...')
-        r = request_post(url, params=payload, files=files)
+        r = request_post(url, params=payload)
         if r.status_code == 500:
             print('Code: ' + str(r.status_code))
             return False

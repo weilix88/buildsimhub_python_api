@@ -89,6 +89,7 @@ class Model(object):
             'base_model_api_key': self._track_token,
             'cmp_model_api_key': target_key
         }
+        print(payload)
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
@@ -293,9 +294,13 @@ class Model(object):
             return False
 
         if resp_json['status'] == 'success':
-            data = resp_json['data']
+            data = resp_json['data']['value']
             self._last_parameter_unit = 'floor'
-            return data['total_cond_floor']
+            if 'total_cond_floor' in data:
+                return data['total_cond_floor']
+            else:
+                print(data)
+                return False
         else:
             return -1
 
@@ -322,7 +327,7 @@ class Model(object):
             return False
 
         if resp_json['status'] == 'success':
-            data = resp_json['data']
+            data = resp_json['data']['value']
             self._last_parameter_unit = 'floor'
             return data['total_floor']
         else:
