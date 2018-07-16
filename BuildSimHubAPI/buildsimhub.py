@@ -131,3 +131,44 @@ class BuildSimHubAPIClient(object):
         }
         data_list = request_large_data(url, params=payload)
         return data_list
+
+    @staticmethod
+    def compare_models(src_model, target_model):
+        """
+        This method compares two models
+        :param src_model: the source energy model in Model object
+        :param target_model: the target energy model in Model object
+        :type src_model: Model()
+        :type target_model: Model()
+        :return: none - you will be prompt to a page
+        """
+        src_model.model_compare(target_model.track_token)
+        return
+
+    @staticmethod
+    def merge_models(src_model, target_model):
+        """
+        This method merges src model to target model
+        :param src_model: the source energy model in Model object
+        :param target_model: the target energy model in Model object
+        :type src_model: Model()
+        :type target_model: Model()
+        :return: none - you will be prompt to a page
+        """
+        src_model.model_merge(target_model.track_token)
+        return
+
+    @staticmethod
+    def copy_model(src_model, target_project_api_key=''):
+        """
+        This method copies src_model in the same project or the other project (when target_project_api_key
+        is specified). Copy will create a new model in the project
+        :param src_model: the source energy model in Model object
+        :param target_project_api_key: copy to a new project - if copy to the same project,
+            this parameter can be ignored
+        :type src_model: Model()
+        :type target_project_api_key: project api key
+        :return: model id
+        """
+        model = src_model.model_copy(target_project_api_key)
+        return model

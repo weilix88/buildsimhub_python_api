@@ -54,143 +54,6 @@ class SimulationJob(object):
     def track_token(self, value):
         self._track_token = value
 
-    def parameter_batch_modification(self, class_label, field_label, value, class_name=None,
-                                     track_token=None):
-        """
-        This method allows user to modify an uploaded model's parameter
-        Specify the class_label and field label to identify the class in the model
-        if the class name is specified, then the field of class that matches the class name
-
-        will be modified.
-        :param class_label: String, class label, e.g. buildingsurface:detailed
-        :param field_label:  String, field label, e.g. Zone Name
-        :param value: the value that you want to wish to change to
-        :param class_name: String, the name of the class: e.g. class name: ceiling_101 in field_label:name,
-         under the class: buildingsurface:detail
-        :param track_token: the model aip key or track token that point to the model that you want to modify
-        :return: false or new model api key
-        """
-        if self._track_token == "" and self._model_api_key == "":
-            if track_token == "":
-                print("Error: Cannot modify the model if the model is not uploaded. use:"
-                      " create_model() or run() or create_run_model() to upload a model")
-                return False
-            else:
-                self._track_token = track_token
-
-        url = self._base_url + 'BasicModelModification_API'
-        track = "folder_api_key"
-        test = self._track_token.split("-")
-        if len(test) is 3:
-            track = "track_token"
-
-        payload = {
-            'project_api_key': self._project_key,
-            'class_label': class_label,
-            'field_key': field_label,
-            'target_value': value,
-            track: self._track_token
-        }
-
-        if class_name is not None:
-            payload['class_name'] = class_name
-
-        r = request_post(url, params=payload)
-        if r.status_code == 200:
-            data = r.json()
-            print(data['message'])
-            return data['tracking']
-        else:
-            r_json = r.json()
-            try:
-                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
-            except TypeError:
-                print(r_json)
-            return False
-
-    def apply_measures(self, measure_list, track_token=""):
-        """
-        Apply energy measures on a seed model and simulate the new model.
-        It should be noted that once this method is called, the simulation job class will
-        update its track_token to the new model.
-
-        :param measure_list: list of model actions
-        :param track_token: the model api key - if the model is existing model, then user
-            needs to specify this model api key
-        :return: model result class
-
-        """
-        if self._track_token == "" and self._model_api_key == "":
-            if track_token == "":
-                print("Error: Cannot modify the model if the model is not uploaded. use:"
-                      " create_model() or run() or create_run_model() to upload a model")
-                return False
-            else:
-                self._track_token = track_token
-
-        url = self._base_url + 'ModifyModel_API'
-        track_label = "folder_api_key"
-        test = self._track_token.split("-")
-        if len(test) is 3:
-            track_label = "track_token"
-
-        payload = {
-            track_label: self._track_token,
-            'project_api_key': self._project_key
-        }
-
-        for i in range(len(measure_list)):
-            action = measure_list[i]
-            data_str = action.get_data()
-            payload[action.get_api_name()] = data_str
-
-        print('Applying measure to model: ' + self._track_token)
-        r = request_post(url, params=payload)
-        if r.status_code == 200:
-            data = r.json()
-            print(data['message'])
-            return data['tracking']
-        else:
-            r_json = r.json()
-            try:
-                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
-            except TypeError:
-                print(r_json)
-            return False
-
-    def get_simulation_results(self, result_type="html", accept='file'):
-        """
-        This method is deprecated. It is suggested to call the same function in the result object
-        returned by a successful simulation call (or use: bsh_api.helpers.Model(project_key, track_token)
-
-        get a simulation result file (only use after the simulation is completed)
-        :param result_type: currently available option include html, err, eso, eio, rdd
-        :param accept:
-        :return: text of the file, or error code
-        :rtype: string
-        """
-        track = "folder_api_key"
-        test = self._track_token.split("-")
-        if len(test) is 3:
-            track = "track_token"
-
-        url = self._base_url + 'GetSimulationResult_API'
-        payload = {
-            'project_api_key': self._project_key,
-            'result_type': result_type,
-            'accept': accept,
-            track: self._track_token
-        }
-
-        r = request_post(url, params=payload, stream=True)
-
-        if r.status_code == 200:
-            return r.json()
-        else:
-            self._track_status = 'Code: ' + str(r.status_code)
-            print(self._track_status)
-            return False
-
     def track_batch_simulation(self):
         if self._track_token == "":
             return self._track_status
@@ -287,8 +150,8 @@ class SimulationJob(object):
             resp_json = sim_json
         return self._track_info(resp_json)
 
-    def run(self, file_dir, epw_dir, add_files=None, unit='ip', agent=1, simulation_type='regular', track=False,
-            request_time=5):
+    def run(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
+            simulation_type='regular', comment="Python API", track=False, request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
         Use this method when an empty model key is supplied. It should be noted, although a project api key is required
@@ -303,13 +166,16 @@ class SimulationJob(object):
         or go to the simulation dashboard on the web UI to manually retrieve the model results.
 
         :param file_dir: directory of the energy file (idf, osm, or gbXML) or list of directories
-        :param epw_dir: directory of the .epw file
+        :param epw_dir: directory of the .epw file, only customized project supports this function
         :param unit: si or ip
         :param agent: the number of agents determines how many CPU use for this simulation
-        :param simulation_type: - deprecated variable - phase out soon
+        :param simulation_type: regular / load
+        :param comment: the name of the uploaded model
         :param track: true will enable tracking, also will make this function return Model object
         :param request_time: only used when tracking is true, intermittent time between each tracking request
         :param add_files: directory of a folder that contains all the additional simulation files
+        :param design_condition: default is no, if yes, the function will attempt to modify the design day condition
+                using ASHRAE design condition 2013 data based on the closest weather station / lat and lon.
         :type file_dir: str
         :type epw_dir: str
         :type unit: str
@@ -318,17 +184,24 @@ class SimulationJob(object):
         :type track: bool
         :type request_time: float
         :type add_files: str
+        :type design_condition: yes or no
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
         """
 
-        url = self._base_url + 'RunSimulationCustomize_API'
+        url = self._base_url + 'CreateModel_API'
         payload = {
-            'simulation_type': simulation_type,
             'project_api_key': self._project_key,
             'agents': agent,
+            'comment': comment,
+            'design_cond': design_condition,
             'unit': unit
         }
+
+        if simulation_type == 'load':
+            payload['do_load_simulation'] = 'yes'
+        else:
+            payload['do_load_simulation'] = 'no'
 
         if type(file_dir) is str:
 
@@ -341,13 +214,13 @@ class SimulationJob(object):
                 self._zip_dir(add_files, zipf)
                 zipf.close()
                 files['schedule_csv'] = open(directory+'/add_folder.zip', 'rb')
-
             print("Submitting simulation request...")
             r = request_post(url, params=payload, files=files)
             if self._http_code_check(r):
                 resp_json = r.json()
                 if resp_json['status'] == 'success':
                     self._track_token = resp_json['tracking']
+                    self._model_api_key = resp_json['model_api_key']
                     if track:
                         while self.track_simulation():
                             print(self.track_status)
@@ -359,12 +232,12 @@ class SimulationJob(object):
                         res = Model(self._project_key, self._track_token, self._base_url)
                         return res
                     else:
-                        # print(self.track_status)
+                        print(self.track_status)
                         return False
                 else:
                     try:
                         print(resp_json['error_msg'])
-                    except:
+                    except KeyError:
                         print(resp_json)
                     return False
             else:
@@ -389,9 +262,9 @@ class SimulationJob(object):
                 resp_json = r.json()
                 if resp_json['status'] == 'success':
                     # in this case, we are getting the branch key / model key
-                    self._track_token = resp_json['branch_key']
-
-                    payload['branch_key'] = self._track_token
+                    self._track_token = resp_json['model_api_key']
+                    self._model_api_key = resp_json['model_api_key']
+                    payload['model_api_key'] = self._track_token
                     for i in range(1, len(file_dir)):
                         time.sleep(5)
                         print("Submitting the model number: " + str(i + 1))
@@ -418,7 +291,7 @@ class SimulationJob(object):
                 else:
                     try:
                         print(resp_json['error_msg'])
-                    except:
+                    except KeyError:
                         print(resp_json)
                     return False
             else:
@@ -429,8 +302,8 @@ class SimulationJob(object):
             print("Error: file_dir should be either a str or a list of str")
             return False
 
-    def run_model_simulation(self, track_token=None, unit='ip', agent=1, simulation_type="regular",
-                             track=False, request_time=5):
+    def run_model_simulation(self, track_token=None, unit='ip', design_condition='no', agent=1,
+                             simulation_type="regular", track=False, request_time=5):
         """
         Use this method to run an un-simulated model under a project.
 
@@ -456,11 +329,15 @@ class SimulationJob(object):
         :param simulation_type: deprecated - phase out soon
         :param track: true will enable tracking, also will make this function return Model object
         :param request_time: only used when tracking is true, intermittent time between each tracking request
+        :param design_condition: default is no. If yes, BuildSim cloud will attempt to update the design day condition
+            with the project specified design day condition.
+            The condition is extracted from ASHRAE design condition 2013
         :type unit: str
         :type agent: int
         :type simulation_type: str
         :type track: bool
         :type request_time: float
+        :type design_condition: no or yes
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
 
@@ -479,6 +356,7 @@ class SimulationJob(object):
             'track_token': self._track_token,
             'simulation_type': simulation_type,
             'agents': agent,
+            'design_cond': design_condition,
             'unit': unit
         }
 
@@ -507,84 +385,38 @@ class SimulationJob(object):
             # http code check error
             return False
 
-    def create_run_model(self, file_dir,  add_files=None, unit='ip', agent=1,
-                         comment="Python API", simulation_type="regular",
-                         track=False, request_time=5):
+    def create_run_model(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
+                         simulation_type='regular', comment="Python API", track=False, request_time=5):
         """
-        this method requires supplying a project key
-        Use this method to upload and run an energy model
+        deprecated - works the same as the run function now.
 
-        Example:
-
-        # key should be the project api key
-        new_sj = bsh.new_simulation_job("f1fdd7ca-a327-41f1-a24b-d3dbc6")
-        new_sj.create_run_model("local/usr/in.idf", track=True) - this method will run the model
-
-        :param file_dir: a str contains model directory or a list of str contains model directories
-        :param unit:
-        :param agent:
-        :param comment:
-        :param simulation_type:
-        :param track:
-        :param request_time:
+        :param file_dir: directory of the energy file (idf, osm, or gbXML) or list of directories
+        :param epw_dir: directory of the .epw file, only customized project supports this function
+        :param unit: si or ip
+        :param agent: the number of agents determines how many CPU use for this simulation
+        :param simulation_type: regular / load
+        :param comment: the name of the uploaded model
+        :param track: true will enable tracking, also will make this function return Model object
+        :param request_time: only used when tracking is true, intermittent time between each tracking request
         :param add_files: directory of a folder that contains all the additional simulation files
+        :param design_condition: default is no, if yes, the function will attempt to modify the design day condition
+                using ASHRAE design condition 2013 data based on the closest weather station / lat and lon.
+        :type file_dir: str
+        :type epw_dir: str
+        :type unit: str
+        :type agent: int
+        :type simulation_type: str
+        :type track: bool
+        :type request_time: float
+        :type add_files: str
+        :type design_condition: yes or no
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
         """
-        url = self._base_url + 'CreateModel_API'
-        payload = {
-            'folder_api_key': self._project_key,
-            'project_api_key': self._project_key,
-            'comment': comment,
-            'simulation_type': simulation_type,
-            'agents': agent,
-            'unit': unit
-        }
-        files = dict()
+        return self.run(file_dir, epw_dir, add_files, unit, design_condition, agent, simulation_type,
+                        comment, track, request_time)
 
-        if add_files is not None:
-            # parent parent dir
-            directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            zipf = zipfile.ZipFile(directory + '/add_folder.zip', 'w', zipfile.ZIP_DEFLATED)
-            self._zip_dir(add_files, zipf)
-            zipf.close()
-            files['schedule_csv'] = open(directory + '/add_folder.zip', 'rb')
-
-        if is_py2:
-            files['file'] = open(file_dir, 'r')
-        else:
-            # py3 cannot decode incompatible utf-8 string
-            files['file'] = open(file_dir, 'r', errors='ignore')
-
-        print("Submitting simulation request...")
-        r = request_post(url, params=payload, files=files)
-        if self._http_code_check(r):
-            resp_json = r.json()
-
-            if resp_json['status'] == 'success':
-                self._track_token = resp_json['tracking']
-                self._model_api_key = resp_json['model_api_key']
-                if track:
-                    while self.track_simulation():
-                        print(self.track_status)
-                        time.sleep(request_time)
-                if self.track_status == 'Simulation finished successfully':
-                    print(self.track_status)
-                    # check whether there is requested data
-                    print('Completed! You can retrieve results using the key: '+self._track_token)
-                    res = Model(self._project_key, self._track_token, self._base_url)
-                    return res
-                else:
-                    # print(self.track_status)
-                    # results are not produced
-                    return False
-            else:
-                return resp_json['error_msg']
-        else:
-            # http code check error
-            return False
-
-    def create_model(self, file_dir, add_files=None, comment="Upload through Python API"):
+    def create_model(self, file_dir, epw_dir=None, add_files=None, comment="Upload through Python API"):
         """
         Upload an energy model but no simulation
         use it with run_model_simulation() function to do simulation
@@ -598,23 +430,27 @@ class SimulationJob(object):
         :param file_dir:
         :param comment:
         :param add_files: directory of a folder that contains all the additional simulation files
+        :param epw_dir: weather file -optional only customized project supports this function
         :return: True, upload success or False, otherwise
         """
         url = self._base_url + 'CreateModel_API'
         payload = {
             'project_api_key': self._project_key,
             'comment': comment,
-            'simulation_type': '',
-            'agents': 1
+            'agents': ''
         }
 
         files = dict()
 
         if is_py2:
-            files['file'] = open(file_dir, 'r')
+            files['model'] = open(file_dir, 'r')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r')
         else:
             # py3 cannot decode incompatible utf-8 string
-            files['file'] = open(file_dir, 'r', errors='ignore')
+            files['model'] = open(file_dir, 'r', errors='ignore')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
 
         if add_files is not None:
             # parent parent dir
@@ -624,6 +460,7 @@ class SimulationJob(object):
             zipf.close()
             files['schedule_csv'] = open(directory + '/add_folder.zip', 'rb')
 
+        print('submitting model to the server...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
             self._track_status = 'Code: ' + str(r.status_code)
@@ -634,17 +471,20 @@ class SimulationJob(object):
             try:
                 self._track_status = 'Code: ' + str(r.status_code) + \
                     ' message: ' + resp_json['error_msg']
-            except:
-                print(resp_json)
-            print(self._track_status)
+            except (KeyError, TypeError):
+                print(self._track_status)
             return False
 
         if resp_json['status'] == 'no_simulation':
             self._track_token = resp_json['tracking']
+            self._model_api_key = resp_json['model_api_key']
             print(self._track_token)
             return True
         else:
-            print(resp_json['error_msg'])
+            if 'error_msg' in resp_json:
+                print(resp_json['error_msg'])
+            else:
+                print(resp_json)
             return False
 
     def _track_info(self, resp_json):

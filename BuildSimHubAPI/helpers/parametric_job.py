@@ -9,21 +9,21 @@ class ParametricJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, project_key, model_key='', base_url=None):
+    def __init__(self, project_api_key, model_api_key='', base_url=None):
         """
         Construct a parametric job
 
         Specify EEM and do parametrics
 
-        :param project_key: required
-        :param model_key: optional
+        :param project_api_key: required
+        :param model_api_key: optional
         :param base_url: optional - use for testing only
-        :type project_key: str
-        :type model_key: str
+        :type project_api_key: str
+        :type model_api_key: str
         :type base_url: str
         """
-        self._project_key = project_key
-        self._model_key = model_key
+        self._project_key = project_api_key
+        self._model_api_key = model_api_key
         self._track_token = ""
         self._track_status = ""
         # list of data
@@ -36,13 +36,22 @@ class ParametricJob(object):
     def track_token(self):
         return self._track_token
 
-    def get_status(self):
+    @property
+    def track_status(self):
         """Get the tracking status"""
         return self._track_status
 
-    def set_track_token(self, track_token):
+    @property
+    def model_api_key(self):
+        return self._model_api_key
+
+    @property
+    def project_key(self):
+        return self._project_key
+
+    @track_token.setter
+    def track_token(self, track_token):
         self._track_token = track_token
-        return True
 
     def add_model_measures(self, measures):
         """
@@ -62,7 +71,9 @@ class ParametricJob(object):
         self._model_action_list.append(measure)
 
     def num_total_combination(self):
-        """Number of combinations based on the number of EEM & number of options for each EEM"""
+        """Number of combinations based on the number of EEM & number of options for each EEM,
+            this function serves as a quick check when adding measures to the model
+        """
         num_total = 0
         for i in range(len(self._model_action_list)):
             if num_total == 0:
@@ -71,9 +82,9 @@ class ParametricJob(object):
                 num_total = num_total * self._model_action_list[i].get_num_value()
         return num_total
 
-    def submit_parametric_study_local(self, file_dir, unit='ip', simulation_type="parametric"
-                                      , track=False, request_time=5, customize='false'
-                                      , algorithm='Default', size=200):
+    def submit_parametric_study_local(self, file_dir, epw_dir=None, unit='ip', simulation_type="parametric",
+                                      track=False, request_time=5, customize='false',
+                                      algorithm='Default', size=200):
         """
         Submit an energy model from local as the seed model to a project for this parametric study
         Example:
@@ -84,6 +95,7 @@ class ParametricJob(object):
             new_sj.submit_parametric_study_local(file_dir, track=True)
 
         :param file_dir:
+        :param epw_dir:
         :param unit:
         :param simulation_type: deprecated
         :param track:
@@ -92,6 +104,7 @@ class ParametricJob(object):
         :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
         :param size: determine the size of the parametric study - does not work on the Default algorithm
         :type file_dir: str
+        :type epw_dir: str
         :type unit: str (ip or si)
         :type simulation_type: str
         :type track: bool
@@ -128,10 +141,13 @@ class ParametricJob(object):
 
         if is_py2:
             files['model'] = open(file_dir, 'r')
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r')
         else:
             # py3 cannot decode incompatible utf-8 string
             files['model'] = open(file_dir, 'r', errors='ignore')
-
+            if epw_dir is not None:
+                files['weather_file'] = open(epw_dir, 'r', errors='ignore')
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
@@ -161,39 +177,9 @@ class ParametricJob(object):
         else:
             print(resp_json['error_msg'])
             return False
-    # For this method, it allows user to upload energy model from local machine, along with the weather file
-    # this will creates a new project each time and run the parametric simulation.
-    #    def submit_parametric_study_local(self, file_dir, wea_dir, simulationType ="parametric"):
-    # file_dir indicates the seed model
-    #        url = ParametricJob.BASE_URL + 'CreateModel_API'
-    #        payload = {
-    #            'project_api_key': self._project_key,
-    #            'simulation_type': simulationType,
-    #            'agents':1
-    #        }
 
-    #        for i in range(len(self._model_action_list)):
-    #            action = self._model_action_list[i]
-    #            payload[action.get_api_name()] = action.get_datalist()
-
-    #        files = {
-    #            'file': open(file_dir, 'rb')
-    #        }
-
-    #        r = requests.post(url, data=payload, files= files)
-
-    #        resp_json = r.json()
-
-    #        if(resp_json['status'] == 'success'):
-    #            self._track_token = resp_json['tracking']
-    #            return resp_json['status']
-    #        else:
-    #            return resp_json['error_msg']
-
-    # for this method, it allows user to identify one seed model in a project.
-    # This allows the parametric study performed under a project with a fixed weather file,
-    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_key=None, track=False,
-                                request_time=5, customize='false', algorithm='Default', size=200):
+    def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_api_key=None,
+                                track=False, request_time=5, customize='false', algorithm='Default', size=200):
         """
         Select a model in the project as the seed model and do parametric study
 
@@ -208,7 +194,8 @@ class ParametricJob(object):
         instead this method
 
         :param unit:
-        :param model_key: optional
+        :param epw_dir: weather file optional
+        :param model_api_key: optional
         :param simulation_type: deprecated
         :param track:
         :param request_time:
@@ -216,7 +203,8 @@ class ParametricJob(object):
         :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
         :param size: determine the size of the parametric study - does not work on the Default algorithm
         :type unit: str
-        :type model_key: str
+        :type epw_dir: str
+        :type model_api_key: str
         :type simulation_type: str
         :type track: bool
         :type request_time: float
@@ -225,17 +213,17 @@ class ParametricJob(object):
         :type size: int
         :return: True if success, False otherwise
         """
-        if model_key is not None:
-            self._model_key = model_key
+        if model_api_key is not None:
+            self._model_api_key = model_api_key
 
-        if self._model_key == '':
-            print('submit_parametric_study requires a valid model_key')
+        if self._model_api_key == '':
+            print('submit_parametric_study requires a valid model_api_key')
             return False
 
         url = self._base_url + 'ParametricSettingCopyModel_API'
         payload = {
             'project_api_key': self._project_key,
-            'model_api_key': self._model_key,
+            'model_api_key': self._model_api_key,
             'simulation_type': simulation_type,
             'agents': 1,
             'unit': unit,

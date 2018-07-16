@@ -4,6 +4,7 @@ import BuildSimHubAPI.postprocess as pp
 
 # project_key can be found in every project (click the information icon next to project name)
 project_key = "f98aadb3-254f-428d-a321-82a6e4b9424c"
+project_customized_key = '8d0aa6f4-50c3-4471-84e6-9bd4877ed19a'
 
 file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
@@ -13,9 +14,13 @@ bsh = bsh_api.BuildSimHubAPIClient()
 """
 The most straightforward way to do simulation
 """
-new_sj_run = bsh.new_simulation_job(project_key)
-results = new_sj_run.run(file_dir, wea_dir, track=True)
+new_sj_run_temp = bsh.new_simulation_job(project_key)
+results = new_sj_run_temp.run(file_dir, wea_dir, track=True)
+assert(results == False)
 # results = bsh.model_results(project_key, '2-330-698')
+
+new_sj_run = bsh.new_simulation_job(project_customized_key)
+results = new_sj_run.run(file_dir, wea_dir, track=True)
 
 if results:
     assert(results.net_site_eui() == 21.43)
@@ -26,7 +31,7 @@ if results:
     assert(results.num_condition_zones() == 5.0)
     assert(results.condition_floor_area('si') == 182.48999999999998)
     assert(results.gross_floor_area('si') == 927.1999999999999)
-    assert(results.window_wall_ratio() == 0.18687089715536104)
+    assert(results.window_wall_ratio() == 18.687089715536104)
     assert(results.total_site_eui() == 21.43)
     assert(results.not_met_hour_cooling() == 57.75)
     assert(results.not_met_hour_heating() == 3.25)
@@ -56,10 +61,10 @@ if results:
     assert(results.bldg_epd() == 1.7092069856841865)
     assert(results.wall_rvalue() == 13.88888888888889)
     assert(results.roof_rvalue() == 20)
-    assert(results.window_uvalue() == 0.7585)
-    assert(results.window_shgc() == 0.49333333333333335)
+    assert(results.window_uvalue() == 0.568)
+    assert(results.window_shgc() == 0.756)
     assert(results.roof_absorption() == 0.35)
-    assert(results.bldg_infiltration() == 0.05757919971127442)
+    assert(results.bldg_infiltration() == 0.05720000000000001)
     assert(results.bldg_dx_cooling_efficiency() == -1)
     assert(results.bldg_chiller_efficiency() == 3.2)
     assert(results.bldg_electric_boiler_efficiency() == -1)
@@ -69,8 +74,8 @@ if results:
 """
 Upload your model to a project and run simulation
 """
-new_sj_project = bsh.new_simulation_job(project_key)
-results = new_sj_project.create_run_model(file_dir, track=True)
+new_sj_project = bsh.new_simulation_job(project_customized_key)
+results = new_sj_project.create_run_model(file_dir, wea_dir, track=True)
 model_api_key = new_sj_project.model_api_key
 
 if results:
@@ -85,10 +90,10 @@ if results:
     assert(one_zone_load.heating_load_table()['Total'].sum() == -13313.98)
     assert(one_zone_load.floor_area == 1067.45)
     assert(one_zone_load.zone_name == 'SPACE1-1')
-    assert(len(results.hourly_data()) == 74)
+    assert(len(results.hourly_data()) == 87)
 
-new_sj = bsh.new_simulation_job(project_key)
-response = new_sj.create_model(file_dir)
+new_sj = bsh.new_simulation_job(project_customized_key)
+response = new_sj.create_model(file_dir, wea_dir)
 results = new_sj.run_model_simulation(track=True)
 
 # new_sj = bsh.new_simulation_job(project_key)
@@ -96,7 +101,7 @@ results = new_sj.run_model_simulation(track=True)
 # results = new_sj.run_model_simulation(track=True)
 
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
-new_pj = bsh.new_parametric_job(project_key, model_api_key)
+new_pj = bsh.new_parametric_job(project_customized_key, model_api_key)
 
 # Define EEMs
 wwr = bsh_api.measures.WindowWallRatio()
@@ -131,15 +136,17 @@ if results:
     # Plot
     plot = pp.ParametricPlot(result_dict, result_unit)
     pd = plot.pandas_df()
-    assert(pd['Value'].sum() == 159.02999999999997)
+    assert(pd['Value'].sum() == 109.3)
 
-model_list = pp.ModelList(bsh.model_list(project_key, parametric_id))
+list_data = bsh.model_list(project_customized_key, parametric_id)
+print(list_data)
+model_list = pp.ModelList(bsh.model_list(project_customized_key, parametric_id))
 pd = model_list.pandas_df()
 assert(len(pd) == 8)
 
 ########## MONTE CARLO Procedure ######################
 
-new_pj = bsh.new_parametric_job(project_key)
+new_pj = bsh.new_parametric_job(project_customized_key)
 
 # Define EEMs
 measure_list = list()
@@ -175,5 +182,6 @@ if results:
 
     # Plot
     plot = pp.ParametricPlot(result_dict, result_unit)
-    assert(plot.pandas_df()['Value'].sum() == 183.42999999999998)
+    print(plot.pandas_df()['Value'].sum())
+    assert(plot.pandas_df()['Value'].sum() == 130.0)
 
