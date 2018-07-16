@@ -9,7 +9,7 @@ import BuildSimHubAPI.postprocess as pp
 # 1. set your folder key
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 
-file_dir = "/Users/weilixu/Desktop/data/jsontest/5ZoneAirCooled_UniformLoading.epJSON"
+file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 
 bsh = bsh_api.BuildSimHubAPIClient()
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function

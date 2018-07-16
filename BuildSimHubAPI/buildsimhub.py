@@ -162,7 +162,9 @@ class BuildSimHubAPIClient(object):
     def copy_model(src_model, target_project_api_key=''):
         """
         This method copies src_model in the same project or the other project (when target_project_api_key
-        is specified). Copy will create a new model in the project
+        is specified). Copy will create a new model in the project. All the simulation results will be copied
+        to the new model as well.
+
         :param src_model: the source energy model in Model object
         :param target_project_api_key: copy to a new project - if copy to the same project,
             this parameter can be ignored
