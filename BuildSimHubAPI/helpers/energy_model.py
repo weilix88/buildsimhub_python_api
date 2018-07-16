@@ -41,6 +41,26 @@ class Model(object):
 
         if base_url is not None:
             self._base_url = base_url
+        # if this is model api key, we will record the commit id
+        test = self._track_token.split('-')
+        if len(test) is not 3:
+            url = self._base_url + 'GetFirstModelOfBranch_API'
+            payload = {
+                'project_api_key': self._project_api_key,
+                'folder_api_key': self._track_token,
+            }
+            r = request_get(url, params=payload)
+            resp_json = r.json()
+            if r.status_code > 200:
+                try:
+                    print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+                except TypeError:
+                    print(resp_json)
+                    return
+                return False
+            if resp_json['status'] == 'success':
+                self._track_token = resp_json['commit_id']
+                print('find the track token...' + self._track_token)
 
     @property
     def project_api_key(self):
@@ -89,7 +109,7 @@ class Model(object):
             'base_model_api_key': self._track_token,
             'cmp_model_api_key': target_key
         }
-        print(payload)
+        print('comparing: ' + self._track_token + ' with ' + target_key)
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
@@ -103,6 +123,13 @@ class Model(object):
             webbrowser.open(compare_url)
 
     def model_merge(self, target_key):
+        """
+        Merge two models - merge the current model to the target model,
+        where the target_key point at.
+
+        :param target_key: the target model
+        :return: none, a web pages shows
+        """
         url = self._base_url + 'ModelMerge_API'
         payload = {
             'base_model_api_key': self._track_token,
@@ -121,6 +148,14 @@ class Model(object):
             webbrowser.open(merge_url)
 
     def model_copy(self, project_api_key=''):
+        """
+        This function copies one model and place it in the same project
+        or if the project_api_key is provided, place it to the project where
+        the project_api_key point at.
+
+        :param project_api_key: optional, project api key in str
+        :return: the model id of the copied model
+        """
         url = self._base_url + 'ModelCopy_API'
 
         payload = {
@@ -147,6 +182,16 @@ class Model(object):
             return track
 
     def get_design_day_condition(self):
+        """
+        Get the design condition of the energy model from the project
+        or branch (in customized project case)
+        This will return a dictionary data where the key:
+        'cooling': cooling design condition (99%)
+        'heating': heating design condition (1%)
+        'site': the site condition
+
+        :return: design in dict data structure
+        """
         url = self._base_url + 'GetDesignDayData_API'
         track = 'folder_api_key'
         test = self._track_token.split('-')
@@ -168,15 +213,33 @@ class Model(object):
         if resp_json['status'] == 'success':
             cooling = resp_json['cooling_design_day']
             heating = resp_json['heating_design_day']
+            site = resp_json['site']
             self._last_parameter_unit = ''
             design = dict()
             design['cooling'] = cooling
             design['heating'] = heating
+            design['site'] = site
             return design
         else:
             return -1
 
     def zone_info(self, zone_name):
+        """
+        Get a zone's information regarding:
+        lighting, people, equipment, HVAC systems
+        All in SI units - IP units are not available
+        All are non-normalized parameters - means lighting power is in Watts, not in watts/m2
+
+        This method works without a simulation
+        :param zone_name:
+        :return:
+
+        example output:
+        {'zone_name': 'SPACE1-1', 'zone_area': '99.16000000000001', 'zone_ppl':
+        '11.0', 'zone_lpd': '1702.992', 'zone_epd': '1056.0',
+        'zone_heat': 'VAV Sys 1', 'zone_cool': 'VAV Sys 1', 'zone_vent': 'VAV Sys 1', 'zone_exhaust': ''}
+
+        """
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = 'folder_api_key'
         test = self._track_token.split('-')
@@ -206,6 +269,21 @@ class Model(object):
             return -1
 
     def zone_list(self):
+        """
+        Get the list of zones in the model,
+        information include the zone name, located floor level, and whether it is conditioned or not.
+        This method works without a simulation
+
+        :return: list of dict contains each zone's information
+
+        example output
+        [{'zone_name': 'SPACE1-1', 'floor': 1, 'conditioned': 'Yes'},
+        {'zone_name': 'SPACE5-1', 'floor': 1, 'conditioned': 'Yes'},
+        {'zone_name': 'SPACE4-1', 'floor': 1, 'conditioned': 'Yes'},
+        {'zone_name': 'SPACE3-1', 'floor': 1, 'conditioned': 'Yes'},
+        {'zone_name': 'SPACE2-1', 'floor': 1, 'conditioned': 'Yes'},
+        {'zone_name': 'PLENUM-1', 'floor': 2, 'conditioned': 'No'}]
+        """
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = 'folder_api_key'
         test = self._track_token.split('-')
@@ -236,6 +314,11 @@ class Model(object):
             return -1
 
     def bldg_orientation(self):
+        """
+        Get the building orientation.
+
+        :return:
+        """
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
         test = self._track_token.split("-")

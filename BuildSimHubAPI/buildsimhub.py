@@ -140,7 +140,7 @@ class BuildSimHubAPIClient(object):
         :param target_model: the target energy model in Model object
         :type src_model: Model()
         :type target_model: Model()
-        :return:
+        :return: none - you will be prompt to a page
         """
         src_model.model_compare(target_model.track_token)
         return
@@ -153,7 +153,7 @@ class BuildSimHubAPIClient(object):
         :param target_model: the target energy model in Model object
         :type src_model: Model()
         :type target_model: Model()
-        :return:
+        :return: none - you will be prompt to a page
         """
         src_model.model_merge(target_model.track_token)
         return
@@ -168,7 +168,7 @@ class BuildSimHubAPIClient(object):
             this parameter can be ignored
         :type src_model: Model()
         :type target_project_api_key: project api key
-        :return:
+        :return: model id
         """
         model = src_model.model_copy(target_project_api_key)
         return model
