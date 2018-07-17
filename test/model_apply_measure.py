@@ -15,7 +15,7 @@ file_dir = "/Users/weilixu/Desktop/data/smalloffice.idf"
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 
 # start cloud client
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io/')
+bsh = bshapi.BuildSimHubAPIClient()
 new_sj = bsh.new_simulation_job(project_api_key)
 # upload and run the model under a project.
 results = new_sj.create_run_model(file_dir, track=True)

@@ -11,7 +11,7 @@ project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 updated_model_id = '1-559-1480'
 compare_model_id = '1-559-1441'
 
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 
 # get the two models
 updated_model = bsh.model_results(project_api_key, updated_model_id)

@@ -18,20 +18,10 @@ bsh = bsh_api.BuildSimHubAPIClient()
 The most straightforward way to do simulation
 """
 new_sj_run = bsh.new_simulation_job(project_key)
-results = new_sj_run.run(file_dir, wea_dir, track=True)
+results = new_sj_run.run(file_dir, track=True)
 
 if results:
     print(str(results.net_site_eui()) + " " + results.last_parameter_unit)
-
-"""
-Upload your model to a project and run simulation
-"""
-new_sj_project = bsh.new_simulation_job(project_key)
-results = new_sj_project.create_run_model(file_dir, track=True)
-if results:
-    print(new_sj_project.model_api_key)
-    print(str(results.not_met_hour_heating()) + " " + results.last_parameter_unit)
-    # print(results.download_model(new_sj_project.model_api_key))
 
 """
 Upload your model with a specific model_key and run simulation
