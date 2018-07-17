@@ -23,26 +23,20 @@ Latest Version 1.6.0:
 3. Design day condition - automatically update design day conditions.
 
 Previous update:
+
 Version 1.5.5:
-4. Package and distribution on PYPI
-5. New [monte carlo] algorithm is implemented in parametric study.
-6. New methods to modify energy efficiency measure and parameters in a single model.
+1. Package and distribution on PYPI
+2. New [monte carlo](https://en.wikipedia.org/wiki/Monte_Carlo) algorithm is implemented in parametric study.
+3. New methods to modify energy efficiency measure and parameters in a single model.
 
 Version 1.5.0:
-7. API library is now supporting model download. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/download_model_test.py)
-8. Model upload support customize (.CSV) schedules. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/simulation_csv_test.py)
-9. Supports hourly data extract from a single model. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/hourly_data_retrieve.py)
-10. Support extracting a single table from HTML. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/html_table_test.py)
-11. Open 3D geometry viewer using API. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/model_geo_test.py)
-12. Zone Load / Load component Extraction. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/zone_load_test.py)
-13. Add post-processing functions - convert data to pandas dataframe, and utilize plotly for plotting.
-
-Version 1.4.0
-14. Initialize a simulation job / parametric job requires a project api key now.
-15. User API key is deleted
-16. Run function in simulation job supports multiple models submission.
-17. Include more standard measures: Building orientation, overhangs, fins, roof absorptions, water heater, water usage, equipment power
-18. Include more data retriving options at building level.
+1. API library is now supporting model download. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/download_model_test.py)
+2. Model upload support customize (.CSV) schedules. Check out this [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/simulation_csv_test.py)
+3. Supports hourly data extract from a single model. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/hourly_data_retrieve.py)
+4. Support extracting a single table from HTML. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/html_table_test.py)
+5. Open 3D geometry viewer using API. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/model_geo_test.py)
+6. Zone Load / Load component Extraction. [script](https://github.com/weilix88/buildsimhub_python_api/blob/master/test/zone_load_test.py)
+7. Add post-processing functions - convert data to pandas dataframe, and utilize plotly for plotting.
 
 <a name="installation"></a>
 
