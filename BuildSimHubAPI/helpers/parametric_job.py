@@ -164,6 +164,7 @@ class ParametricJob(object):
 
         if resp_json['status'] == 'success':
             self._track_token = resp_json['tracking']
+            print('You can track the parametric using API key: ' + self._track_token)
             if track:
                 while self.track_simulation():
                     print(self._track_status)
@@ -260,6 +261,7 @@ class ParametricJob(object):
 
         if resp_json['status'] == 'success':
             self._track_token = resp_json['tracking']
+            print('You can track the parametric using API key: ' + self._track_token)
             if track:
                 while self.track_simulation():
                     print(self._track_status)
@@ -301,17 +303,26 @@ class ParametricJob(object):
             self._track_status = resp_json['error_msg']
             return False
 
-        success = float(resp_json['success'])
-        running = float(resp_json['running'])
-        error = float(resp_json['error'])
-        queue = float(resp_json['queue'])
+        if 'success' in resp_json:
 
-        total_progress = (success + error) / (success + running + error + queue)
+            success = float(resp_json['success'])
+            running = float(resp_json['running'])
+            error = float(resp_json['error'])
+            queue = float(resp_json['queue'])
 
-        message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
-        self._track_status = message % (total_progress * 100, success, error, running, queue)
+            divider = success + running + error + queue
+            if divider == 0:
+                total_progress = 1
+            else:
+                total_progress = (success + error) / divider
 
-        if total_progress == 1:
-            return False
+            message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
+            self._track_status = message % (total_progress * 100, success, error, running, queue)
+
+            if total_progress == 1:
+                return False
+            else:
+                return True
         else:
+            print(resp_json['message'])
             return True

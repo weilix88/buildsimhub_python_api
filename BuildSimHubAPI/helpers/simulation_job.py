@@ -81,23 +81,28 @@ class SimulationJob(object):
             self._track_status = resp_json['error_msg']
             return False
 
-        success = float(resp_json['success'])
-        running = float(resp_json['running'])
-        error = float(resp_json['error'])
-        queue = float(resp_json['queue'])
+        if 'success' in resp_json:
 
-        divider = success + running + error + queue
-        if divider == 0:
-            total_progress = 1
+            success = float(resp_json['success'])
+            running = float(resp_json['running'])
+            error = float(resp_json['error'])
+            queue = float(resp_json['queue'])
+
+            divider = success + running + error + queue
+            if divider == 0:
+                total_progress = 1
+            else:
+                total_progress = (success + error) / divider
+
+            message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
+            self._track_status = message % (total_progress * 100, success, error, running, queue)
+
+            if total_progress == 1:
+                return False
+            else:
+                return True
         else:
-            total_progress = (success + error) / divider
-
-        message = "Total progress %d%%, success: %d, failure: %d, running: %d, queue: %d"
-        self._track_status = message % (total_progress * 100, success, error, running, queue)
-
-        if total_progress == 1:
-            return False
-        else:
+            print(resp_json['message'])
             return True
 
     def track_simulation(self):
@@ -151,7 +156,7 @@ class SimulationJob(object):
         return self._track_info(resp_json)
 
     def run(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
-            simulation_type='regular', comment="Python API", track=False, request_time=5):
+            comment="Python API", track=False, request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
         Use this method when an empty model key is supplied. It should be noted, although a project api key is required
@@ -169,7 +174,6 @@ class SimulationJob(object):
         :param epw_dir: directory of the .epw file, only customized project supports this function
         :param unit: si or ip
         :param agent: the number of agents determines how many CPU use for this simulation
-        :param simulation_type: regular / load
         :param comment: the name of the uploaded model
         :param track: true will enable tracking, also will make this function return Model object
         :param request_time: only used when tracking is true, intermittent time between each tracking request
@@ -180,7 +184,6 @@ class SimulationJob(object):
         :type epw_dir: str
         :type unit: str
         :type agent: int
-        :type simulation_type: str
         :type track: bool
         :type request_time: float
         :type add_files: str
@@ -195,13 +198,9 @@ class SimulationJob(object):
             'agents': agent,
             'comment': comment,
             'design_cond': design_condition,
-            'unit': unit
+            'unit': unit,
+            'do_load_simulation': 'no'
         }
-
-        if simulation_type == 'load':
-            payload['do_load_simulation'] = 'yes'
-        else:
-            payload['do_load_simulation'] = 'no'
 
         if type(file_dir) is str:
 
@@ -357,8 +356,13 @@ class SimulationJob(object):
             'simulation_type': simulation_type,
             'agents': agent,
             'design_cond': design_condition,
-            'unit': unit
+            'unit': unit,
         }
+
+        if simulation_type == 'regular':
+            payload['do_load_simulation'] = 'no'
+        else:
+            payload['do_load_simulation'] = 'yes'
 
         print("Submitting simulation request...")
         r = request_post(url, params=payload)
@@ -386,7 +390,7 @@ class SimulationJob(object):
             return False
 
     def create_run_model(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
-                         simulation_type='regular', comment="Python API", track=False, request_time=5):
+                        comment="Python API", track=False, request_time=5):
         """
         deprecated - works the same as the run function now.
 
@@ -394,7 +398,6 @@ class SimulationJob(object):
         :param epw_dir: directory of the .epw file, only customized project supports this function
         :param unit: si or ip
         :param agent: the number of agents determines how many CPU use for this simulation
-        :param simulation_type: regular / load
         :param comment: the name of the uploaded model
         :param track: true will enable tracking, also will make this function return Model object
         :param request_time: only used when tracking is true, intermittent time between each tracking request
@@ -405,7 +408,6 @@ class SimulationJob(object):
         :type epw_dir: str
         :type unit: str
         :type agent: int
-        :type simulation_type: str
         :type track: bool
         :type request_time: float
         :type add_files: str
@@ -413,7 +415,7 @@ class SimulationJob(object):
         :return: True if server accepts simulation request, False otherwise, or a Model object if tracking = True
         :rtype: bool or Model
         """
-        return self.run(file_dir, epw_dir, add_files, unit, design_condition, agent, simulation_type,
+        return self.run(file_dir, epw_dir, add_files, unit, design_condition, agent,
                         comment, track, request_time)
 
     def create_model(self, file_dir, epw_dir=None, add_files=None, comment="Upload through Python API"):
@@ -437,6 +439,7 @@ class SimulationJob(object):
         payload = {
             'project_api_key': self._project_key,
             'comment': comment,
+            'do_load_simulation': 'no',
             'agents': ''
         }
 

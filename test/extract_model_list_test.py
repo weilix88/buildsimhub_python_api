@@ -28,13 +28,11 @@ project_api_key = "f98aadb3-254f-428d-a321-82a6e4b9424c"
 bsh = bshapi.BuildSimHubAPIClient()
 
 project_list = bsh.project_model_list(project_api_key)
-print(project_list)
-
 try:
     import pandas as pd
 except:
     print("No pandas installed")
 
 df = pd.DataFrame(project_list)
-print(df[['branch_name', 'api_key']])
+print(df.to_string())
 # print(df[''])
