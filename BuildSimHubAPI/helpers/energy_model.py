@@ -57,7 +57,6 @@ class Model(object):
                 except TypeError:
                     print(resp_json)
                     return
-                return False
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['commit_id']
                 print('find the track token...' + self._track_token)
@@ -848,6 +847,27 @@ class Model(object):
                 print(rj)
             return False
 
+    def monthly_electricity(self):
+        return self.__monthly_call_api('ElectricityMonthly')
+
+    def monthly_hvac_air_system_load(self, air_system=None):
+        return self.__monthly_call_api('HVACAirSystemLoadsMonthly', air_system)
+
+    def monthly_hvac_system_energy(self):
+        return self.__monthly_call_api('HVACSystemEnergyMonthly')
+
+    def monthly_natural_gas(self):
+        return self.__monthly_call_api('NaturalGasMonthly')
+
+    def monthly_occupant_comfort_zone(self, zone=None):
+        return self.__monthly_call_api('OccupantComfortZoneMonthly', zone)
+
+    def monthly_outdoor_air_zone(self, zone=None):
+        return self.__monthly_call_api('OutdoorAirZoneMonthly', zone)
+
+    def monthly_setpoint_not_met_zone(self, zone=None):
+        return self.__monthly_call_api('SetpointNotMetZoneMonthly', zone)
+
     # Below are the methods use for retrieving results
     def net_site_eui(self):
         return self.__call_api('NetSiteEUI')
@@ -974,6 +994,52 @@ class Model(object):
 
     def bldg_dx_heating_efficiency(self):
         return self.__call_api('ElectricHeatingDXCoils')
+
+    def __monthly_call_api(self, request_data, request_component=None):
+        url = self._base_url + 'GetBuildingMonthlyResults_API'
+        track = 'folder_api_key'
+
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = 'track_token'
+
+        payload = {
+            'project_api_key': self._project_api_key,
+            track: self._track_token,
+            'request_data': request_data
+        }
+
+        if request_component is not None:
+            payload['request_for'] = request_component
+
+        r = request_get(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+            return False
+        if resp_json['status'] == 'success':
+            data = resp_json['data']
+            value_type = data['type']
+            collections = data['collection']
+
+            if value_type == 'Numeric':
+                value = data['value']
+                if 'unit' in data:
+                    self._last_parameter_unit = data['unit']
+                return value
+            elif value_type == 'JsonObject':
+                if collections == 'true':
+                    value = data['array']
+                    return value
+                else:
+                    value = data['value']
+                    return value
+        else:
+            return -1
 
     def __call_api(self, request_data):
         url = self._base_url + 'GetBuildingSimulationResults_API'
