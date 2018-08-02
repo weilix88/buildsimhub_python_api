@@ -1,63 +1,50 @@
 """
-This example shows how to extract parametric model information as well as their keys
-The server returned data is arranged in a list - dict structure, for example:
-
-[{'commit_msg': 'WWR: 0.4, LPD: 0.9, HeatingEff: 0.86', 'commit_date': '2018-06-20', 'commit_id': '1-146-429'},
-{'commit_msg': 'WWR: 0.4, LPD: 0.9, HeatingEff: 0.8', 'commit_date': '2018-06-20', 'commit_id': '1-146-428'},
-{'commit_msg': 'WWR: 0.4, LPD: 1.2, HeatingEff: 0.86', 'commit_date': '2018-06-20', 'commit_id': '1-146-427'},
-{'commit_msg': 'WWR: 0.4, LPD: 1.2, HeatingEff: 0.8', 'commit_date': '2018-06-20', 'commit_id': '1-146-426'},
-{'commit_msg': 'WWR: 0.6, LPD: 0.9, HeatingEff: 0.86', 'commit_date': '2018-06-20', 'commit_id': '1-146-425'}]
-
-if there is pandas in the local python library, simply put this structure in pandas dataframe:
-df = pd.DataFrame(retrieved_data)
-print(df[['commit_msg', 'commit_id']])
-
-This will rearrange the above data into a nicely pandas dataframe:
-                             commit_msg  commit_id
-0  WWR: 0.4, LPD: 0.9, HeatingEff: 0.86  1-146-429
-1   WWR: 0.4, LPD: 0.9, HeatingEff: 0.8  1-146-428
-2  WWR: 0.4, LPD: 1.2, HeatingEff: 0.86  1-146-427
-3   WWR: 0.4, LPD: 1.2, HeatingEff: 0.8  1-146-426
-4  WWR: 0.6, LPD: 0.9, HeatingEff: 0.86  1-146-425
-5   WWR: 0.6, LPD: 0.9, HeatingEff: 0.8  1-146-424
-6  WWR: 0.6, LPD: 1.2, HeatingEff: 0.86  1-146-423
-7   WWR: 0.6, LPD: 1.2, HeatingEff: 0.8  1-146-422
 
 """
-
 import BuildSimHubAPI as bshapi
 import BuildSimHubAPI.postprocess as pp
+import pandas as pd
 
-project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
-# model_key can be found in each model information bar
-model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 
 file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
+wea_dir_sf = "/Users/weilixu/Desktop/data/UnitTest/insf.epw"
+temp_dir = "/Users/weilixu/Desktop/data/"
 
-# 1-372-1125
+# model_key can be found in each model information bar
+# paste your project api key
+project_api_key = '6e764740-cb49-40ed-8a1a-1331b1d87ed2'
+# paste your model api key
+project_customized_key = '8d0aa6f4-50c3-4471-84e6-9bd4877ed19a'
+model_api_key = "e6964bb0-a5a3-437e-b2c1-686f430686b8"
 
 bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 
-file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
-wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
+parametric = bsh.new_parametric_job(project_api_key)
 
-#new_sj_run = bsh.new_simulation_job(project_api_key)
-#results = new_sj_run.run(file_dir, wea_dir, track=True)
+measurelist = list()
 
-results = bsh.model_results(project_api_key, '2-381-1134')
+wwr = bshapi.measures.WindowWallRatio(orientation='S')
+wwrlist = [0.5]
+wwr.set_datalist(wwrlist)
+measurelist.append(wwr)
 
-data = results.zone_load('SPACE1-1')
-print(data)
+wu = bshapi.measures.WindowUValue(orientation='S')
+wulist = [1.4]
+wu.set_datalist(wulist)
+measurelist.append(wu)
 
+wshgc = bshapi.measures.WindowSHGC(orientation='S')
+wshgclist = [0.2]
+wshgc.set_datalist(wshgclist)
+measurelist.append(wshgc)
 
+parametric.add_model_measures(measurelist)
 
-#results = bsh.parametric_results(project_api_key, model_api_key)
-#result_val = results.net_site_eui()
-#result_unit = results.last_parameter_unit
+results = parametric.submit_parametric_study_local(file_dir, track=True)
 
-#pp_plot = pp.ParametricPlot(result_val, result_unit)
-#print(pp_plot.pandas_df())
+print(results.net_site_eui())
+
 
 
 

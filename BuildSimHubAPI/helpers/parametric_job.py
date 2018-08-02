@@ -83,8 +83,8 @@ class ParametricJob(object):
         return num_total
 
     def submit_parametric_study_local(self, file_dir, epw_dir=None, unit='ip', simulation_type="parametric",
-                                      track=False, request_time=5, customize='false',
-                                      algorithm='Default', size=200):
+                                      track=False, request_time=5, customize='false', design_condition='yes',
+                                      algorithm='Default', size=200, comment=None):
         """
         Submit an energy model from local as the seed model to a project for this parametric study
         Example:
@@ -103,6 +103,8 @@ class ParametricJob(object):
         :param customize: keep it false if you are not a vendor / enterprise user
         :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
         :param size: determine the size of the parametric study - does not work on the Default algorithm
+        :param comment: the parametric study description
+        :param design_condition: yes or no
         :type file_dir: str
         :type epw_dir: str
         :type unit: str (ip or si)
@@ -112,6 +114,7 @@ class ParametricJob(object):
         :type customize: str
         :type algorithm: str
         :type size: int
+        :type comment: str
         :return: True success, False otherwise
         """
         # file_dir indicates the seed model
@@ -123,8 +126,13 @@ class ParametricJob(object):
             'unit': unit,
             'customize': customize,
             'algorithm': algorithm,
-            'size': size
+            'size': size,
+            'design_cond': design_condition
         }
+
+        if comment is not None:
+            # this will override the model description
+            payload['comment'] = comment
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
@@ -180,7 +188,8 @@ class ParametricJob(object):
             return False
 
     def submit_parametric_study(self, unit='ip', simulation_type='parametric', model_api_key=None,
-                                track=False, request_time=5, customize='false', algorithm='Default', size=200):
+                                design_condition="yes", track=False, request_time=5, customize='false',
+                                algorithm='Default', size=200, comment=None):
         """
         Select a model in the project as the seed model and do parametric study
 
@@ -195,7 +204,6 @@ class ParametricJob(object):
         instead this method
 
         :param unit:
-        :param epw_dir: weather file optional
         :param model_api_key: optional
         :param simulation_type: deprecated
         :param track:
@@ -203,8 +211,9 @@ class ParametricJob(object):
         :param customize: keep it false if you are not a vendor / enterprise user
         :param algorithm: select algorithms to do the parametric, currently available: 'montecarlo'
         :param size: determine the size of the parametric study - does not work on the Default algorithm
+        :param comment: the parametric study description
+        :param design_condition: yes or no
         :type unit: str
-        :type epw_dir: str
         :type model_api_key: str
         :type simulation_type: str
         :type track: bool
@@ -212,6 +221,7 @@ class ParametricJob(object):
         :type customize: str
         :type algorithm: str
         :type size: int
+        :type comment: str
         :return: True if success, False otherwise
         """
         if model_api_key is not None:
@@ -230,8 +240,13 @@ class ParametricJob(object):
             'unit': unit,
             'customize': customize,
             'algorithm': algorithm,
+            'design_cond': design_condition,
             'size': size
         }
+
+        if comment is not None:
+            # this will override the model description
+            payload['comment'] = comment
 
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]

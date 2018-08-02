@@ -8,8 +8,21 @@ class WindowUValue(ModelAction):
     # convert U-value IP to SI
     CONVERSION_RATE = 5.678
 
-    def __init__(self, unit="si"):
-        ModelAction.__init__(self, 'window_uvalue', unit)
+    def __init__(self, unit="si", orientation=None):
+        orientation = orientation.lower()
+
+        if orientation is None:
+            ModelAction.__init__(self, 'window_uvalue', unit)
+        elif orientation == 'w':
+            ModelAction.__init__(self, 'window_uvalue_w', unit)
+        elif orientation == 'e':
+            ModelAction.__init__(self, 'window_uvalue_e', unit)
+        elif orientation == 's':
+            ModelAction.__init__(self, 'window_uvalue_s', unit)
+        elif orientation == 'n':
+            ModelAction.__init__(self, 'window_uvalue_n', unit)
+        else:
+            ModelAction.__init__(self, 'window_uvalue', unit)
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

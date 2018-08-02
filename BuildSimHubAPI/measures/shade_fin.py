@@ -20,8 +20,21 @@ class ShadeFin(ModelAction):
     # The conversion will change ft to m if ip shows
     CONVERSION_RATE = 3.28084
 
-    def __init__(self, unit="si"):
-        ModelAction.__init__(self, 'window_fin', unit)
+    def __init__(self, unit="si", orientation=None):
+        orientation = orientation.lower()
+
+        if orientation is None:
+            ModelAction.__init__(self, 'window_fin', unit)
+        elif orientation == 'w':
+            ModelAction.__init__(self, 'window_fin_w', unit)
+        elif orientation == 'e':
+            ModelAction.__init__(self, 'window_fin_e', unit)
+        elif orientation == 's':
+            ModelAction.__init__(self, 'window_fin_s', unit)
+        elif orientation == 'n':
+            ModelAction.__init__(self, 'window_fin_n', unit)
+        else:
+            ModelAction.__init__(self, 'window_fin', unit)
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)
