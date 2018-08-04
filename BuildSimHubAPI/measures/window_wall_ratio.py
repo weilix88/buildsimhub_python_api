@@ -7,20 +7,21 @@ from .model_action import ModelAction
 class WindowWallRatio(ModelAction):
 
     def __init__(self, orientation=None):
-        orientation = orientation.lower()
 
         if orientation is None:
             ModelAction.__init__(self, 'window_wall_ratio')
-        elif orientation == 'w':
-            ModelAction.__init__(self, 'window_wall_ratio_w')
-        elif orientation == 'e':
-            ModelAction.__init__(self, 'window_wall_ratio_e')
-        elif orientation == 's':
-            ModelAction.__init__(self, 'window_wall_ratio_s')
-        elif orientation == 'n':
-            ModelAction.__init__(self, 'window_wall_ratio_n')
         else:
-            ModelAction.__init__(self, 'window_wall_ratio')
+            orientation = orientation.lower()
+            if orientation == 'w':
+                ModelAction.__init__(self, 'window_wall_ratio_w')
+            elif orientation == 'e':
+                ModelAction.__init__(self, 'window_wall_ratio_e')
+            elif orientation == 's':
+                ModelAction.__init__(self, 'window_wall_ratio_s')
+            elif orientation == 'n':
+                ModelAction.__init__(self, 'window_wall_ratio_n')
+            else:
+                ModelAction.__init__(self, 'window_wall_ratio')
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)
