@@ -482,7 +482,7 @@ class SimulationJob(object):
             self._track_token = resp_json['tracking']
             self._model_api_key = resp_json['model_api_key']
             print(self._track_token)
-            return True
+            return Model(self.project_key, self._track_token, self._base_url)
         else:
             if 'error_msg' in resp_json:
                 print(resp_json['error_msg'])
