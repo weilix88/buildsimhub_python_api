@@ -31,5 +31,5 @@ measure_list.append(light)
 new_model_api = results.apply_measures(measure_list)
 if new_model_api:
     updated_sim = bsh.new_simulation_job(project_api_key)
-    updated_results = new_sj.run_model_simulation(new_model_api, unit='ip', track=True)
+    updated_results = updated_sim.run_model_simulation(new_model_api, unit='ip', track=True)
     print(str(updated_results.net_site_eui()) + ' ' + updated_results.last_parameter_unit)

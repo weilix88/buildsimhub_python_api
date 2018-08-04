@@ -22,20 +22,21 @@ class ShadeOverhang(ModelAction):
     CONVERSION_RATE = 3.28084
 
     def __init__(self, unit="si", orientation=None):
-        orientation = orientation.lower()
 
         if orientation is None:
             ModelAction.__init__(self, 'window_overhang', unit)
-        elif orientation == 'w':
-            ModelAction.__init__(self, 'window_overhang_w', unit)
-        elif orientation == 'e':
-            ModelAction.__init__(self, 'window_overhang_e', unit)
-        elif orientation == 's':
-            ModelAction.__init__(self, 'window_overhang_s', unit)
-        elif orientation == 'n':
-            ModelAction.__init__(self, 'window_overhang_n', unit)
         else:
-            ModelAction.__init__(self, 'window_overhang', unit)
+            orientation = orientation.lower()
+            if orientation == 'w':
+                ModelAction.__init__(self, 'window_overhang_w', unit)
+            elif orientation == 'e':
+                ModelAction.__init__(self, 'window_overhang_e', unit)
+            elif orientation == 's':
+                ModelAction.__init__(self, 'window_overhang_s', unit)
+            elif orientation == 'n':
+                ModelAction.__init__(self, 'window_overhang_n', unit)
+            else:
+                ModelAction.__init__(self, 'window_overhang', unit)
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)
