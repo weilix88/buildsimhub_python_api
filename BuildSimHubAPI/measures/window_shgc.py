@@ -24,11 +24,3 @@ class WindowSHGC(ModelAction):
 
     def set_datalist(self, datalist):
         ModelAction.set_datalist(self, datalist)
-
-#########TEST CODE###############
-# wp = WindowProperty('ip')
-# a = [1.1,2.2,3.3]
-# wp.add_uvalue_list(a)
-# b = [0.2,0.3,0.4,0.6]
-# wp.add_shgc_list(b)
-# print(wp.get_num_combination())
