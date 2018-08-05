@@ -5,6 +5,7 @@ class DaylightingSensor(ModelAction):
     def __init__(self):
         ModelAction.__init__(self, 'daylight_sensor')
         self._default_list = [1, 0]
+        self._data = 1
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

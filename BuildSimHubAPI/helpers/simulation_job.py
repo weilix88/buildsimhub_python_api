@@ -25,7 +25,7 @@ class SimulationJob(object):
         self._project_key = project_key
         self._track_token = ""
         self._track_status = "No simulation is running or completed in this Job - " \
-                             "please start simulation using create_run_model method."
+                             "please start simulation using run method."
         self._model_action_list = list()
         self._base_url = SimulationJob.BASE_URL
         self._model_api_key = ""
