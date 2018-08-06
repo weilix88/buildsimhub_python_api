@@ -19,22 +19,22 @@ new_pj = bsh.new_parametric_job(project_key)
 # Define EEMs
 measure_list = list()
 
-wwrn = bsh_api.measures.WindowWallRatioNorth()
+wwrn = bsh_api.measures.WindowWallRatio(orientation="N")
 wwrn.set_min(0.3)
 wwrn.set_max(0.6)
 measure_list.append(wwrn)
 
-wwrs = bsh_api.measures.WindowWallRatioSouth()
+wwrs = bsh_api.measures.WindowWallRatio(orientation="S")
 wwrs.set_min(0.3)
 wwrs.set_max(0.6)
 measure_list.append(wwrs)
 
-wwrw = bsh_api.measures.WindowWallRatioWest()
+wwrw = bsh_api.measures.WindowWallRatio(orientation="W")
 wwrw.set_min(0.3)
 wwrw.set_max(0.6)
 measure_list.append(wwrw)
 
-wwre = bsh_api.measures.WindowWallRatioEast()
+wwre = bsh_api.measures.WindowWallRatio(orientation="E")
 wwre.set_min(0.3)
 wwre.set_max(0.6)
 measure_list.append(wwre)
@@ -62,7 +62,7 @@ measure_list.append(heatEff)
 new_pj.add_model_measures(measure_list)
 
 # Start!
-results = new_pj.submit_parametric_study_local(file_dir, algorithm='montecarlo', size=200, track=True)
+results = new_pj.submit_parametric_study_local(file_dir, algorithm='montecarlo', size=2, track=True)
 print(results)
 # if the seed model is on the Buildsim cloud - use this method:
 # results = new_pj.submit_parametric_study(track=True)
