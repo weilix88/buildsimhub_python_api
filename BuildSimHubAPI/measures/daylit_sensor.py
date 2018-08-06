@@ -15,7 +15,7 @@ class DaylightingSensor(ModelAction):
         ModelAction.set_datalist(self, self._default_list)
 
     def set_data(self, data):
-        if data is not 1 or data is not 0:
+        if data != 1 and data != 0:
             return False
         else:
             ModelAction.set_data(self, data)
