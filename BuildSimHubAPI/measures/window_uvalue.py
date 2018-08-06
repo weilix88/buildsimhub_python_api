@@ -36,15 +36,15 @@ class WindowUValue(ModelAction):
 
     def set_data(self, data):
         if ModelAction.unit(self) == 'ip':
-            data = data / WindowUValue.CONVERSION_RATE
+            data = data * WindowUValue.CONVERSION_RATE
         ModelAction.set_data(self, data)
 
     def set_min(self, min_val):
         if ModelAction.unit(self) == 'ip':
-            min_val = min_val / WindowUValue.CONVERSION_RATE
+            min_val = min_val * WindowUValue.CONVERSION_RATE
         ModelAction.set_min(self, min_val)
 
     def set_max(self, max_val):
         if ModelAction.unit(self) == 'ip':
-            max_val = max_val / WindowUValue.CONVERSION_RATE
+            max_val = max_val * WindowUValue.CONVERSION_RATE
         ModelAction.set_max(self, max_val)
