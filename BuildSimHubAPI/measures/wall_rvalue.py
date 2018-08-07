@@ -10,6 +10,8 @@ class WallRValue(ModelAction):
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'wall_rvalue', unit)
+        self._measure_name = 'Wall_R'
+        self._lower_limit = 0
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

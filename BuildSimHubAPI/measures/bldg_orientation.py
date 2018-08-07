@@ -15,6 +15,7 @@ minimum is 0
 class BuildingOrientation(ModelAction):
     def __init__(self):
         ModelAction.__init__(self, 'bldg_orientation')
+        self._measure_name = "Orientation"
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

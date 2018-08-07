@@ -24,18 +24,25 @@ class ShadeFin(ModelAction):
 
         if orientation is None:
             ModelAction.__init__(self, 'window_fin', unit)
+            self._measure_name = 'Fin'
         else:
             orientation = orientation.lower()
             if orientation == 'w':
                 ModelAction.__init__(self, 'window_fin_w', unit)
+                self._measure_name = 'Fin_West'
             elif orientation == 'e':
                 ModelAction.__init__(self, 'window_fin_e', unit)
+                self._measure_name = 'Fin_East'
             elif orientation == 's':
                 ModelAction.__init__(self, 'window_fin_s', unit)
+                self._measure_name = 'Fin_South'
             elif orientation == 'n':
                 ModelAction.__init__(self, 'window_fin_n', unit)
+                self._measure_name = 'Fin_North'
             else:
                 ModelAction.__init__(self, 'window_fin', unit)
+                self._measure_name = 'Fin'
+        self._lower_limit = 0.1
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

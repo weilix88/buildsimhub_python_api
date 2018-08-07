@@ -724,6 +724,9 @@ class Model(object):
         for i in range(len(measure_list)):
             action = measure_list[i]
             data_str = action.get_data()
+            if data_str == "":
+                # error processing measures
+                return
             payload[action.get_api_name()] = data_str
 
         print('Applying measure to model: ' + self._track_token)

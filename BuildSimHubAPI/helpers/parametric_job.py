@@ -138,13 +138,16 @@ class ParametricJob(object):
             action = self._model_action_list[i]
             if algorithm == 'montecarlo':
                 data_str = action.get_boundary()
+                if data_str == "":
+                    return
             else:
                 data_str = action.get_data_string()
+                if data_str == "":
+                    return
 
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'
             payload[action.get_api_name()] = data_str
-
         files = dict()
 
         if is_py2:
@@ -253,8 +256,14 @@ class ParametricJob(object):
 
             if algorithm == 'montecarlo':
                 data_str = action.get_boundary()
+                if data_str == "":
+                    # error processing measures
+                    return
             else:
                 data_str = action.get_data_string()
+                if data_str == "":
+                    # error processing measures
+                    return
 
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'

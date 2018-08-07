@@ -10,6 +10,8 @@ class RoofRValue(ModelAction):
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'roof_rvalue', unit)
+        self._measure_name = 'Roof_R'
+        self._lower_limit = 0
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

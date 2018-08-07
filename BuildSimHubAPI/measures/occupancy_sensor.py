@@ -6,6 +6,9 @@ class OccupancySensor(ModelAction):
         ModelAction.__init__(self, 'occupancy_sensor')
         self._default_list = [1, 0]
         self._data = 1
+        self._measure_name = 'OccupancySensor'
+        self._lower_limit = 0
+        self._upper_limit = 1
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

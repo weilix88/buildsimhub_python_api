@@ -9,6 +9,8 @@ class Infiltration(ModelAction):
     def __init__(self):
         ModelAction.__init__(self, 'infiltration')
         self._default_list = [-1, -2, -3]
+        self._measure_name = 'Infiltration'
+        self._lower_limit = 0
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)
