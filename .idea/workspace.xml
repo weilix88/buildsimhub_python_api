@@ -2,35 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d975d362-de7b-42a3-8c65-b8680decdec1" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/buildsimplot/plot_dash.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/parametric.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/buildsimplot/plotexamples/parametricSample.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/bldg_orientation.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/bldg_orientation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/cooling_all_cop.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/cooling_all_cop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/cooling_chiller_cop.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/cooling_chiller_cop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/cooling_coil_cop.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/cooling_coil_cop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/daylit_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/daylit_sensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/equipment_epd.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/equipment_epd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/equipment_epd_percent.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/equipment_epd_percent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/heating_dx_efficiency.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/heating_dx_efficiency.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/heating_efficiency.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/heating_efficiency.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/infiltration.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/infiltration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/light_lpd.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/light_lpd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/light_lpd_percent.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/light_lpd_percent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/model_action.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/model_action.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/occupancy_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/occupancy_sensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_rvalue.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_rvalue.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_fin.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_fin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_overhang.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_overhang.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/wall_rvalue.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/wall_rvalue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/water_heater_efficiency.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/water_heater_efficiency.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/water_use_reduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/water_use_reduction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/window_shgc.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/window_shgc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/window_uvalue.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/window_uvalue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/window_wall_ratio.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/window_wall_ratio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/postprocess/monthly_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/postprocess/monthly_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/version.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,30 +20,33 @@
     <session id="-1671976454">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.13" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="50" />
+          <entry key="json" value="4" />
+          <entry key="py" value="62" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="50" />
+          <entry key="JSON" value="4" />
+          <entry key="Python" value="62" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="3369" />
+          <entry key="py" value="8380" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="3369" />
+          <entry key="Python" value="8380" />
         </counts>
       </usages-collector>
     </session>
@@ -76,8 +56,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="237">
-              <caret line="24" column="19" lean-forward="true" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+            <state relative-caret-position="246">
+              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
               <folding>
                 <element signature="e#9#40#0" expanded="true" />
               </folding>
@@ -85,11 +65,20 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/window_uvalue.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="88">
+              <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="259" column="47" selection-start-line="259" selection-start-column="47" selection-end-line="259" selection-end-column="47" />
+            <state relative-caret-position="130">
+              <caret line="162" selection-start-line="162" selection-end-line="162" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -98,39 +87,21 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/postprocess/monthly_data.py">
+        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="25" column="25" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+            <state relative-caret-position="210">
+              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/monte_carlo_test.py">
+        <entry file="file://$PROJECT_DIR$/buildsimplot/plot_dash.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="55" column="46" lean-forward="true" selection-start-line="55" selection-start-column="46" selection-end-line="55" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/model_action.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="57" column="16" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="725" column="38" selection-start-line="725" selection-start-column="30" selection-end-line="725" selection-end-column="38" />
+            <state relative-caret-position="140">
+              <caret line="186" column="29" selection-start-line="186" selection-start-column="29" selection-end-line="186" selection-end-column="29" />
               <folding>
-                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#147#178#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,36 +118,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>model_api_ke</find>
-      <find>print(</find>
-      <find>print(resp</find>
-      <find>project_key</find>
-      <find>base_url</find>
-      <find>design</find>
-      <find>run_model_simulation</find>
-      <find>track</find>
-      <find>get_design</find>
-      <find>run</find>
-      <find>17.45</find>
-      <find>set</find>
-      <find>Set</find>
-      <find>submit_</find>
-      <find>submit</find>
-      <find>appl</find>
-      <find>create_run</find>
-      <find>create_model</find>
-      <find>run_model</find>
       <find>apply</find>
       <find>fc.z</find>
       <find>api_name</find>
       <find>get_api_name</find>
-      <find>print</find>
       <find>get_boundary</find>
       <find>_default_list</find>
       <find>get_data_string</find>
       <find>_data</find>
       <find>None</find>
       <find>get_data</find>
+      <find>submit_</find>
+      <find>graph/parametric.json</find>
+      <find>download_plotlyjs</find>
+      <find>generateFileFromSampleJson</find>
+      <find>generateFile</find>
+      <find>PolarMap</find>
+      <find>lst</find>
+      <find>genaratefunction</find>
+      <find>genarate_functiongene</find>
+      <find>commit_date</find>
+      <find>print()</find>
+      <find>print</find>
+      <find>generate_file_from_sample_json</find>
+      <find>data</find>
+      <find>temp</find>
+      <find>parallel_coordinate</find>
+      <find>parallel</find>
+      <find>bar_chart</find>
+      <find>sum_dict</find>
+      <find>add_</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -185,8 +156,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/test/extract_one_model_from_parametric.py" />
-        <option value="$PROJECT_DIR$/test/parametric_map_commitid_with_case_number.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/httpurllib.py" />
         <option value="$PROJECT_DIR$/test/apply_measure_and_compare_models.py" />
         <option value="$PROJECT_DIR$/test/compare_models.py" />
@@ -221,7 +190,6 @@
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/light_lpd_percent.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/occupancy_sensor.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_rvalue.py" />
-        <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_fin.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_overhang.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/wall_rvalue.py" />
@@ -232,17 +200,21 @@
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/window_wall_ratio.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/daylit_sensor.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/postprocess/monthly_data.py" />
-        <option value="$PROJECT_DIR$/test/test.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/model_action.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py" />
+        <option value="$PROJECT_DIR$/buildsimplot/plotexamples/parametricSample.json" />
+        <option value="$PROJECT_DIR$/buildsimplot/plot_dash.py" />
+        <option value="$PROJECT_DIR$/test/test.py" />
+        <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="156" />
     <option name="y" value="22" />
-    <option name="width" value="1140" />
-    <option name="height" value="696" />
+    <option name="width" value="1078" />
+    <option name="height" value="725" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -289,18 +261,6 @@
             <path>
               <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
               <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-              <item name="BuildSimHubAPI" type="462c0819:PsiDirectoryNode" />
-              <item name="measures" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-              <item name="BuildSimHubAPI" type="462c0819:PsiDirectoryNode" />
-              <item name="postprocess" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -316,18 +276,19 @@
     <property name="settings.editor.selected.configurable" value="Erlang External Tools" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/buildsimplot/plotexamples" />
+      <recent name="$PROJECT_DIR$/buildsimlearn" />
+      <recent name="$PROJECT_DIR$/buildsimplot" />
+      <recent name="$USER_HOME$/Library/Python/3.6/lib/python/site-packages" />
+      <recent name="$PROJECT_DIR$/BuildSimHubAPI/helpers" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/workflowexample" />
       <recent name="$PROJECT_DIR$/buildsimplot/plotexamples" />
       <recent name="$PROJECT_DIR$/buildsimplot" />
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/buildsimlearn" />
-      <recent name="$PROJECT_DIR$/buildsimplot" />
-      <recent name="$USER_HOME$/Library/Python/3.6/lib/python/site-packages" />
-      <recent name="$PROJECT_DIR$/BuildSimHubAPI/helpers" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -364,27 +325,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="extract_parametric_list_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="buildsimhub_python_api" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/extract_parametric_list_test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="monte_carlo_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="buildsimhub_python_api" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -398,6 +338,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/monte_carlo_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="plot_dash" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="buildsimhub_python_api" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/buildsimplot" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/buildsimplot/plot_dash.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -449,19 +410,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.extract_parametric_list_test" />
       <item itemvalue="Python.test" />
       <item itemvalue="Python.anothertest" />
       <item itemvalue="Python.test_proecdure" />
       <item itemvalue="Python.monte_carlo_test" />
+      <item itemvalue="Python.plot_dash" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.plot_dash" />
         <item itemvalue="Python.monte_carlo_test" />
         <item itemvalue="Python.test_proecdure" />
         <item itemvalue="Python.anothertest" />
-        <item itemvalue="Python.extract_parametric_list_test" />
       </list>
     </recent_temporary>
   </component>
@@ -494,15 +455,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1140" height="696" extended-state="0" />
+    <frame x="156" y="22" width="1078" height="725" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22966935" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24314097" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32872504" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6976321" visible="true" weight="0.397351" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6976321" visible="true" weight="0.34123224" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39939025" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -558,25 +519,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/modelingstandard/ModelCycleOne.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1747" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/buildsimhub.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="150" column="8" lean-forward="true" selection-start-line="150" selection-start-column="8" selection-end-line="150" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/zone_list_in_a_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="13" column="11" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/design_day_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
@@ -612,13 +554,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/compare_models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/anothertest.py" />
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/shade_fin_e.py" />
     <entry file="file://$PROJECT_DIR$/test/parametric_test.py">
@@ -634,16 +569,6 @@
           <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
           <folding>
             <element signature="e#111#150#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/html_table_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
-          <folding>
-            <element signature="e#1#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -680,13 +605,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
           <caret line="28" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="227" column="8" selection-start-line="227" selection-start-column="8" selection-end-line="227" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -781,13 +699,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/shade_overhang.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
@@ -830,13 +741,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/window_uvalue.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/daylit_sensor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -848,16 +752,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="24" column="19" lean-forward="true" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-          <folding>
-            <element signature="e#9#40#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -891,25 +785,97 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/model_action.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="57" column="16" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="16" />
+        <state relative-caret-position="-24">
+          <caret line="89" column="8" selection-start-line="89" selection-start-column="8" selection-end-line="89" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/buildsimplot/plotexamples/parametricSample.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="16" selection-start-column="4" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/buildsimplot/plotexamples/parametric.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="110" column="33" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/html_table_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="90" lean-forward="true" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="90" />
+          <folding>
+            <element signature="e#1#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="725" column="38" selection-start-line="725" selection-start-column="30" selection-end-line="725" selection-end-column="38" />
+        <state relative-caret-position="105">
+          <caret line="964" column="19" selection-start-line="964" selection-start-column="8" selection-end-line="964" selection-end-column="19" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/compare_models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="44" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/buildsimplot/plot_dash.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="186" column="29" selection-start-line="186" selection-start-column="29" selection-end-line="186" selection-end-column="29" />
+          <folding>
+            <element signature="e#147#178#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/window_uvalue.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <element signature="e#9#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/roof_solar_absorption.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="259" column="47" selection-start-line="259" selection-start-column="47" selection-end-line="259" selection-end-column="47" />
+        <state relative-caret-position="130">
+          <caret line="162" selection-start-line="162" selection-end-line="162" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

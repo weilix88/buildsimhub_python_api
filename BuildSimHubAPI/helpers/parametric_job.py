@@ -159,6 +159,7 @@ class ParametricJob(object):
             files['model'] = open(file_dir, 'r', errors='ignore')
             if epw_dir is not None:
                 files['weather_file'] = open(epw_dir, 'r', errors='ignore')
+
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
