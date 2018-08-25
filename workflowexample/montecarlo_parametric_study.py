@@ -69,9 +69,9 @@ measure_list.append(heatEff)
 new_pj.add_model_measures(measure_list)
 
 # Start!
-if model_api_key is not None or model_api_key != '':
+if model_api_key is not None and model_api_key != '':
     results = new_pj.submit_parametric_study(model_api_key=model_api_key, algorithm='montecarlo',
                                              size=number_of_simulation, track=True)
-elif local_file_dir is not None or local_file_dir != '':
+elif local_file_dir is not None and local_file_dir != '':
     results = new_pj.submit_parametric_study_local(local_file_dir, algorithm='montecarlo', size=number_of_simulation,
                                                    track=True)

@@ -26,7 +26,7 @@ in order to submit the model from local).
 import BuildSimHubAPI as bsh_api
 
 # 1. set your folder key
-project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
+project_api_key = 'faa5ac84-6f72-427c-a4e7-278e9c17830d'
 model_api_key = ''
 local_file_dir = '/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf'
 
@@ -54,7 +54,7 @@ measure_list.append(heatEff)
 new_pj.add_model_measures(measure_list)
 
 # Start!
-if model_api_key is not None or model_api_key != '':
+if model_api_key is not None and model_api_key != '':
     results = new_pj.submit_parametric_study(model_api_key=model_api_key, algorithm='opat', track=True)
-elif local_file_dir is not None or local_file_dir != '':
+elif local_file_dir is not None and local_file_dir != '':
     results = new_pj.submit_parametric_study_local(local_file_dir, algorithm='opat', track=True)
