@@ -27,9 +27,9 @@ import matplotlib.pyplot as plt
 """
 USER INPUT
 """
-project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
-model_api_key = 'aa09eabf-693f-4437-88cc-a522a25fba01'
-n_estimate = 1000
+project_api_key = 'faa5ac84-6f72-427c-a4e7-278e9c17830d'
+model_api_key = 'dc06a59c-14ec-4ec0-8e14-6944c99c4a75'
+n_estimate = 500
 
 """
 SCRIPT
@@ -72,10 +72,11 @@ features = np.array(features)
 print(feature_list)
 
 # Split the data into training and testing sets
-train_features, test_features, train_values, test_values = train_test_split(features, values)
+# train_features, test_features, train_values, test_values = train_test_split(features, values)
 
 # train models
 rf = RandomForestRegressor(n_estimators=n_estimate)
+rf.fit(features, values)
 
 # feature selection
 importances = list(rf.feature_importances_)

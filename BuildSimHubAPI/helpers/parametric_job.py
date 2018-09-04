@@ -137,11 +137,11 @@ class ParametricJob(object):
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
             if algorithm == 'montecarlo':
-                data_str = action.get_boundary()
+                data_str = action.get_boundary_string()
                 if data_str == "":
                     return
             else:
-                data_str = action.get_data_string()
+                data_str = action.get_datalist_string()
                 if data_str == "":
                     return
 
@@ -256,12 +256,12 @@ class ParametricJob(object):
             action = self._model_action_list[i]
 
             if algorithm == 'montecarlo':
-                data_str = action.get_boundary()
+                data_str = action.get_boundary_string()
                 if data_str == "":
                     # error processing measures
                     return
             else:
-                data_str = action.get_data_string()
+                data_str = action.get_datalist_string()
                 if data_str == "":
                     # error processing measures
                     return

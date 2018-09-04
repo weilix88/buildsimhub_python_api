@@ -34,7 +34,10 @@ class HTMLTable(object):
             row = js['row']
             col = js['col']
             val_str = js['value']
-            unit = js['unit']
+            if 'unit' in js:
+                unit = js['unit']
+            else:
+                unit = ''
 
             if row.isspace():
                 continue

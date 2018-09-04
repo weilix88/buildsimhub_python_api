@@ -32,6 +32,8 @@ class ModelAction(object):
             print("Warning: The input: " + str(min_val) + " is lower than the minimum: " +
                   str(self._lower_limit) + " for the measure: " + self._measure_name +
                   ". This might be rejected by the server")
+        if self._unit == 'ip':
+            min_val = min_val / self._unit_convert_ratio()
         self._min = min_val
 
     def set_max(self, max_val):
@@ -39,9 +41,52 @@ class ModelAction(object):
             print("Warning: The input: " + str(max_val) + " is greater than the maximum: " +
                   str(self._upper_limit) + " for the measure: " + self._measure_name +
                   ". This might be rejected by the server")
+        if self._unit == 'ip':
+            max_val = max_val / self._unit_convert_ratio()
         self._max = max_val
 
-    def get_data_string(self):
+    def set_datalist(self, data_list):
+        for i in range(len(data_list)):
+            data = data_list[i]
+            if data < self._lower_limit:
+                print("Warning: The input: " + str(data) + " is lower than the minimum: " +
+                      str(self._lower_limit) + " for the measure: " + self._measure_name +
+                      ". This might be rejected by the server")
+            if data_list[i] > self._upper_limit:
+                print("Warning: The input: " + str(data) + " is greater than the maximum: " +
+                      str(self._upper_limit) + " for the measure: " + self._measure_name +
+                      ". This might be rejected by the server")
+            if self._unit == 'ip':
+                data_list[i] = data / self._unit_convert_ratio()
+
+        self._list_data = data_list
+        return True
+
+    def set_data(self, data):
+        if data < self._lower_limit:
+            print("Warning: The input: " + str(data) + " is lower than the minimum: " +
+                  str(self._lower_limit) + " for the measure: " + self._measure_name +
+                  ". This might be rejected by the server")
+        if data > self._upper_limit:
+            print("Warning: The input: " + str(data) + " is greater than the maximum: " +
+                  str(self._upper_limit) + " for the measure: " + self._measure_name +
+                  ". This might be rejected by the server")
+        if self._unit == 'ip':
+            data = data / self._unit_convert_ratio()
+        self._data = data
+        return True
+
+    def get_min(self):
+        if self._unit == 'ip':
+            return self._min * self._unit_convert_ratio()
+        return self._min
+
+    def get_max(self):
+        if self._unit == 'ip':
+            return self._max * self._unit_convert_ratio()
+        return self._max
+
+    def get_datalist_string(self):
         if not self._list_data:
             if not self._default_list:
                 print("Severe, no default list or data list assigned for parametric study")
@@ -52,17 +97,14 @@ class ModelAction(object):
         else:
             return "[" + ",".join(str(x) for x in self._list_data) + "]"
 
-    def get_datalist(self):
-        return self._list_data
-
-    def get_data(self):
+    def get_data_string(self):
         if self._data is None:
             print("Severe: no data assigned for applying measure: " + self._measure_name)
             print("Error: process stopped")
             return ""
         return "[" + str(self._data) + "]"
 
-    def get_boundary(self):
+    def get_boundary_string(self):
         if self._min is None:
             print("Severe: algorithm requires user to define the minimum value - "
                   "use set_min() to define a minimum value")
@@ -77,6 +119,38 @@ class ModelAction(object):
 
         return "[" + str(self._min) + "," + str(self._max) + "]"
 
+    def get_datalist(self):
+
+        if self._unit == 'ip':
+            list_data = []
+            for data in self._list_data:
+                data = data * self._unit_convert_ratio()
+                list_data.append(data)
+            return list_data
+        return self._list_data
+
+    def get_data(self):
+        if self._unit == 'ip':
+            data = self._data * self._unit_convert_ratio()
+            return data
+        return self._data
+
+    def get_boundary(self):
+        if self._min is None:
+            print("Severe: algorithm requires user to define the minimum value - "
+                  "use set_min() to define a minimum value")
+            print("No minimum value found in measure: " + self._measure_name + ". Process stopped")
+            return ()
+
+        if self._max is None:
+            print("Severe: algorithm requires user to define the maximum value - "
+                  "use set_max() to define a maximum value")
+            print("No maximum value found in measure: " + self._measure_name + ". Process stopped")
+            return ()
+        if self._unit == 'ip':
+            return (self._min * self._unit_convert_ratio(), self._max * self._unit_convert_ratio())
+        return (self._min, self._max)
+
 #    def num_of_combinations(self):
 #        comb = 0
 #        for i in range(len(self._list_data)):
@@ -87,33 +161,11 @@ class ModelAction(object):
 #                comb = comb * len(data_list)
 #        return comb
 
-    def set_datalist(self, data_list):
-        for data in data_list:
-            if data < self._lower_limit:
-                print("Warning: The input: " + str(data) + " is lower than the minimum: " +
-                      str(self._lower_limit) + " for the measure: " + self._measure_name +
-                      ". This might be rejected by the server")
-            if data > self._upper_limit:
-                print("Warning: The input: " + str(data) + " is greater than the maximum: " +
-                      str(self._upper_limit) + " for the measure: " + self._measure_name +
-                      ". This might be rejected by the server")
-        self._list_data = data_list
-        return True
-
-    def set_data(self, data):
-        if data < self._lower_limit:
-            print("Warning: The input: " + str(data) + " is lower than the minimum: " +
-                  str(self._lower_limit) + " for the measure: " + self._measure_name +
-                  ". This might be rejected by the server")
-        if data > self._upper_limit:
-            print("Warning: The input: " + str(data) + " is greater than the maximum: " +
-                  str(self._upper_limit) + " for the measure: " + self._measure_name +
-                  ". This might be rejected by the server")
-        self._data = data
-        return True
-
     def get_api_name(self):
         return self._name
+
+    def _unit_convert_ratio(self):
+        pass
 
     @property
     def measure_name(self):

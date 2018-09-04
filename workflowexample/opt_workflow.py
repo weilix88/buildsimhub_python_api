@@ -1,22 +1,5 @@
 """
-This provides a sample workflow to kick-off a parametric study using the brute force algorithm
-The brute force algorithm will exhaustively simulate all the possible combinations of the
-measures -
-
-e.g.
-if:
- 2 options for lighting power density,
- 2 options for window wall ratio,
- 2 options for heating efficiency
-
-The total number of possible combinations is 2 x 2 x 2 = 8 - so this script will run 8 simulations.
-
-Enter the project_api_key - which link to the project that you wish to host your parametric study.
-
-Enter the model_api_key if you wish to use a model on the BuildSim Cloud as seed model,
-or you can specify local_file_dir variable to submit a seed model (you need to switch the model_api_key to None or ''
-in order to submit the model from local).
-
+Author: Weili Xu
 """
 
 import BuildSimHubAPI as bsh_api
@@ -26,8 +9,10 @@ from sklearn import linear_model
 import scipy.optimize as opt
 
 # 1. set your folder key
-project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
-model_api_key = '03b7947b-38d4-4d92-8c6d-b826166e937d'
+project_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
+model_api_key = ''
+local_file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
+number_of_simulation = 100
 
 
 # Helper functions
@@ -44,7 +29,7 @@ def pretty_print_linear(coefs, names=None, sort=False):
 
 bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
-# Get the EUI results
+new_pj = bsh.new_parametric_job(project_key)
 
 # Define EEMs
 measure_list = list()
@@ -69,6 +54,11 @@ wwre.set_min(0.3)
 wwre.set_max(0.6)
 measure_list.append(wwre)
 
+wallr = bsh_api.measures.WallRValue('ip')
+wallr.set_min(20)
+wallr.set_max(40)
+measure_list.append(wallr)
+
 lpd = bsh_api.measures.LightLPD('ip')
 lpd.set_min(0.6)
 lpd.set_max(1.2)
@@ -84,7 +74,18 @@ heatEff.set_min(0.8)
 heatEff.set_max(0.95)
 measure_list.append(heatEff)
 
-results = bsh.parametric_results(project_api_key, model_api_key)
+# Add EEMs to parametric job
+new_pj.add_model_measures(measure_list)
+
+results = None
+# Start!
+if model_api_key is not None and model_api_key != '':
+    results = new_pj.submit_parametric_study(model_api_key=model_api_key, algorithm='montecarlo',
+                                             size=number_of_simulation, track=True)
+elif local_file_dir is not None and local_file_dir != '':
+    results = new_pj.submit_parametric_study_local(local_file_dir, algorithm='montecarlo', size=number_of_simulation,
+                                                   track=True)
+# Get the EUI results
 # Collect results
 result_dict = results.net_site_eui()
 result_unit = results.last_parameter_unit
@@ -128,7 +129,7 @@ def bounds(col_head):
     col_head = col_head.strip()
     for measure in measure_list:
         if measure.measure_name == col_head:
-            return measure.get_range()
+            return measure.get_boundary()
 
 
 def col_max(col_head):
@@ -150,20 +151,3 @@ print(res.x)
 target_val = alg.predict([res.x])
 print(target_val)
 
-# Let's run the single model with the above values
-for i in range(len(measure_list)):
-    measure = measure_list[i]
-
-    # search for the index in the column
-    for j in range(len(column_head)):
-        col_head = column_head[j].strip()
-        if measure.measure_name == col_head:
-            measure.set_data(res.x[j])
-            break
-
-model = bsh.model_results(project_api_key, model_api_key)
-model_id = model.apply_measures(measure_list)
-
-new_sj = bsh.new_simulation_job(project_api_key)
-result = new_sj.run_model_simulation(model_id, track=True)
-print(result.net_site_eui())

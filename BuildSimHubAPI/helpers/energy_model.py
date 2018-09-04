@@ -723,7 +723,7 @@ class Model(object):
 
         for i in range(len(measure_list)):
             action = measure_list[i]
-            data_str = action.get_data()
+            data_str = action.get_data_string()
             if data_str == "":
                 # error processing measures
                 return
