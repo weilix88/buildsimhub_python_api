@@ -105,7 +105,6 @@ lm = LinearRegression()
 lm.fit(X_train, y_train)
 print('Interpret value β0: '+str(lm.intercept_))
 
-
 print('training score: ' + str(lm.score(X_train, y_train)))
 print('testing score: ' + str(lm.score(X_test, y_test)))
 

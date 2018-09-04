@@ -27,9 +27,10 @@ pandas, numpy
 import pandas as pd
 import numpy as np
 
+path = "D:\\Chrome Download\\ss\\fanCoil_414.csv"
+
 if __name__ == "__main__":
     # CSV file should be in ASCII encoding
-    path = "D:\\Chrome Download\\ss\\fanCoil_414.csv"
 
     with open(path + ".schedule.idf", 'w') as f:
         f.write("ScheduleTypeLimits,\n")

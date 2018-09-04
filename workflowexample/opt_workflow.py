@@ -27,6 +27,44 @@ def pretty_print_linear(coefs, names=None, sort=False):
                       for coef, name in lst)
 
 
+def convert_parajson_pandas(result_dict):
+    for i in range(len(result_dict)):
+        tempstr = result_dict["value"]
+
+    dict = {}
+    for key in result_dict:
+        if key == "model":
+            templist = result_dict[key]
+            tempdict = {}
+            for i in range(len(templist)):
+                tempstr = result_dict["model"][i]
+                templist = tempstr.split(',')
+                for j in range(len(templist)):
+                    pair = templist[j].split(': ')
+                    if pair[0] not in tempdict:
+                        tempdict[pair[0]] = []
+                    tempdict[pair[0]].append(pair[1])
+            for subkey in tempdict:
+                dict[subkey] = tempdict[subkey]
+        elif key != 'model_plot':
+            dict[key] = result_dict[key]
+    return pd.DataFrame(dict)
+
+
+def bounds(col_head):
+    col_head = col_head.strip()
+    for measure in measure_list:
+        if measure.measure_name == col_head:
+            return measure.get_boundary()
+
+
+def col_max(col_head):
+    col_head = col_head.strip()
+    for measure in measure_list:
+        if measure.measure_name == col_head:
+            return measure.get_max()
+
+
 bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
 new_pj = bsh.new_parametric_job(project_key)
@@ -90,28 +128,7 @@ elif local_file_dir is not None and local_file_dir != '':
 result_dict = results.net_site_eui()
 result_unit = results.last_parameter_unit
 
-for i in range(len(result_dict)):
-   tempstr = result_dict["value"]
-
-dict = {}
-for key in result_dict:
-    if key == "model":
-        templist = result_dict[key]
-        tempdict = {}
-        for i in range(len(templist)):
-            tempstr = result_dict["model"][i]
-            templist = tempstr.split(',')
-            for j in range(len(templist)):
-                pair = templist[j].split(': ')
-                if pair[0] not in tempdict:
-                    tempdict[pair[0]] = []
-                tempdict[pair[0]].append(pair[1])
-        for subkey in tempdict:
-            dict[subkey] = tempdict[subkey]
-    elif key != 'model_plot':
-        dict[key] = result_dict[key]
-
-df = pd.DataFrame(dict)
+df = convert_parajson_pandas(result_dict)
 # Training code starts from here
 y = df.loc[:, 'value']
 x = df.loc[:, df.columns != 'value']
@@ -119,24 +136,12 @@ column_head = list(x)
 # train a regression model
 alg = linear_model.LinearRegression()
 alg.fit(x, y)
+print('Interpret value β0: '+str(alg.intercept_))
+print('training score: ' + str(alg.score(x, y)))
 print('Linear regression model: ' + str(alg.intercept_) + ' + ' + pretty_print_linear(alg.coef_))
 
 
 def fun(x_pred): return alg.predict([x_pred])
-
-
-def bounds(col_head):
-    col_head = col_head.strip()
-    for measure in measure_list:
-        if measure.measure_name == col_head:
-            return measure.get_boundary()
-
-
-def col_max(col_head):
-    col_head = col_head.strip()
-    for measure in measure_list:
-        if measure.measure_name == col_head:
-            return measure.get_max()
 
 
 bounds = [bounds(col_head) for col_head in column_head]
