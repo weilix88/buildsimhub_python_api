@@ -10,27 +10,8 @@ class WallRValue(ModelAction):
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'wall_rvalue', unit)
+        self._measure_name = 'Wall_R'
+        self._lower_limit = 0
 
-    def get_num_value(self):
-        return ModelAction.num_of_value(self)
-
-    def set_datalist(self, datalist):
-        if ModelAction.unit(self) == 'ip':
-            for i in range(len(datalist)):
-                datalist[i] = datalist[i] / WallRValue.CONVERSION_RATE
-        ModelAction.set_datalist(self, datalist)
-
-    def set_data(self, data):
-        if ModelAction.unit(self) == 'ip':
-            data = data / WallRValue.CONVERSION_RATE
-        ModelAction.set_data(self, data)
-
-    def set_min(self, min_val):
-        if ModelAction.unit(self) == 'ip':
-            min_val = min_val / WallRValue.CONVERSION_RATE
-        ModelAction.set_min(self, min_val)
-
-    def set_max(self, max_val):
-        if ModelAction.unit(self) == 'ip':
-            max_val = max_val / WallRValue.CONVERSION_RATE
-        ModelAction.set_max(self, max_val)
+    def _unit_convert_ratio(self):
+        return WallRValue.CONVERSION_RATE

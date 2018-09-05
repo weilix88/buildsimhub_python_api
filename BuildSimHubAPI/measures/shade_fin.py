@@ -24,39 +24,25 @@ class ShadeFin(ModelAction):
 
         if orientation is None:
             ModelAction.__init__(self, 'window_fin', unit)
+            self._measure_name = 'Fin'
         else:
             orientation = orientation.lower()
             if orientation == 'w':
                 ModelAction.__init__(self, 'window_fin_w', unit)
+                self._measure_name = 'Fin_West'
             elif orientation == 'e':
                 ModelAction.__init__(self, 'window_fin_e', unit)
+                self._measure_name = 'Fin_East'
             elif orientation == 's':
                 ModelAction.__init__(self, 'window_fin_s', unit)
+                self._measure_name = 'Fin_South'
             elif orientation == 'n':
                 ModelAction.__init__(self, 'window_fin_n', unit)
+                self._measure_name = 'Fin_North'
             else:
                 ModelAction.__init__(self, 'window_fin', unit)
+                self._measure_name = 'Fin'
+        self._lower_limit = 0.1
 
-    def get_num_value(self):
-        return ModelAction.num_of_value(self)
-
-    def set_datalist(self, datalist):
-        if ModelAction.unit(self) == 'ip':
-            for i in range(len(datalist)):
-                datalist[i] = datalist[i] / ShadeFin.CONVERSION_RATE
-        ModelAction.set_datalist(self, datalist)
-
-    def set_data(self, data):
-        if ModelAction.unit(self) == 'ip':
-            data = data / ShadeFin.CONVERSION_RATE
-        ModelAction.set_data(self, data)
-
-    def set_min(self, min_val):
-        if ModelAction.unit(self) == 'ip':
-            min_val = min_val / ShadeFin.CONVERSION_RATE
-        ModelAction.set_min(self, min_val)
-
-    def set_max(self, max_val):
-        if ModelAction.unit(self) == 'ip':
-            max_val = max_val / ShadeFin.CONVERSION_RATE
-        ModelAction.set_max(self, max_val)
+    def _unit_convert_ratio(self):
+        return ShadeFin.CONVERSION_RATE

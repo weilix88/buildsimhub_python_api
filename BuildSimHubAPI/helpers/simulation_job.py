@@ -155,7 +155,7 @@ class SimulationJob(object):
             resp_json = sim_json
         return self._track_info(resp_json)
 
-    def run(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
+    def run(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='yes', agent=1,
             comment="Python API", track=False, request_time=5):
         """
         The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
@@ -301,7 +301,7 @@ class SimulationJob(object):
             print("Error: file_dir should be either a str or a list of str")
             return False
 
-    def run_model_simulation(self, track_token=None, unit='ip', design_condition='no', agent=1,
+    def run_model_simulation(self, track_token=None, unit='ip', design_condition='yes', agent=1,
                              simulation_type="regular", track=False, request_time=5):
         """
         Use this method to run an un-simulated model under a project.
@@ -389,7 +389,7 @@ class SimulationJob(object):
             # http code check error
             return False
 
-    def create_run_model(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='no', agent=1,
+    def create_run_model(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='yes', agent=1,
                         comment="Python API", track=False, request_time=5):
         """
         deprecated - works the same as the run function now.

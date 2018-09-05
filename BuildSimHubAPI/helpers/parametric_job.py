@@ -137,14 +137,17 @@ class ParametricJob(object):
         for i in range(len(self._model_action_list)):
             action = self._model_action_list[i]
             if algorithm == 'montecarlo':
-                data_str = action.get_boundary()
+                data_str = action.get_boundary_string()
+                if data_str == "":
+                    return
             else:
-                data_str = action.get_data_string()
+                data_str = action.get_datalist_string()
+                if data_str == "":
+                    return
 
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'
             payload[action.get_api_name()] = data_str
-
         files = dict()
 
         if is_py2:
@@ -156,6 +159,7 @@ class ParametricJob(object):
             files['model'] = open(file_dir, 'r', errors='ignore')
             if epw_dir is not None:
                 files['weather_file'] = open(epw_dir, 'r', errors='ignore')
+
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload, files=files)
         if r.status_code == 500:
@@ -252,9 +256,15 @@ class ParametricJob(object):
             action = self._model_action_list[i]
 
             if algorithm == 'montecarlo':
-                data_str = action.get_boundary()
+                data_str = action.get_boundary_string()
+                if data_str == "":
+                    # error processing measures
+                    return
             else:
-                data_str = action.get_data_string()
+                data_str = action.get_datalist_string()
+                if data_str == "":
+                    # error processing measures
+                    return
 
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'

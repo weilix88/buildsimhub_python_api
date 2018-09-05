@@ -25,39 +25,25 @@ class ShadeOverhang(ModelAction):
 
         if orientation is None:
             ModelAction.__init__(self, 'window_overhang', unit)
+            self._measure_name = 'Overhang'
         else:
             orientation = orientation.lower()
             if orientation == 'w':
                 ModelAction.__init__(self, 'window_overhang_w', unit)
+                self._measure_name = 'Overhang_West'
             elif orientation == 'e':
                 ModelAction.__init__(self, 'window_overhang_e', unit)
+                self._measure_name = 'Overhang_East'
             elif orientation == 's':
                 ModelAction.__init__(self, 'window_overhang_s', unit)
+                self._measure_name = 'Overhang_South'
             elif orientation == 'n':
                 ModelAction.__init__(self, 'window_overhang_n', unit)
+                self._measure_name = 'Overhang_North'
             else:
                 ModelAction.__init__(self, 'window_overhang', unit)
+                self._measure_name = 'Overhang'
+            self._lower_limit = 0.1
 
-    def get_num_value(self):
-        return ModelAction.num_of_value(self)
-
-    def set_datalist(self, datalist):
-        if ModelAction.unit(self) == 'ip':
-            for i in range(len(datalist)):
-                datalist[i] = datalist[i] / ShadeOverhang.CONVERSION_RATE
-        ModelAction.set_datalist(self, datalist)
-
-    def set_data(self, data):
-        if ModelAction.unit(self) == 'ip':
-            data = data / ShadeOverhang.CONVERSION_RATE
-        ModelAction.set_data(self, data)
-
-    def set_min(self, min_val):
-        if ModelAction.unit(self) == 'ip':
-            min_val = min_val / ShadeOverhang.CONVERSION_RATE
-        ModelAction.set_min(self, min_val)
-
-    def set_max(self, max_val):
-        if ModelAction.unit(self) == 'ip':
-            max_val = max_val / ShadeOverhang.CONVERSION_RATE
-        ModelAction.set_max(self, max_val)
+    def _unit_convert_ratio(self):
+        return ShadeOverhang.CONVERSION_RATE

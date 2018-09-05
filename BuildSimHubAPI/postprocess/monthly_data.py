@@ -15,7 +15,6 @@ except ImportError:
 class MonthlyTable(object):
 
     def __init__(self, data):
-        print(data)
         column_meta = data['columnMeta']
         data_list = list()
         row_list = list()
