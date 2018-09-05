@@ -13,6 +13,7 @@ project_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 model_api_key = ''
 local_file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 number_of_simulation = 100
+budget = 200000
 
 
 # Helper functions
@@ -51,6 +52,26 @@ def convert_parajson_pandas(result_dict):
     return pd.DataFrame(dict)
 
 
+def window_wall_ratio_cost(val):
+    return -13143.2 * val + 33255.32
+
+
+def wall_r_cost(val):
+    return 432 * val + 11230.2
+
+
+def lpd_cost(val):
+    return -8112 * val + 19885.4
+
+
+def chiller_cost(val):
+    return 8732.2 * val + 23222.22
+
+
+def boiler_cost(val):
+    return 9174.44 * val + 17837.99
+
+
 def bounds(col_head):
     col_head = col_head.strip()
     for measure in measure_list:
@@ -65,7 +86,8 @@ def col_max(col_head):
             return measure.get_max()
 
 
-bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+# Start script
+bsh = bsh_api.BuildSimHubAPIClient()
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
 new_pj = bsh.new_parametric_job(project_key)
 
@@ -129,6 +151,7 @@ result_dict = results.net_site_eui()
 result_unit = results.last_parameter_unit
 
 df = convert_parajson_pandas(result_dict)
+print(df.to_string())
 # Training code starts from here
 y = df.loc[:, 'value']
 x = df.loc[:, df.columns != 'value']
@@ -141,6 +164,7 @@ print('training score: ' + str(alg.score(x, y)))
 print('Linear regression model: ' + str(alg.intercept_) + ' + ' + pretty_print_linear(alg.coef_))
 
 
+# obj function
 def fun(x_pred): return alg.predict([x_pred])
 
 
@@ -154,5 +178,5 @@ print(column_head)
 print(res.x)
 
 target_val = alg.predict([res.x])
-print(target_val)
+print('EUI: ' + str(target_val) + ' kBtu/ft2')
 

@@ -18,6 +18,7 @@ import BuildSimHubAPI as bsh_api
 import BuildSimHubAPI.postprocess as pp
 from sklearn.model_selection import cross_validate
 from sklearn import linear_model
+from sklearn.svm import SVR
 
 # Parametric Study
 # 1. set your folder key
@@ -29,10 +30,11 @@ cv_fold = 3
 # CPU use for parallelism the calculation
 cpu = 1
 # insert algorithms here
-algs = [linear_model.LinearRegression()]
+algs_name = ['linear', 'svr']
+algs = [linear_model.LinearRegression(), SVR(kernel='linear', C=10)]
 
 # SCRIPT
-bsh = bsh_api.BuildSimHubAPIClient()
+bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 results = bsh.parametric_results(project_api_key, model_api_key)
 
 # Collect results
@@ -47,6 +49,7 @@ df = param_plot.pandas_df()
 y = df.loc[:, 'Value']
 x = df.loc[:, df.columns != 'Value']
 # default is 3 fold
-for alg in algs:
-    train_result = cross_validate(alg, x, y, cv=cv_fold, n_jobs=cpu, return_train_score=False)
+for i in range(len(algs)):
+    train_result = cross_validate(algs[i], x, y, cv=cv_fold, n_jobs=cpu, return_train_score=False)
+    print(algs_name[i])
     print(train_result['test_score'])
