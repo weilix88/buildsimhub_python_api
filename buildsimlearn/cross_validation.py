@@ -23,7 +23,7 @@ from sklearn.svm import SVR
 # Parametric Study
 # 1. set your folder key
 project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
-model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
+model_api_key = '9ad4b655-db49-4451-9b63-82470df3cae8'
 # hyper-parameter
 # number of folds
 cv_fold = 3
@@ -34,7 +34,7 @@ algs_name = ['linear', 'svr']
 algs = [linear_model.LinearRegression(), SVR(kernel='linear', C=10)]
 
 # SCRIPT
-bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bsh_api.BuildSimHubAPIClient()
 results = bsh.parametric_results(project_api_key, model_api_key)
 
 # Collect results
