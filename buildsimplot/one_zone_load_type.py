@@ -33,7 +33,7 @@ zone_component_load_type = 'cooling'
 SCRIPT
 """
 # initialize the client
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 zone_list = results.zone_list()
 for i in range(len(zone_list)):
