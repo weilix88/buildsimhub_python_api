@@ -34,7 +34,7 @@ variable_two_index = 45
 SCRIPT
 """
 # initialize the client
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 
 # get the list of hourly variables

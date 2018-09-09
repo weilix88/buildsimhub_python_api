@@ -26,7 +26,7 @@ model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 SCRIPT
 """
 # initialize the client
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 
 """

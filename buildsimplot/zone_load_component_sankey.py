@@ -48,7 +48,7 @@ color_map = ["rgba(31, 119, 180, 0.8)", "rgba(255, 127, 14, 0.8)", "rgba(44, 160
              "rgba(44, 160, 44, 0.8)", "rgba(214, 39, 40, 0.8)", "rgba(148, 103, 189, 0.8)", "magenta"]
 
 # initialize the client
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 zone_list = results.zone_list()
 for i in range(len(zone_list)):

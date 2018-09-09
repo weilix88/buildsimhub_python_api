@@ -14,15 +14,14 @@ from sklearn import linear_model
 # USER INPUTS
 # model_key can be found in each model information bar
 # paste your project api key
-project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
+project_api_key = ''
 # paste your model api key
-model_api_key = "9ad4b655-db49-4451-9b63-82470df3cae8"
+model_api_key = ""
 
 # initialization
 # Get model list and results
-bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bshapi.BuildSimHubAPIClient()
 app = dash.Dash()
-budget = 150000
 measure_list = list()
 
 

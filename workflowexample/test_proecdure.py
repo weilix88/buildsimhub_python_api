@@ -9,7 +9,7 @@ project_customized_key = '8d0aa6f4-50c3-4471-84e6-9bd4877ed19a'
 file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 wea_dir = "/Users/weilixu/Desktop/data/UnitTest/in.epw"
 # initialize the client
-bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+bsh = bsh_api.BuildSimHubAPIClient()
 
 """
 The most straightforward way to do simulation
@@ -24,7 +24,7 @@ results = new_sj_run.run(file_dir, wea_dir, track=True)
 
 if results:
     print(results.net_site_eui())
-    assert(results.net_site_eui() == 21.43)
+    assert(results.net_site_eui() == 17.88)
     print(results.bldg_orientation())
     assert(results.bldg_orientation() == 30.0)
     print(results.num_above_ground_floor())

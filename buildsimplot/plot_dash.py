@@ -170,7 +170,7 @@ def main():
     model_api_key = "8153a89b-e98a-4be1-9600-a28282b822bd"
 
     # Get model list and results
-    bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
+    bsh = bshapi.BuildSimHubAPIClient()
 
     model_list = bsh.model_list(project_api_key, model_api_key)
     model_dict = generate_parametric_dict(model_list)
