@@ -226,8 +226,8 @@ def request_large_data(path, params):
             next_start = int(resp_obj['next_start'])
 
             result.extend(resp_obj['data'])
-            print("Finish extracting: " + str(start+1) + " to " + str(next_start) + " , remaining: "
-                  + str(total - next_start-1))
+            print("Finish extracting: " + str(start+1) + " to " + str(next_start-1) + " , remaining: "
+                  + str(total - next_start))
             start = next_start
             conn.close()
             if start == total:
