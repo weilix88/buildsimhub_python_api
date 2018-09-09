@@ -78,7 +78,7 @@ class Model(object):
     def log(self):
         return self._log
 
-    def bldg_geo(self):
+    def bldg_geo(self, browser=True):
         """
         This method will open up your default browser to view the model geometry
         """
@@ -95,7 +95,10 @@ class Model(object):
 
         r = make_url(url, payload)
         self._log = r
-        webbrowser.open(r)
+        if browser:
+            webbrowser.open(r)
+        else:
+            return self._log
 
     def model_compare(self, target_key):
         """
