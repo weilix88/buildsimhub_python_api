@@ -14,13 +14,14 @@ from sklearn import linear_model
 # USER INPUTS
 # model_key can be found in each model information bar
 # paste your project api key
-project_api_key = ''
+project_api_key = 'f98aadb3-254f-428d-a321-82a6e4b9424c'
 # paste your model api key
-model_api_key = ""
+model_api_key = "9ad4b655-db49-4451-9b63-82470df3cae8"
+
 
 # initialization
 # Get model list and results
-bsh = bshapi.BuildSimHubAPIClient()
+bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 app = dash.Dash()
 measure_list = list()
 
@@ -400,7 +401,7 @@ app.css.append_css({
 def update_eui(wall, lpd, chiller, heating, wwrs, wwrw, wwre, wwrn):
     x = [wall, lpd, chiller, heating, wwrs, wwrw, wwre, wwrn]
     eui = fun(x)[0]
-    return 'EUI (kBtu/ft2): {}'.format(eui)
+    return 'EUI (kBtu/ft2): {0:.2f}'.format(eui)
 
 
 @app.callback(
@@ -417,7 +418,7 @@ def update_eui(wall, lpd, chiller, heating, wwrs, wwrw, wwre, wwrn):
 def update_cost(wall, lpd, chiller, heating, wwrs, wwrw, wwre, wwrn):
     x = [wall, lpd, chiller, heating, wwrs, wwrw, wwre, wwrn]
     cost_val = cost(x)
-    return 'Total Cost ($): {}'.format(cost_val)
+    return 'Total Cost ($): {0:.2f}'.format(cost_val)
 
 
 @app.callback(
