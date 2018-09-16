@@ -620,6 +620,44 @@ class Model(object):
         else:
             return -1
 
+    def add_modify_zone(self, zone_list, template_array):
+        """
+        add and modify object according to zone
+
+        :param zone_list: list of zones that is related to the EnergyPlus class e.g. lights for zone SPACE1-1
+        :param template_array: template of the object - should include what is necessary
+        :return: text of the file, or error code
+        :rtype: string
+
+        """
+        url = self._base_url + 'ModifyZoneDataInModel_API'
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_api_key,
+            track: self._track_token
+        }
+
+        data = dict()
+        data['zone_list'] = zone_list
+        data['component_template'] = template_array
+        payload['request_content'] = data
+        r = request_post(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['message'])
+            return data['tracking']
+        else:
+            r_json = r.json()
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
+            return False
+
     def get_simulation_results(self, result_type="html", accept='file'):
         """
         get a simulation result file (only use after the simulation is completed)
@@ -657,6 +695,87 @@ class Model(object):
             except TypeError:
                 print(js)
                 return
+            return False
+
+    def get_value(self, class_label, field_label=None, field_index=None, class_name=None):
+        """
+        This method allows user to retrieve the value of a specific object
+        Specify the class_label and field label / field_index to identify the class in the model
+        if the class name is specified, then the field of class that matches the class name
+
+        will be modified.
+        :param class_label: String, class label, e.g. buildingsurface:detailed
+        :param field_label:  String, field label, e.g. Zone Name
+        :param field_index:  int, field index, e.g. 2
+        :param class_name: String, the name of the class: e.g. class name: ceiling_101 in field_label:name,
+         under the class: buildingsurface:detail
+        :return: false or new model api key
+        """
+
+        url = self._base_url + 'GetSingleValueFromModel_API'
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_api_key,
+            'class_label': class_label,
+            'field_key': "" if field_label is None else field_label,
+            'field_index': "" if field_index is None else str(field_index),
+            'class_name': "" if class_name is None else class_name,
+            track: self._track_token
+        }
+
+        r = request_get(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['status'])
+            return data['data']['value']
+        else:
+            r_json = r.json()
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
+            return False
+
+    def get_class(self, class_label, class_name=None):
+        """
+        This method allows user to retrieve the data under a class in EnergyPlus file
+        Specify the class_label to identify the class in the model
+        if the class name is specified, then correspondent class will be retrieved
+
+        will be modified.
+        :param class_label: String, class label, e.g. buildingsurface:detailed
+        :param class_name: String, the name of the class: e.g. class name: ceiling_101 in field_label:name,
+         under the class: buildingsurface:detail
+        :return: false or new model api key
+        """
+
+        url = self._base_url + 'GetObjectsFromModel_API'
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        payload = {
+            'project_api_key': self._project_api_key,
+            'class_label': class_label,
+            'class_name': "" if class_name is None else class_name,
+            track: self._track_token
+        }
+        r = request_get(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['status'])
+            return data['data']
+        else:
+            r_json = r.json()
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
             return False
 
     def parameter_batch_modification(self, class_label, field_label, value, class_name=None):
