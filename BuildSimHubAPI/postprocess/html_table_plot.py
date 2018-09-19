@@ -47,7 +47,7 @@ class HTMLTable(object):
             try:
                 val = float(val_str)
             except ValueError:
-                val = 0.0
+                val = val_str
 
             if row not in data_dict:
                 data_dict[row] = dict()
@@ -89,19 +89,24 @@ class HTMLTable(object):
                     # skip this row
                     if skip_rows is not None and index in skip_rows:
                         continue
+
+                    row_val = row[col]
+
                     # only include the none zero values
-                    if row[col] > 0:
+                    if isinstance(row_val, str):
+                        row_val = 0
+                    elif row_val > 0:
                         col_name_list.append(index)
-                        row_val_list.append(row[col])
+                        row_val_list.append(row_val)
                     else:
                         continue
 
                     unit_temp = self._unit_dict[index][col]
                     if unit == '':
                         unit = unit_temp
-                        col_sum = row[col]
+                        col_sum = row_val
                     elif unit == unit_temp:
-                        col_sum = col_sum + row[col]
+                        col_sum = col_sum + row_val
                     else:
                         col_name_list.pop()
                         row_val_list.pop()
@@ -129,10 +134,14 @@ class HTMLTable(object):
                     if skip_cols is not None and col in skip_cols:
                         continue
 
+                    row_val = row[col]
+
                     # only include the none zero values
-                    if row[col] > 0:
+                    if isinstance(row_val, str):
+                        row_val = 0
+                    elif row_val > 0:
                         col_name_list.append(col)
-                        row_val_list.append(row[col])
+                        row_val_list.append(row_val)
                     else:
                         continue
 
@@ -140,9 +149,9 @@ class HTMLTable(object):
                     unit_temp = self._unit_dict[index][col]
                     if unit == '':
                         unit = unit_temp
-                        row_sum = row[col]
+                        row_sum = row_val
                     elif unit == unit_temp:
-                        row_sum = row_sum + row[col]
+                        row_sum = row_sum + row_val
                     else:
                         col_name_list.pop()
                         row_val_list.pop()
@@ -215,18 +224,22 @@ class HTMLTable(object):
                     if skip_rows is not None and index in skip_rows:
                         continue
                     # only include the none zero values
-                    if row[col] > 0:
+                    row_val = row[col]
+
+                    if isinstance(row_val, str):
+                        row_val = 0
+                    elif row_val > 0:
                         col_name_list.append(index)
-                        row_val_list.append(row[col])
+                        row_val_list.append(row_val)
                     else:
                         continue
 
                     unit_temp = self._unit_dict[index][col]
                     if unit == '':
                         unit = unit_temp
-                        col_sum = row[col]
+                        col_sum = row_val
                     elif unit == unit_temp:
-                        col_sum = col_sum + row[col]
+                        col_sum = col_sum + row_val
                     else:
                         col_name_list.pop()
                         row_val_list.pop()
@@ -265,9 +278,13 @@ class HTMLTable(object):
                         continue
 
                     # only include the none zero values
-                    if row[col] > 0:
+                    row_val = row[col]
+
+                    if isinstance(row_val, str):
+                        row_val = 0
+                    elif row_val > 0:
                         col_name_list.append(col)
-                        row_val_list.append(row[col])
+                        row_val_list.append(row_val)
                     else:
                         continue
 
@@ -275,9 +292,9 @@ class HTMLTable(object):
                     unit_temp = self._unit_dict[index][col]
                     if unit == '':
                         unit = unit_temp
-                        row_sum = row[col]
+                        row_sum = row_val
                     elif unit == unit_temp:
-                        row_sum = row_sum + row[col]
+                        row_sum = row_sum + row_val
                     else:
                         col_name_list.pop()
                         row_val_list.pop()
@@ -324,15 +341,4 @@ class HTMLTable(object):
         dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         fig = dict(data=data, layout=layout)
         plot(fig, filename=dir + '/' + image_name + '.html')
-
-
-
-
-
-
-
-
-
-
-
 
