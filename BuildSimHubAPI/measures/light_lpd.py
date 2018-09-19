@@ -13,6 +13,15 @@ class LightLPD(ModelAction):
         ModelAction.__init__(self, 'light_lpd', unit)
         self._measure_name = 'LPD'
         self._lower_limit = 0
+        self._measure_help = '''
+        measure name: LPD
+        Unit: ip or si
+        Minimum: 0
+        Maximum: NA
+        Type: numeric
+
+        This measure will update the power density in the Lights
+        '''
 
     def _unit_convert_ratio(self):
         return LightLPD.CONVERSION_RATE

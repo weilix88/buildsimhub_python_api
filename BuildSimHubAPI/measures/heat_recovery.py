@@ -20,6 +20,23 @@ class HeatRecovery(ModelAction):
         self._measure_name = 'HeatRecovery'
         self._lower_limit = 0
         self._upper_limit = 1
+        self._measure_help = '''
+        measure name: HeatRecovery
+        Unit: Not required
+        Minimum: 0 (Off)
+        Maximum: 1 (On)
+        Type: Categorical (On/Off)
+
+        Implementation logic:
+        If Off (0):
+            If there is heat exchanger air to air - set heat recovery to off
+            If there is no heat exchanger air to air - skip
+        else if On (1):
+            If there is heat exchanger air to air - add an heat exchanger and set availability to On
+            If there is no heat exchanger air to air - add an heat exchanger to every AHU
+
+        Warning: This measure only works on HVAC systems with central air handling unit.
+        '''
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

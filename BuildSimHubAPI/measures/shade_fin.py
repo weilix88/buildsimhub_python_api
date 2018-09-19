@@ -43,6 +43,17 @@ class ShadeFin(ModelAction):
                 ModelAction.__init__(self, 'window_fin', unit)
                 self._measure_name = 'Fin'
         self._lower_limit = 0.1
+        self._measure_help = '''
+            measure name: Fin_[Orientation]
+            Unit: ip or si
+            Minimum: 0
+            Maximum: NA
+            Type: numeric
+
+            This measure will add Fins to the building or a specific orientation
+            If the value is 0, then it will remove the fins
+            or if the value is larger than 0, it will adds fins with both left & right depths equal to the value
+            '''
 
     def _unit_convert_ratio(self):
         return ShadeFin.CONVERSION_RATE

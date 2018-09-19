@@ -22,8 +22,8 @@ in order to submit the model from local).
 import BuildSimHubAPI as bsh_api
 
 # 1. set your folder key
-project_api_key = '74139f64-eb54-4f6c-90e7-8bf583d5a930'
-model_api_key = '82eb2c16-8c26-4b7a-b3d4-6a7e1663ee37'
+project_api_key = 'faa5ac84-6f72-427c-a4e7-278e9c17830d'
+model_api_key = 'b38e3623-7a19-49c6-9344-0256761d1c4a'
 local_file_dir = ''
 
 bsh = bsh_api.BuildSimHubAPIClient()
@@ -31,10 +31,16 @@ bsh = bsh_api.BuildSimHubAPIClient()
 new_pj = bsh.new_parametric_job(project_api_key)
 measure_list = list()
 # Define EEMs
-inf = bsh_api.measures.Infiltration()
-inf_ratio = [0.1, 3.0]
-inf.set_datalist(inf_ratio)
-measure_list.append(inf)
+
+# inf = bsh_api.measures.Infiltration()
+# inf_ratio = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0]
+# inf.set_datalist(inf_ratio)
+# measure_list.append(inf)
+
+heff = bsh_api.measures.HeatingDXEfficiency()
+h_cop = [2.93, 3.28]
+heff.set_datalist(h_cop)
+measure_list.append(heff)
 
 # wwr = bsh_api.measures.WindowWallRatio()
 # wwr_ratio = [0.6, 0.4]
@@ -47,7 +53,7 @@ measure_list.append(inf)
 # measure_list.append(lpd)
 
 # heatEff = bsh_api.measures.HeatingEfficiency()
-# cop = [0.8, 0.86]
+# cop = [0.8, 0.86, 0.9]
 # heatEff.set_datalist(cop)
 # measure_list.append(heatEff)
 

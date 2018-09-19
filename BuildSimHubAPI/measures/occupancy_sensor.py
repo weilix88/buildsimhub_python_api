@@ -9,6 +9,16 @@ class OccupancySensor(ModelAction):
         self._measure_name = 'OccupancySensor'
         self._lower_limit = 0
         self._upper_limit = 1
+        self._measure_help = '''
+            measure name: OccupancySensor
+            Unit: Not required
+            Minimum: 0 (Off)
+            Maximum: 1 (On)
+            Type: Categorical (On/Off)
+
+            Implementation logic:
+            This follows the ASHRAE Appendix G guide - 10% or 15% credit is given depending on the space area.
+            '''
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)
