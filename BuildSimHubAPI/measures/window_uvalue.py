@@ -31,6 +31,18 @@ class WindowUValue(ModelAction):
                 ModelAction.__init__(self, 'window_uvalue', unit)
                 self._measure_name = 'Window_U'
         self._lower_limit = 0
+        self._measure_help = '''
+        measure name: Window_U_[Orientation]
+        Unit: ip or si
+        Minimum: 0.1
+        Maximum: NA
+        Type: numeric
+
+        This measure will update the U value of the window in WindowMaterial:SimpleGlazingSystem 
+        It is suggested to use this function with Window SHGC measure - if the Window U-Value is not present
+        and the original model uses detail window layer method, then this measure could create a new simple glazing system
+        with a default SHGC.
+        '''
 
     def _unit_convert_ratio(self):
         return WindowUValue.CONVERSION_RATE

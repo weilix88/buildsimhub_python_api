@@ -24,6 +24,24 @@ class DemandControl(ModelAction):
         self._measure_name = 'DemandControl'
         self._lower_limit = 0
         self._upper_limit = 1
+        self._measure_help = '''
+        measure name: DemandControl
+        Unit: Not required
+        Minimum: 0 (Off)
+        Maximum: 1 (On)
+        Type: Categorical (On/Off)
+        
+        Implementation logic:
+        If Off (0):
+            If there is mechanical ventilation specified - set demand control ventilation to No
+            If there is no mechanical ventilation specified - skip
+        else if On (1):
+            If there is mechanical ventilation specified - set demand control ventilation to Yes
+            If there is no mechanical ventilation specified - add mechanical ventilation based on central system layout
+        
+        Warning: This measure only works on HVAC systems with central air handling unit.
+        '''
+
 
     def get_num_value(self):
         return ModelAction.num_of_value(self)

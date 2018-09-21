@@ -13,6 +13,15 @@ class EquipmentEPD(ModelAction):
         ModelAction.__init__(self, 'equipment_epd', unit)
         self._measure_name = 'EPD'
         self._lower_limit = 0
+        self._measure_help = '''
+        measure name: EPD
+        Unit: ip or si
+        Minimum: 0
+        Maximum: NA
+        Type: numeric
+
+        This measure will update the power density in the ElectricEquipment
+        '''
 
     def _unit_convert_ratio(self):
         return EquipmentEPD.CONVERSION_RATE

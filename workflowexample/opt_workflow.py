@@ -1,7 +1,7 @@
 """
 Author: Weili Xu
 """
-
+import time
 import BuildSimHubAPI as bsh_api
 import pandas as pd
 import numpy as np
@@ -87,6 +87,9 @@ def col_max(col_head):
 
 
 # Start script
+start = time.time()
+print("Start the Script!")
+print("#############################################################")
 bsh = bsh_api.BuildSimHubAPIClient()
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
 new_pj = bsh.new_parametric_job(project_key)
@@ -146,12 +149,22 @@ elif local_file_dir is not None and local_file_dir != '':
     results = new_pj.submit_parametric_study_local(local_file_dir, algorithm='montecarlo', size=number_of_simulation,
                                                    track=True)
 # Get the EUI results
+# Get the EUI results
 # Collect results
+print("Extracting data from cloud....")
+print("#############################################################")
 result_dict = results.net_site_eui()
 result_unit = results.last_parameter_unit
+print("Finish extracting data from cloud...")
+print("#############################################################")
 
+print()
+print()
+print("Start training a model...")
+print("#############################################################")
 df = convert_parajson_pandas(result_dict)
 print(df.to_string())
+print(df.loc[df['value'].idxmin()])
 # Training code starts from here
 y = df.loc[:, 'value']
 x = df.loc[:, df.columns != 'value']
@@ -159,24 +172,53 @@ column_head = list(x)
 # train a regression model
 alg = linear_model.LinearRegression()
 alg.fit(x, y)
+
+print("Model training a completed!...")
 print('Interpret value β0: '+str(alg.intercept_))
 print('training score: ' + str(alg.score(x, y)))
 print('Linear regression model: ' + str(alg.intercept_) + ' + ' + pretty_print_linear(alg.coef_))
+print("#############################################################")
+
+# OPTIMIZATION FUNCTIONS
+# obj function
+end = time.time()
+print("Start optimization: " + str(end - start))
+print("#############################################################")
 
 
 # obj function
 def fun(x_pred): return alg.predict([x_pred])
 
 
+# budget constraint
+def cost(x_pred):
+    cost = 0.0
+    for i in range(len(column_head)):
+        head = column_head[i].strip()
+        if head == 'Wall_R':
+            cost += wall_r_cost(x_pred[i])
+        elif head == 'LPD':
+            cost += lpd_cost(x_pred[i])
+        elif head == 'ChillerCOP':
+            cost += chiller_cost(x_pred[i])
+        elif head == 'HeatingEff':
+            cost += boiler_cost(x_pred[i])
+        else:
+            cost += window_wall_ratio_cost(x_pred[i])
+    return budget - cost
+
+
 bounds = [bounds(col_head) for col_head in column_head]
 X = np.array([[col_max(col_head)] for col_head in column_head])
 X.reshape(1, -1)
-res = opt.minimize(fun, X, bounds=bounds, options={'disp': True})
+res = opt.minimize(fun, X, bounds=bounds, options={'disp': True},
+                   constraints={'type': 'ineq', 'fun': cost})
 
 print("Optimized")
 print(column_head)
 print(res.x)
 
 target_val = alg.predict([res.x])
-print('EUI: ' + str(target_val) + ' kBtu/ft2')
-
+total_cost = budget - cost(res.x)
+print('Predicted EUI: ' + str(target_val) + ' kBtu/ft2')
+print('Cost: $' + str(total_cost) + ' compare to budget: $' + str(budget))

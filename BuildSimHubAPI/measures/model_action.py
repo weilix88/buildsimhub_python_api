@@ -19,6 +19,7 @@ class ModelAction(object):
         self._min = None
         self._max = None
         self._measure_name = "Default"
+        self._measure_help = ''
 
     def unit(self):
         """Returns the unit system (si or ip)"""
@@ -166,6 +167,9 @@ class ModelAction(object):
 
     def _unit_convert_ratio(self):
         pass
+
+    def measure_help(self):
+        return self._measure_help
 
     @property
     def measure_name(self):
