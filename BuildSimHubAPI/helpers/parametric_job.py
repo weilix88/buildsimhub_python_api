@@ -145,11 +145,21 @@ class ParametricJob(object):
                 if data_str == "":
                     return
 
+            # client specific requested measures
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'
-            payload[action.get_api_name()] = data_str
-        files = dict()
+            # payload[action.get_api_name()] = data_str
 
+            # User defined measures
+            if action.get_api_name() == 'user_defined':
+                if payload.get(action.get_api_name()) is None:
+                    payload[action.get_api_name()] = []
+                payload[action.get_api_name()].append(data_str)
+            else:
+                payload[action.get_api_name()] = data_str
+
+        # Upload files
+        files = dict()
         if is_py2:
             files['model'] = open(file_dir, 'r')
             if epw_dir is not None:
@@ -268,7 +278,13 @@ class ParametricJob(object):
 
             if customize == 'true' and data_str == '[]':
                 data_str = 'default'
-            payload[action.get_api_name()] = data_str
+
+            if action.get_api_name() == 'user_defined':
+                if payload.get(action.get_api_name()) is None:
+                    payload[action.get_api_name()] = []
+                payload[action.get_api_name()].append(data_str)
+            else:
+                payload[action.get_api_name()] = data_str
 
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload)
