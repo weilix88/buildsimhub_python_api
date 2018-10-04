@@ -21,6 +21,8 @@ class HTTPConnect(object):
         """
         self._status_code = status_code
         self._response_error = ""
+        self._original_response = response_obj
+        
         if type(response_obj) is bytes:
             response_obj = response_obj.decode("utf-8", errors='ignore')
 
@@ -43,6 +45,9 @@ class HTTPConnect(object):
 
     def json(self):
         return self._response
+        
+    def original_response(self):
+        return self._original_response
 
     def set_error(self, error):
         self._response_error = error
