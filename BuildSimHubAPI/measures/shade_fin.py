@@ -42,7 +42,7 @@ class ShadeFin(ModelAction):
             else:
                 ModelAction.__init__(self, 'window_fin', unit)
                 self._measure_name = 'Fin'
-        self._lower_limit = 0.1
+        self._lower_limit = 0.0
         self._measure_help = '''
             measure name: Fin_[Orientation]
             Unit: ip or si

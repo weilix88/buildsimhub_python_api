@@ -43,7 +43,7 @@ class ShadeOverhang(ModelAction):
             else:
                 ModelAction.__init__(self, 'window_overhang', unit)
                 self._measure_name = 'Overhang'
-            self._lower_limit = 0.1
+            self._lower_limit = 0.0
         self._measure_help = '''
             measure name: Overhang_[Orientation]
             Unit: ip or si
