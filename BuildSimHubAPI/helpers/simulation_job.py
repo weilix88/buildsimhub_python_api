@@ -12,7 +12,7 @@ class SimulationJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, project_key, base_url=None):
+    def __init__(self, project_key, base_url=None, logger=None):
         """
         Create simulation job object.
 
@@ -29,10 +29,13 @@ class SimulationJob(object):
         self._model_action_list = list()
         self._base_url = SimulationJob.BASE_URL
         self._model_api_key = ""
+        self._logger = None
 
         # base_url can be reset if not None
         if base_url is not None:
             self._base_url = base_url
+        if logger is not None:
+            self._logger = logger
 
     @property
     def track_status(self):
@@ -158,13 +161,10 @@ class SimulationJob(object):
     def run(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='yes', agent=1,
             comment="Python API", track=False, request_time=5):
         """
-        The function allows user to upload a model (idf, osm or gbXML) and a epw file for simulation.
-        Use this method when an empty model key is supplied. It should be noted, although a project api key is required
-        for this method, however, this method is only use the CPUs from the linked project api key for simulation, but
-        the upload model does not associate with the project.
-        For example: user use a project api key a-b-c for simulation. This method will use one of the CPUs
-        in the project a-b-c. However, the submitted model does not belong to the project a-b-c.
-        If user wish to retrieve the model information. user can either use the python library:
+        The function allows user to upload a model or a list of models (idf, osm or gbXML) and a epw file
+        (required for global project) for simulation.
+        The method serves as a generic method to accomplish a single task: upload model, run cloud simulation
+        and retrieve the model for output extraction.
 
         bsh.model_results(project_api_key, track_token)
 
@@ -220,6 +220,11 @@ class SimulationJob(object):
                 if resp_json['status'] == 'success':
                     self._track_token = resp_json['tracking']
                     self._model_api_key = resp_json['model_api_key']
+
+                    # log
+                    if self._logger is not None:
+                        self._logger.write_in_message('ModelSimulation', 'BatchRun', self._project_key,
+                                                      self._track_token, '200', self._track_token)
                     if track:
                         while self.track_simulation():
                             print(self.track_status)
@@ -263,6 +268,12 @@ class SimulationJob(object):
                     # in this case, we are getting the branch key / model key
                     self._track_token = resp_json['model_api_key']
                     self._model_api_key = resp_json['model_api_key']
+
+                    # log
+                    if self._logger is not None:
+                        self._logger.write_in_message('ModelSimulation', 'Run', self._project_key,
+                                                      self._track_token, '200', self._track_token)
+
                     payload['model_api_key'] = self._track_token
                     for i in range(1, len(file_dir)):
                         time.sleep(5)
@@ -304,7 +315,7 @@ class SimulationJob(object):
     def run_model_simulation(self, track_token=None, unit='ip', design_condition='yes', agent=1,
                              simulation_type="regular", track=False, request_time=5):
         """
-        Use this method to run an un-simulated model under a project.
+        Use this method to run a model (not simulated) on the cloud
 
         Example:
 
@@ -370,6 +381,12 @@ class SimulationJob(object):
             resp_json = r.json()
             if resp_json['status'] == 'success':
                 self._track_token = resp_json['tracking']
+
+                # log
+                if self._logger is not None:
+                    self._logger.write_in_message('ModelSimulation', 'RunModelSimulation', self._project_key,
+                                                  self._track_token, '200', self._track_token)
+
                 if track:
                     while self.track_simulation():
                         print(self.track_status)
@@ -390,7 +407,7 @@ class SimulationJob(object):
             return False
 
     def create_run_model(self, file_dir, epw_dir=None, add_files=None, unit='ip', design_condition='yes', agent=1,
-                        comment="Python API", track=False, request_time=5):
+                         comment="Python API", track=False, request_time=5):
         """
         deprecated - works the same as the run function now.
 
@@ -481,6 +498,11 @@ class SimulationJob(object):
         if resp_json['status'] == 'no_simulation':
             self._track_token = resp_json['tracking']
             self._model_api_key = resp_json['model_api_key']
+
+            # log
+            if self._logger is not None:
+                self._logger.write_in_message('ModelSimulation', 'UploadModel', self._project_key,
+                                              self._track_token, '200', self._track_token)
             print(self._track_token)
             return Model(self.project_key, self._track_token, self._base_url)
         else:

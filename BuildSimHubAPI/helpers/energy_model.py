@@ -10,7 +10,7 @@ class Model(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, project_api_key, track_token, base_url=None):
+    def __init__(self, project_api_key, track_token, base_url=None, logger=None):
         """
         Construct Model object
 
@@ -28,6 +28,7 @@ class Model(object):
         :param project_api_key: required
         :param track_token: required - track_token and model_api_key can be used interchangeably
         :param base_url: optional, this is only for testing purpose
+        :param logger: a buildsim logger object - None means no log
         :type project_api_key: str
         :type track_token: str
 
@@ -36,8 +37,12 @@ class Model(object):
         self._last_parameter_unit = ""
         self._track_token = track_token
         self._base_url = Model.BASE_URL
+        self._logger = None
         # record all the messages in API calling
         self._log = ""
+
+        if logger is not None:
+            self._logger = logger
 
         if base_url is not None:
             self._base_url = base_url
@@ -95,6 +100,11 @@ class Model(object):
 
         r = make_url(url, payload)
         self._log = r
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'IDF3DViewer', self._project_api_key, self._track_token, '200', r)
+
         if browser:
             webbrowser.open(r)
         else:
@@ -114,6 +124,12 @@ class Model(object):
         print('comparing: ' + self._track_token + ' with ' + target_key)
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'ModelCompare', self._project_api_key,
+                                          self._track_token, r.status_code, 'compare')
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -139,6 +155,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'ModelMerge', self._project_api_key,
+                                          self._track_token, r.status_code, 'merge')
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -168,6 +190,12 @@ class Model(object):
             payload['target_project_api_key'] = project_api_key
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'ModelMerge', self._project_api_key,
+                                          self._track_token, r.status_code, 'copy')
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -205,6 +233,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'DesignDay', self._project_api_key,
+                                          self._track_token, r.status_code, 'design_day')
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -255,6 +289,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'ZoneInfo', self._project_api_key,
+                                          self._track_token, r.status_code, 'zone_information')
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -279,12 +319,10 @@ class Model(object):
         :return: list of dict contains each zone's information
 
         example output
-        [{'zone_name': 'SPACE1-1', 'floor': 1, 'conditioned': 'Yes'},
-        {'zone_name': 'SPACE5-1', 'floor': 1, 'conditioned': 'Yes'},
-        {'zone_name': 'SPACE4-1', 'floor': 1, 'conditioned': 'Yes'},
-        {'zone_name': 'SPACE3-1', 'floor': 1, 'conditioned': 'Yes'},
-        {'zone_name': 'SPACE2-1', 'floor': 1, 'conditioned': 'Yes'},
-        {'zone_name': 'PLENUM-1', 'floor': 2, 'conditioned': 'No'}]
+        [{'zone_name': 'SPACE1-1', 'floor': 1, 'conditioned': 'Yes', 'zone_heat': 'VAV Sys 1', 'zone_cool': 'VAV Sys 1'
+        , 'zone_vent': 'VAV Sys 1', 'zone_exhaust': ''},
+        {'zone_name': 'SPACE5-1', 'floor': 1, 'conditioned': 'Yes', 'zone_heat': 'VAV Sys 1', 'zone_cool': 'VAV Sys 1',
+        'zone_vent': 'VAV Sys 1', 'zone_exhaust': ''}]
         """
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = 'folder_api_key'
@@ -299,6 +337,12 @@ class Model(object):
 
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'ZoneList', self._project_api_key,
+                                          self._track_token, r.status_code, 'zone_lists')
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -335,7 +379,12 @@ class Model(object):
 
         r = request_get(url, params=payload)
         resp_json = r.json()
+
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'BuildingOrientation', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -347,7 +396,10 @@ class Model(object):
             data = resp_json['data']
             value = data['value']
             self._last_parameter_unit = 'deg'
-
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'BuildingOrientation', self._project_api_key,
+                                              self._track_token, r.status_code, value + ' ' + self._last_parameter_unit)
             return value
         else:
             return -1
@@ -370,7 +422,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumberAboveGroundFloor', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -382,6 +439,10 @@ class Model(object):
             data = resp_json['data']['value']
             self._last_parameter_unit = 'floor'
             if 'total_cond_floor' in data:
+                # log action
+                if self._logger is not None:
+                    self._logger.write_in_message('Model', 'NumberAboveGroundFloor', self._project_api_key,
+                                                  self._track_token, r.status_code, data['total_cond_floor'])
                 return data['total_cond_floor']
             else:
                 print(data)
@@ -403,7 +464,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumberTotalFloor', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -414,6 +480,10 @@ class Model(object):
         if resp_json['status'] == 'success':
             data = resp_json['data']['value']
             self._last_parameter_unit = 'floor'
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumberTotalFloor', self._project_api_key,
+                                              self._track_token, r.status_code, data['total_floor'])
             return data['total_floor']
         else:
             return -1
@@ -433,7 +503,12 @@ class Model(object):
 
         r = request_get(url, params=payload)
         resp_json = r.json()
+
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumZone', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -444,6 +519,10 @@ class Model(object):
         if resp_json['status'] == 'success':
             data = resp_json['data']
             self._last_parameter_unit = 'zones'
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumZone', self._project_api_key,
+                                              self._track_token, r.status_code, data['value'])
             return data['value']
         else:
             return -1
@@ -462,7 +541,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumConditionedZones', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -473,6 +557,10 @@ class Model(object):
         if resp_json['status'] == 'success':
             data = resp_json['data']
             self._last_parameter_unit = 'zones'
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'NumConditionedZones', self._project_api_key,
+                                              self._track_token, r.status_code, data['value'])
             return data['value']
         else:
             return -1
@@ -491,7 +579,12 @@ class Model(object):
         }
         r = request_get(url, params=payload)
         resp_json = r.json()
+
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'ConditionedFloorArea', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -507,6 +600,11 @@ class Model(object):
             if unit == 'ip':
                 value = value * 10.7639
                 self._last_parameter_unit = 'ft2'
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'ConditionedFloorArea', self._project_api_key,
+                                              self._track_token, r.status_code,
+                                              str(value) + ' ' + self._last_parameter_unit)
             return value
         else:
             return -1
@@ -526,6 +624,10 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
+
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'GrossFloorArea', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -541,6 +643,11 @@ class Model(object):
             if unit == 'ip':
                 self._last_parameter_unit = "ft2"
                 value = value * 10.7639
+
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'GrossFloorArea', self._project_api_key,
+                                              self._track_token, r.status_code,
+                                              str(value) + ' ' + self._last_parameter_unit)
             return value
         else:
             return -1
@@ -560,6 +667,10 @@ class Model(object):
         r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'WindowWallRatio', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
             except TypeError:
@@ -571,7 +682,10 @@ class Model(object):
             data = resp_json['data']
             value = data['value']
             self._last_parameter_unit = ""
-
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'WindowWallRatio', self._project_api_key,
+                                              self._track_token, r.status_code, str(value))
             return value
         else:
             return -1
@@ -606,6 +720,12 @@ class Model(object):
 
         r = request_get(url, params=payload)
         resp_json = r.json()
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'ZoneLoad', self._project_api_key,
+                                          self._track_token, r.status_code, 'zone_load: ' + zone_name)
+
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -649,9 +769,19 @@ class Model(object):
         if r.status_code == 200:
             data = r.json()
             print(data['message'])
+
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'AddModifyZone', self._project_api_key,
+                                              self._track_token, r.status_code, data['tracking'])
+
             return data['tracking']
         else:
             r_json = r.json()
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'AddModifyZone', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
             except TypeError:
@@ -680,8 +810,12 @@ class Model(object):
             'accept': accept,
             track: self._track_token
         }
-
         r = request_get(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'SimulationResults', self._project_api_key,
+                                          self._track_token, r.status_code, 'simulation_results: ' + result_type)
         if r.status_code == 200:
             if accept == 'string':
                 res = json.loads(r.json())
@@ -728,6 +862,11 @@ class Model(object):
         }
 
         r = request_get(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'GetValue', self._project_api_key,
+                                          self._track_token, r.status_code, 'value from: ' + class_label)
         if r.status_code == 200:
             data = r.json()
             print(data['status'])
@@ -766,6 +905,11 @@ class Model(object):
             track: self._track_token
         }
         r = request_get(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'GetClass', self._project_api_key,
+                                          self._track_token, r.status_code, 'class from: ' + class_label)
         if r.status_code == 200:
             data = r.json()
             print(data['status'])
@@ -810,12 +954,25 @@ class Model(object):
             payload['class_name'] = class_name
 
         r = request_post(url, params=payload)
+
         if r.status_code == 200:
             data = r.json()
             print(data['message'])
+
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'ParameterBatchModification', self._project_api_key,
+                                              self._track_token, r.status_code,
+                                              'updated model: ' + data['tracking'])
             return data['tracking']
         else:
             r_json = r.json()
+
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'ParameterBatchModification', self._project_api_key,
+                                              self._track_token, r.status_code,
+                                              'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
             except TypeError:
@@ -840,7 +997,8 @@ class Model(object):
 
         payload = {
             track_label: self._track_token,
-            'project_api_key': self._project_api_key
+            'project_api_key': self._project_api_key,
+            'unit' : 'si'
         }
 
         for i in range(len(measure_list)):
@@ -853,12 +1011,23 @@ class Model(object):
 
         print('Applying measure to model: ' + self._track_token)
         r = request_post(url, params=payload)
+
         if r.status_code == 200:
             data = r.json()
             print(data['message'])
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'ApplyMeasure', self._project_api_key,
+                                              self._track_token, r.status_code,
+                                              'Updated model: ' + data['tracking'])
             return data['tracking']
         else:
             r_json = r.json()
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'ApplyMeasure', self._project_api_key,
+                                              self._track_token, r.status_code,
+                                              'error')
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
             except TypeError:
@@ -885,6 +1054,12 @@ class Model(object):
         }
 
         r = request_get(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'DownloadModel', self._project_api_key,
+                                          self._track_token, r.status_code,
+                                          'download_model')
         if r.status_code == 200:
             return r.json()
         else:
@@ -917,6 +1092,12 @@ class Model(object):
             payload['variable'] = data
 
         r = request_get(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'HourlyData', self._project_api_key,
+                                          self._track_token, r.status_code,
+                                          'hourly_data')
         if r.status_code == 200:
             data_array = r.json()['data']
 
@@ -962,6 +1143,12 @@ class Model(object):
         }
 
         r = request_get(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'HTMLTable', self._project_api_key,
+                                          self._track_token, r.status_code,
+                                          report + ' ' + table)
         if r.status_code == 200:
             return r.json()
         else:
@@ -1139,6 +1326,11 @@ class Model(object):
 
         r = request_get(url, params=payload)
         resp_json = r.json()
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'MonthlyData', self._project_api_key,
+                                          self._track_token, r.status_code,
+                                          request_data + ': ' + request_component)
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
@@ -1182,6 +1374,11 @@ class Model(object):
 
         r = request_get(url, params=payload)
         resp_json = r.json()
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('Model', 'SimulationResult', self._project_api_key,
+                                          self._track_token, r.status_code,
+                                          request_data)
         if r.status_code > 200:
             try:
                 print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
