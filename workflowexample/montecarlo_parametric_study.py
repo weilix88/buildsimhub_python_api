@@ -49,6 +49,7 @@ measure_list.append(wwre)
 wallr = bsh_api.measures.WallRValue('ip')
 wallr.set_min(20)
 wallr.set_max(40)
+measure_list.append(wallr)
 
 lpd = bsh_api.measures.LightLPD('ip')
 lpd.set_min(0.6)

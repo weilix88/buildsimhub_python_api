@@ -11,7 +11,7 @@ class ParametricModel(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, project_key, track_token, base_url=None):
+    def __init__(self, project_key, track_token, base_url=None, logger=None):
         """
         Construct parametric result object
 
@@ -27,8 +27,12 @@ class ParametricModel(object):
         self._last_parameter_unit = ""
         self._track_token = track_token
         self._base_url = ParametricModel.BASE_URL
+        self._logger = None
+
         if base_url is not None:
             self._base_url = base_url
+        if logger is not None:
+            self._logger = logger
 
     @property
     def last_parameter_unit(self):
@@ -48,6 +52,12 @@ class ParametricModel(object):
         }
 
         r = make_url(url, payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('ParametricModel', 'IDF3DViewer', self._project_key, self._track_token,
+                                          '200', r)
+
         webbrowser.open(r)
 
     def bldg_load(self, load_type='cooling'):
@@ -74,6 +84,11 @@ class ParametricModel(object):
         }
 
         data_list = request_large_data(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('ParametricModel', 'BuildingLoad', self._project_key, self._track_token,
+                                          '200', "building load: " + load_type)
 
         value = list()
         model = list()
@@ -228,6 +243,12 @@ class ParametricModel(object):
         }
 
         data_list = request_large_data(url, params=payload)
+
+        # log action
+        if self._logger is not None:
+            self._logger.write_in_message('ParametricModel', 'ParametricResults', self._project_key, self._track_token,
+                                          '200', "results: " + request_data)
+
         value = list()
         model = list()
         model_plot = list()

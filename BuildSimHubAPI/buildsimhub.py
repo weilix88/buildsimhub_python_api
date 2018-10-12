@@ -11,6 +11,7 @@ This file provides the BuildSim API client
 
 from BuildSimHubAPI import helpers
 from BuildSimHubAPI.helpers.httpurllib import request_large_data
+from BuildSimHubAPI.logger import BuildSimLogger
 # from BuildSimHubAPI.helpers.network_connectivity import internet
 
 
@@ -36,6 +37,7 @@ class BuildSimHubAPIClient(object):
         in the API package
         """
         info = helpers.bldgsim_info.MetaInfo()
+        self._logger = BuildSimLogger()
 
         if base_url is None:
             self._base_url = info.base_url
@@ -59,7 +61,7 @@ class BuildSimHubAPIClient(object):
         a7ce63-0e58-4efc-93f3-73b7ddaa0 or 111-111-111
         :return: the model results
         """
-        results = helpers.Model(project_key, model_key, self._base_url)
+        results = helpers.Model(project_key, model_key, self._base_url, self._logger)
         return results
 
     def parametric_results(self, project_key, model_key):
@@ -83,7 +85,7 @@ class BuildSimHubAPIClient(object):
         :rtype: SimulationJob or None
 
         """
-        sj = helpers.simulation_job.SimulationJob(project_key, self._base_url)
+        sj = helpers.simulation_job.SimulationJob(project_key, self._base_url, self._logger)
         return sj
 
     def new_parametric_job(self, project_key, model_key=""):
@@ -96,7 +98,7 @@ class BuildSimHubAPIClient(object):
         :rtype: ParametricJob or None
 
         """
-        pj = helpers.parametric_job.ParametricJob(project_key, model_key, self._base_url)
+        pj = helpers.parametric_job.ParametricJob(project_key, model_key, self._base_url, self._logger)
         return pj
 
     def model_list(self, project_key, model_key):

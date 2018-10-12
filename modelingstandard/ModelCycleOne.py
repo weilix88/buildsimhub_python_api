@@ -72,51 +72,51 @@ orientation = bsh_api.measures.BuildingOrientation()
 orientation.set_datalist(bldg_orientation)
 measures.append(orientation)
 
-wwrs = bsh_api.measures.WindowWallRatioSouth()
+wwrs = bsh_api.measures.WindowWallRatio('s')
 wwrs.set_datalist(wwr_south)
 measures.append(wwrs)
 
-wwrn = bsh_api.measures.WindowWallRatioNorth()
+wwrn = bsh_api.measures.WindowWallRatio('n')
 wwrn.set_datalist(wwr_north)
 measures.append(wwrn)
 
-wwrw = bsh_api.measures.WindowWallRatioWest()
+wwrw = bsh_api.measures.WindowWallRatio('w')
 wwrw.set_datalist(wwr_west)
 measures.append(wwrw)
 
-wwre = bsh_api.measures.WindowWallRatioEast()
+wwre = bsh_api.measures.WindowWallRatio('e')
 wwre.set_datalist(wwr_east)
 measures.append(wwre)
 
-overhangn = bsh_api.measures.ShadeOverhangNorth()
+overhangn = bsh_api.measures.ShadeOverhang('n')
 overhangn.set_datalist(overhang_north)
 measures.append(overhangn)
 
-overhangs = bsh_api.measures.ShadeOverhangSouth()
+overhangs = bsh_api.measures.ShadeOverhang('s')
 overhangs.set_datalist(overhang_south)
 measures.append(overhangs)
 
-overhangw = bsh_api.measures.ShadeOverhangWest()
+overhangw = bsh_api.measures.ShadeOverhang('w')
 overhangw.set_datalist(overhang_west)
 measures.append(overhangw)
 
-overhange = bsh_api.measures.ShadeOverhangEast()
+overhange = bsh_api.measures.ShadeOverhang('e')
 overhange.set_datalist(overhang_east)
 measures.append(overhange)
 
-finn = bsh_api.measures.ShadeFinNorth()
+finn = bsh_api.measures.ShadeFin('n')
 finn.set_datalist(fin_north)
 measures.append(finn)
 
-fins = bsh_api.measures.ShadeFinSouth()
+fins = bsh_api.measures.ShadeFin('s')
 fins.set_datalist(fin_south)
 measures.append(fins)
 
-finw = bsh_api.measures.ShadeFinWest()
+finw = bsh_api.measures.ShadeFin('w')
 finw.set_datalist(fin_west)
 measures.append(finw)
 
-fine = bsh_api.measures.ShadeFinEast()
+fine = bsh_api.measures.ShadeFin('e')
 fine.set_datalist(fin_east)
 measures.append(fine)
 
@@ -158,4 +158,4 @@ if results:
     # Plot
     plot = pp.ParametricPlot(result_dict, result_unit)
     print(plot.pandas_df())
-    plot.parallel_coordinate_plotly()
+

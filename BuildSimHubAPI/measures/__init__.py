@@ -24,5 +24,7 @@ from .shade_fin import ShadeFin
 from .heating_dx_efficiency import HeatingDXEfficiency
 from .light_lpd_percent import LightLPDPercent
 from .equipment_epd_percent import EquipmentEPDPercent
+from .demand_control import DemandControl
+from .heat_recovery import HeatRecovery
 from .customized_measure import CustomizedMeasure
 from .discrete_measure_option_template import DiscreteMeasureOptionTemplate

@@ -2,6 +2,7 @@ import os
 import datetime as dt
 import threading
 import csv
+import os.path
 
 global_lock = threading.Lock()
 
@@ -26,10 +27,15 @@ class BuildSimLogger(object):
             self.logger_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.logger_content = []
 
-    def write_in_message(self, class_name='', request='', project_id='', model_id='', result=''):
-        logger_msg = [dt.datetime.now().strftime('%y/%m/%d %H:%M:%S'), class_name, request, project_id, model_id, result]
+        if not os.path.isfile(self.logger_dir + '/buildsim_logger.csv'):
+            f = open(self.logger_dir + '/buildsim_logger.csv', 'w+')
+            f.write("Time, Class, Request, ProjectAPI, ModelAPI, ResponseCode, Results \n")
+            f.close()
+
+    def write_in_message(self, class_name='', request='', project_id='', model_id='', code=200, result=''):
+        logger_msg = [dt.datetime.now().strftime('%y/%m/%d %H:%M:%S'), class_name, request, project_id,
+                      model_id, str(code), result]
         self.logger_content.append(logger_msg)
-        print(self.logger_content)
 
     @threaded
     def write_in_csv(self):

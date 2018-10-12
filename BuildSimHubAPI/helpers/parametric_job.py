@@ -9,7 +9,7 @@ class ParametricJob(object):
     # every call will connect to this base URL
     BASE_URL = 'https://my.buildsim.io/'
 
-    def __init__(self, project_api_key, model_api_key='', base_url=None):
+    def __init__(self, project_api_key, model_api_key='', base_url=None, logger=None):
         """
         Construct a parametric job
 
@@ -29,8 +29,12 @@ class ParametricJob(object):
         # list of data
         self._model_action_list = list()
         self._base_url = ParametricJob.BASE_URL
+        self._logger = None
+
         if base_url is not None:
             self._base_url = base_url
+        if logger is not None:
+            self._logger = logger
 
     @property
     def track_token(self):
@@ -186,6 +190,12 @@ class ParametricJob(object):
 
         if resp_json['status'] == 'success':
             self._track_token = resp_json['tracking']
+
+            # log
+            if self._logger is not None:
+                self._logger.write_in_message('ParametricSimulation', 'UploadRun', self._project_key,
+                                              self._track_token, '200', self._track_token)
+
             print('You can track the parametric using API key: ' + self._track_token)
             if track:
                 while self.track_simulation():
@@ -302,6 +312,12 @@ class ParametricJob(object):
 
         if resp_json['status'] == 'success':
             self._track_token = resp_json['tracking']
+
+            # log
+            if self._logger is not None:
+                self._logger.write_in_message('ParametricSimulation', 'Run', self._project_key,
+                                              self._track_token, '200', self._track_token)
+
             print('You can track the parametric using API key: ' + self._track_token)
             if track:
                 while self.track_simulation():
