@@ -6,7 +6,7 @@ class EquipmentEPD(ModelAction):
     # if unit is 'ip', then multiply this rate.
     # for window it is the U-value
     # convert U-value IP to SI
-    # The conversion will change w/m2 to w/ft2 if ip shows
+    # The conversion will change w/ft2 to w/m2 if ip shows
     CONVERSION_RATE = 0.0929
 
     def __init__(self, unit="si"):

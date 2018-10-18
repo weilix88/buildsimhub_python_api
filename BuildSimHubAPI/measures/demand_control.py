@@ -42,7 +42,6 @@ class DemandControl(ModelAction):
         Warning: This measure only works on HVAC systems with central air handling unit.
         '''
 
-
     def get_num_value(self):
         return ModelAction.num_of_value(self)
 
