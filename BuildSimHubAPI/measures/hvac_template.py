@@ -7,16 +7,16 @@ class HVACTemplate(ModelAction):
     # for window it is the U-value
     # convert U-value IP to SI
     # The conversion will change w/ft2 to w/m2 if ip shows
-    NUM_HVAC = 13
+    NUM_HVAC = 12
 
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'hvac_template', unit)
         self._measure_name = 'HVAC'
-        self._default_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        self._default_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         # DOAS + VRF as default
         self._data = 10
         self._lower_limit = 0
-        self._upper_limit = HVACTemplate.NUM_HVAC
+        self._upper_limit = HVACTemplate.NUM_HVAC - 1
         self._measure_help = '''
         measure name: HVAC
         Unit: not required
@@ -34,11 +34,10 @@ class HVACTemplate(ModelAction):
         5. sys6: Packaged VAV with PFP Boxes
         6. sys7: VAV with Reheat
         7. sys8: VAV with PFP Boxes
-        8. sys9: Heating and Ventilation (gas fired)
-        9. sys10: Heating and Ventilation (electric)
-        10. doasvrf: DOAS with variable refrigerant flow
-        11. doasfancoil: DOAS with Fan coils
-        12. doaswshp: DOAS with water source heat pump (ground as condenser)
+        8. doasvrf: DOAS with variable refrigerant flow
+        9. doasfancoil: DOAS with Fan coils
+        10. doaswshp: DOAS with water source heat pump (ground as condenser)
+        11. DOAS with active cool beam + convective baseboard
         '''
 
     def _unit_convert_ratio(self):
