@@ -27,5 +27,6 @@ from .equipment_epd_percent import EquipmentEPDPercent
 from .demand_control import DemandControl
 from .heat_recovery import HeatRecovery
 from .hvac_template import HVACTemplate
+from .design_template import DesignTemplate
 from .customized_measure import CustomizedMeasure
 from .discrete_measure_option_template import DiscreteMeasureOptionTemplate
