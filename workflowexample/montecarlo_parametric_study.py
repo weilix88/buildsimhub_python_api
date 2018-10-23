@@ -17,7 +17,7 @@ import BuildSimHubAPI as bsh_api
 project_key = '6e764740-cb49-40ed-8a1a-1331b1d87ed2'
 model_api_key = '05cdd1a5-f96a-45f5-9ba5-3c80d657d474'
 local_file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
-number_of_simulation = 50
+number_of_simulation = 10
 
 bsh = bsh_api.BuildSimHubAPIClient()
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
@@ -54,6 +54,11 @@ measure_list.append(wallr)
 lpd = bsh_api.measures.LightLPD('ip')
 lpd.set_min(0.6)
 lpd.set_max(1.2)
+light_temp = bsh_api.measures.DesignTemplate()
+light_temp.set_class_label("Lights")
+light_temp.set_template_field("Return Air Fraction", "0.2")
+light_temp.set_template_field("Fraction Radiant", "0.6")
+lpd.set_custom_template(light_temp)
 measure_list.append(lpd)
 
 chillerEff = bsh_api.measures.CoolingChillerCOP()

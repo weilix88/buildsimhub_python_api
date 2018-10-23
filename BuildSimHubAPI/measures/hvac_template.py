@@ -39,7 +39,7 @@ class HVACTemplate(ModelAction):
         10. doasvrf: DOAS with variable refrigerant flow
         11. doasfancoil: DOAS with Fan coils
         12. doaswshp: DOAS with water source heat pump (ground as condenser)
-        13. DOAS with active cool beam + convective baseboard
+        13. doascbcb: DOAS with active cool beam + convective baseboard
         '''
 
     def _unit_convert_ratio(self):

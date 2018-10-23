@@ -1,10 +1,7 @@
 
 class DesignTemplate(object):
     def __init__(self):
-        self._class_label = ""
-        self._field_name = ""
-        self._value = ""
-        self._class_name = ""
+        self._template_dict = dict()
 
     def set_class_label(self, label):
         """
@@ -13,16 +10,17 @@ class DesignTemplate(object):
         :param label:
         :return:
         """
-        self._class_label = label
+        self._template_dict['class_label'] = label
 
-    def set_field_name(self, field):
+    def set_template_field(self, field_name, value):
         """
         Set the field name.
         E.g. Lighting Power Density
-        :param field:
+        :param field_name:
+        :param value:
         :return:
         """
-        self._field_name = field
+        self._template_dict[field_name] = value
 
     def set_class_name(self, name):
         """
@@ -30,20 +28,7 @@ class DesignTemplate(object):
         :param name:
         :return:
         """
-        self._class_name = name
-
-    def set_value(self, value):
-        """
-        Set the value
-        :param value:
-        :return:
-        """
-        self._value = value
+        self._template_dict['class_name'] = name
 
     def get_template(self):
-        template = dict()
-        template['class_label'] = self._class_label
-        template['field_name'] = self._field_name
-        template['class_name'] = self._class_name
-        template['value'] = self._value
-        return template
+        return self._template_dict
