@@ -17,12 +17,19 @@ For more information, examples, and tutorials, please check our [wiki page](http
 * [License](#license)
 
 <a name="update"></a>
-Latest Version 1.6.0:
+Latest version: 1.7.0
+1. HVAC system design options include 14 HVAC systems, which can be implemented on a SEED idf model
+2. Customized EnergyPlus class in a template with all the defiend design options
+3. Support customized design options that allow users to build their own design options
+4. Every design option include a small description of how the design option works (measure_help())
+5. BuildSim data project finally is here!! -> provide useful and free utility functions for pre-processing meter / sensor data.
+6. Design options also include demand control and heat recovery system for central air HVAC systems.
+
+Previous update:
+Version 1.6.0:
 1. EplusGIT model management system - compare, merge and copy - can be accessed through API
 2. Regional project and global project. - the newly added global project allows user upload custom weather files for simulation / parametrics.
 3. Design day condition - automatically update design day conditions.
-
-Previous update:
 
 Version 1.5.5:
 1. Package and distribution on PYPI
