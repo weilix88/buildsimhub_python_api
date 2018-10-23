@@ -1034,6 +1034,16 @@ class Model(object):
                 print(r_json)
             return False
 
+    def download_link(self):
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+
+        url = self._base_url + 'GetModel_API?project_api_key='+ self._project_api_key + '&' + track + '=' + self._track_token
+
+        return url
+
     def download_model(self):
         """
         Help download a model from the a project
