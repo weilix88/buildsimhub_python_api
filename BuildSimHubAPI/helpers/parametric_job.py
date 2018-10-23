@@ -162,6 +162,13 @@ class ParametricJob(object):
             else:
                 payload[action.get_api_name()] = data_str
 
+            # design customized template
+            design_template = action.get_design_template()
+            if len(design_template) > 0:
+                if payload.get("custom_template") is None:
+                    payload["custom_template"] = []
+                payload["custom_template"].extend(design_template)
+
         # Upload files
         files = dict()
         if is_py2:
@@ -295,6 +302,13 @@ class ParametricJob(object):
                 payload[action.get_api_name()].append(data_str)
             else:
                 payload[action.get_api_name()] = data_str
+
+            # design customized template
+            design_template = action.get_design_template()
+            if len(design_template) > 0:
+                if payload.get("custom_template") is None:
+                    payload["custom_template"] = []
+                payload["custom_template"].extend(design_template)
 
         print('Submitting parametric simulation job request...')
         r = request_post(url, params=payload)

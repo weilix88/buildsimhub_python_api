@@ -1,3 +1,4 @@
+from BuildSimHubAPI.measures.design_template import DesignTemplate
 
 
 class ModelAction(object):
@@ -20,6 +21,7 @@ class ModelAction(object):
         self._max = None
         self._measure_name = "Default"
         self._measure_help = ''
+        self._custom_template = list()
 
     def unit(self):
         """Returns the unit system (si or ip)"""
@@ -27,6 +29,20 @@ class ModelAction(object):
 
     def num_of_value(self):
         return len(self._list_data)
+
+    def set_custom_template(self, template):
+        """
+        Add template to a specific design option
+        The template should be an instance of designtemplate class
+
+        :param template:
+        :return:
+        """
+        if not isinstance(template, DesignTemplate):
+            print("Template should be instance of BuildSimHubAPI.measures.DesignTemplate class")
+            return False
+        self._custom_template.append(template)
+        return True
 
     def set_min(self, min_val):
         if min_val < self._lower_limit:
@@ -151,6 +167,18 @@ class ModelAction(object):
         if self._unit == 'ip':
             return (self._min * self._unit_convert_ratio(), self._max * self._unit_convert_ratio())
         return (self._min, self._max)
+
+    def get_design_template(self):
+        """
+        Retrieve design template from one specific design option
+        The design template will be arranged as a list that contains multiple
+        dict - which will eventually converted into json array contains Json objects.
+        :return:
+        """
+        template_list = list()
+        for template in self._custom_template:
+            template_list.append(template.get_template())
+        return template_list
 
 #    def num_of_combinations(self):
 #        comb = 0

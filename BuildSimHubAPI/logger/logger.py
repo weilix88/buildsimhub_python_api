@@ -25,7 +25,7 @@ class BuildSimLogger(object):
         # some initial value
         if logger_dir is None:
             self.logger_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        self.logger_content = []
+        # self.logger_content = []
 
         if not os.path.isfile(self.logger_dir + '/buildsim_logger.csv'):
             f = open(self.logger_dir + '/buildsim_logger.csv', 'w+')
@@ -35,10 +35,10 @@ class BuildSimLogger(object):
     def write_in_message(self, class_name='', request='', project_id='', model_id='', code=200, result=''):
         logger_msg = [dt.datetime.now().strftime('%y/%m/%d %H:%M:%S'), class_name, request, project_id,
                       model_id, str(code), result]
-        self.logger_content.append(logger_msg)
+        self.write_in_csv(logger_msg)
 
     @threaded
-    def write_in_csv(self):
+    def write_in_csv(self, logger_msg):
         with open(self.logger_dir + '/buildsim_logger.csv', "a+") as file:
             csv_writer = csv.writer(file, delimiter=',')
-            csv_writer.writerows(self.logger_content)
+            csv_writer.writerows(logger_msg)
