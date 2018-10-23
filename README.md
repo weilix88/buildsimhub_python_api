@@ -18,7 +18,7 @@ For more information, examples, and tutorials, please check our [wiki page](http
 
 <a name="update"></a>
 Latest version: 1.7.0
-1. HVAC system design options include 14 HVAC systems, which can be implemented on a SEED idf model
+1. HVAC system design options include 14 HVAC systems, which can be implemented on an idf model
 2. Customized EnergyPlus class in a template with all the defiend design options
 3. Support customized design options that allow users to build their own design options
 4. Every design option include a small description of how the design option works (measure_help())
