@@ -1317,6 +1317,9 @@ class Model(object):
     def bldg_dx_heating_efficiency(self):
         return self.__call_api('ElectricHeatingDXCoils')
 
+    def bldg_sys_loads(self, type="cooling"):
+        return self.__call_api('BuildingSysLoad', type)
+
     def __monthly_call_api(self, request_data, request_component=None):
         url = self._base_url + 'GetBuildingMonthlyResults_API'
         track = 'folder_api_key'
@@ -1368,7 +1371,7 @@ class Model(object):
         else:
             return -1
 
-    def __call_api(self, request_data):
+    def __call_api(self, request_data, zone_name=''):
         url = self._base_url + 'GetBuildingSimulationResults_API'
         track = "folder_api_key"
 
@@ -1379,7 +1382,8 @@ class Model(object):
         payload = {
             'project_api_key': self._project_api_key,
             track: self._track_token,
-            'request_data': request_data
+            'request_data': request_data,
+            'zone_name': zone_name
         }
 
         r = request_get(url, params=payload)

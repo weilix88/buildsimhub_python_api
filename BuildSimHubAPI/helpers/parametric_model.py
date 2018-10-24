@@ -234,12 +234,16 @@ class ParametricModel(object):
     def bldg_dx_heating_efficiency(self):
         return self.__call_api('ElectricHeatingDXCoils')
 
-    def __call_api(self, request_data):
+    def bldg_sys_loads(self, type='cooling'):
+        return self.__call_api('BuildingSysLoad', type)
+
+    def __call_api(self, request_data, zone_name=''):
         url = self._base_url + 'ParametricResults_API'
         payload = {
             'project_api_key': self._project_key,
             'folder_api_key': self._track_token,
-            'request_data': request_data
+            'request_data': request_data,
+            'zone_name': zone_name
         }
 
         data_list = request_large_data(url, params=payload)
