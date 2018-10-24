@@ -565,7 +565,7 @@ class Model(object):
         else:
             return -1
 
-    def condition_floor_area(self, unit):
+    def condition_floor_area(self, unit='si'):
         """Total conditioned floor area"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
@@ -609,7 +609,7 @@ class Model(object):
         else:
             return -1
 
-    def gross_floor_area(self, unit):
+    def gross_floor_area(self, unit='si'):
         """Total floor area"""
         url = self._base_url + 'GetBuildingBasicInfo_API'
         track = "folder_api_key"
