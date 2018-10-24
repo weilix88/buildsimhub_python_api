@@ -44,7 +44,7 @@ class ParametricPlot(object):
                 if val.strip() == 'On':
                     val = '1'
 
-                data_dict[title.strip()] = float(val.strip())
+                data_dict[title.strip()] = val.strip()
             # data_dict['Value'] = self._value[j]
 
             data_list.append(data_dict)
