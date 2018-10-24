@@ -237,7 +237,7 @@ class ParametricModel(object):
     def bldg_sys_loads(self, type='cooling'):
         return self.__call_api('BuildingSysLoad', type)
 
-    def __call_api(self, request_data, zone_name):
+    def __call_api(self, request_data, zone_name=''):
         url = self._base_url + 'ParametricResults_API'
         payload = {
             'project_api_key': self._project_key,

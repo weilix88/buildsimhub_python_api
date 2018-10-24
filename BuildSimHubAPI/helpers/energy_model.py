@@ -1361,7 +1361,7 @@ class Model(object):
         else:
             return -1
 
-    def __call_api(self, request_data, zone_name):
+    def __call_api(self, request_data, zone_name=''):
         url = self._base_url + 'GetBuildingSimulationResults_API'
         track = "folder_api_key"
 
