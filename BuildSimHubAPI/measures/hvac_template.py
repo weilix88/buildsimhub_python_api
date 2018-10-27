@@ -12,7 +12,7 @@ class HVACTemplate(ModelAction):
     def __init__(self, unit="si"):
         ModelAction.__init__(self, 'hvac_template', unit)
         self._measure_name = 'HVAC'
-        self._default_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        self._default_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
         # DOAS + VRF as default
         self._data = 10
         self._lower_limit = 0
@@ -40,6 +40,7 @@ class HVACTemplate(ModelAction):
         11. doasfancoil: DOAS with Fan coils
         12. doaswshp: DOAS with water source heat pump (ground as condenser)
         13. doascbcb: DOAS with active cool beam + convective baseboard
+        14. vavfourpipebeam: VAV system with four pipe beam
         '''
 
     def _unit_convert_ratio(self):
