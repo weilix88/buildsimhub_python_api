@@ -1,7 +1,6 @@
 from .model_action import ModelAction
 
 """
-
 If the seed model has mechanical ventilation object,
 this measure will turn on / off the mechanical ventilation object
 
@@ -12,6 +11,12 @@ based on original zone OA design and OA distribution effectiveness
 
 If OA design is missing - insert typical office space OA using sum method (ASHRAE 62.1)
 If OA distribution effectiveness is missing - insert 1.0 (Cooling) 0.8 (Heating) method (ASHRAE 90.1)
+
+EnergyPlus related object:
+Controller:MechanicalVentilation
+
+Parameters
+Zone Maximum Outdoor Air Fraction: 1.0
 
 """
 
@@ -39,6 +44,11 @@ class DemandControl(ModelAction):
             If there is mechanical ventilation specified - set demand control ventilation to Yes
             If there is no mechanical ventilation specified - add mechanical ventilation based on central system layout
         
+        EnergyPlus related object:
+            Controller:MechanicalVentilation
+                Parameters
+                    Zone Maximum Outdoor Air Fraction: 1.0
+            
         Warning: This measure only works on HVAC systems with central air handling unit.
         '''
 

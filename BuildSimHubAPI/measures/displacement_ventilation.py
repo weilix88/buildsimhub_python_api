@@ -8,14 +8,13 @@ this measure will delete or keep the related objects
 If the seed model has no displacement ventilation object but the decision value is 1 (On)
 This measure will insert room air model objects for zones under the control of central air systems
 
-The room air model type is set to three node displacement ventilation
-Default setting for the model is:
-Number of Plumes per Occupant: 1
-Thermostat Height: 1.1 m
-Comfort Height: 1.1 m
-Temperature Difference Threshold for Reporting: 0.4
-
-Use design template to configure your DV specifications.
+EnergyPlus related object:
+RoomAirSettings:ThreeNodeDisplacementVentilation
+    Parameters:
+        Number of Plumes per Occupant: 1
+        Thermostat Height: 1.1 m
+        Comfort Height: 1.1 m
+        Temperature Difference Threshold for Reporting: 0.4
 """
 
 
@@ -38,16 +37,17 @@ class DisplacementVentilation(ModelAction):
 
         If the seed model has no displacement ventilation object but the decision value is 1 (On)
         This measure will insert room air model objects for zones under the control of central air systems
-
-        The room air model type is set to three node displacement ventilation
-        Default setting for the model is:
+        
+        EnergyPlus related object:
+        RoomAirSettings:ThreeNodeDisplacementVentilation:
+        
+        Default Setting
         Number of Plumes per Occupant: 1
         Thermostat Height: 1.1 m
         Comfort Height: 1.1 m
         Temperature Difference Threshold for Reporting: 0.4
 
         Use design template to configure your DV specifications.
-        
         Warning: This measure only works on HVAC systems with central air handling unit.
         '''
 
