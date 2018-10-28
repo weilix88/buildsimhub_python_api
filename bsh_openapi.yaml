@@ -36,7 +36,7 @@ paths:
         - name: agents
           in: query
           required: false
-          description: 'simulation agents, 1,2 or 4'
+          description: 'simulation agents, 1,2 or 4, if set to 0 or empty string, then there will be no simulation performed'
           type: integer
           enum: [1,2,4]
         - in: formData
