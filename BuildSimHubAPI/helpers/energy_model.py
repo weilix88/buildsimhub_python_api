@@ -83,7 +83,50 @@ class Model(object):
     def log(self):
         return self._log
 
-    def bldg_geo(self, browser=True):
+    def bldg_geo(self, data=None, browser=True):
+        """
+        This method will ...?
+        :param data:
+        :param browser: whether to open the browser automaticallly or not
+        :return:
+        """
+        if data is None:
+            self.bldg_threed(browser)
+            return
+
+        url = self._base_url + 'Viewer3DData_API'
+        track = 'model_api_key'
+        test = self._track_token.split('-')
+        if len(test) is 3:
+            track = 'track_token'
+        payload = {
+            'project_api_key': self._project_api_key,
+            track: self._track_token,
+            'json': data
+        }
+        r = request_post(url, params=payload)
+        resp_json = r.json()
+        if r.status_code > 200:
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + resp_json['error_msg'])
+            except TypeError:
+                print(resp_json)
+                return
+        if 'status' not in resp_json:
+            print("Error: " + " supplied data is incomplete")
+            return
+        if resp_json['status'] == 'success':
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'IDF3DViewer', self._project_api_key, self._track_token, '200',
+                                              resp_json['link'])
+            if browser:
+                webbrowser.open(resp_json['link'])
+                return resp_json['status']
+            else:
+                return resp_json['link']
+
+    def bldg_threed(self, browser=True):
         """
         This method will open up your default browser to view the model geometry
         """
@@ -406,8 +449,9 @@ class Model(object):
 
     def hvac_swap(self, temp_dir, autosize=True, select_sys=None):
         """
+        Test function - do not use it
         """
-        url = self._base_url + 'GetBuildingBasicInfo_API'
+        url = self._base_url + 'HVACModelSwap_API'
         track = "folder_api_key"
         test = self._track_token.split("-")
         if len(test) is 3:
@@ -419,12 +463,17 @@ class Model(object):
 
         payload = {
             'project_api_key': self._project_api_key,
-            track: self._track_token,
-            'auto_size': autosize
+            track: self._track_token
         }
+
+        if autosize is True:
+            payload['auto_size'] = 'True'
+        else:
+            payload['auto_size'] = 'False'
 
         if select_sys is not None:
             payload['select_system'] = select_sys
+
         r = request_post(url, params=payload, files=files)
         resp_json = r.json()
         if r.status_code > 200:
@@ -441,6 +490,21 @@ class Model(object):
 
         if resp_json['status'] == 'success':
             data = r.json()
+            if 'warning' in data:
+                print(data['warning'])
+                select_sys = data['select_sys']
+                for sys in select_sys:
+                    print('Name: ' + sys['hvac'] + ', Type: ' + sys['object'])
+                    print('Description: ' + sys['description'])
+                    print('Supply: ')
+                    supply = sys['supply']
+                    for supply_comp in supply:
+                        print(supply_comp)
+                    print('Demand: ')
+                    demand = sys['demand']
+                    for demand_comp in demand:
+                        print(demand_comp)
+                    print('BuildSim choose the first listed system for merge.')
             print(data['message'])
 
             # log action

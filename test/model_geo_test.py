@@ -16,4 +16,4 @@ model_api_key = '60952acf-bde2-44fa-9883-a0a78bf9eb56'
 bsh = bsh_api.BuildSimHubAPIClient()
 model = bsh.model_results(project_api_key, model_api_key)
 # this will open your default browser to view the 3d geometry
-model.bldg_geo()
+model.bldg_threed()
