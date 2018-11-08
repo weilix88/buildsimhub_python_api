@@ -46,6 +46,13 @@ cop = [0.8, 0.86]
 heatEff.set_datalist(cop)
 measure_list.append(heatEff)
 
+daylit = bsh_api.measures.DaylightingSensor()
+measure_list.append(daylit)
+
+hvac = bsh_api.measures.HVACTemplate()
+hvac.set_datalist([1, 2, 3, 4, 5])
+measure_list.append(hvac)
+
 # Add EEMs to parametric job
 new_pj.add_model_measures(measure_list)
 

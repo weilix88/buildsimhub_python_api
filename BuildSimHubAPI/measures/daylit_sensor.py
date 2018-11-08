@@ -9,6 +9,8 @@ class DaylightingSensor(ModelAction):
         self._measure_name = 'DaylitSensor'
         self._lower_limit = 0
         self._upper_limit = 1
+        self.set_min(0)
+        self.set_max(1)
         self._measure_help = '''
         measure name: DaylitSensor
         Unit: Not required

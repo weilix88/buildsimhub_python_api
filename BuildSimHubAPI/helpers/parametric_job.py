@@ -193,8 +193,8 @@ class ParametricJob(object):
             except TypeError:
                 print(resp_json)
             return False
-        print('Received server response')
 
+        print('Received server response')
         if resp_json['status'] == 'success':
             self._track_token = resp_json['tracking']
 
