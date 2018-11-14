@@ -158,7 +158,7 @@ class Model(object):
         class_template = ClassTemplate(self._project_api_key, self._track_token,
                                        class_label, self._base_url, self._logger)
         data = class_template.get_raw_data()
-        print(data)
+        return data
 
     def model_compare(self, target_key):
         """
