@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d975d362-de7b-42a3-8c65-b8680decdec1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/BuildSimHubAPI/experiment/AHU_builder.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BuildSimHubAPI/experiment/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BuildSimHubAPI/experiment/hvac_component.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/class_template.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildSimHubAPI/measures/daylit_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/BuildSimHubAPI/measures/daylit_sensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflowexample/bruteforce_parametric_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/workflowexample/bruteforce_parametric_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/html_processor_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/html_processor_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,9 +15,9 @@
     <session id="-1671976454">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="57" />
+          <entry key="project.closed" value="59" />
           <entry key="project.open.time.0" value="7" />
-          <entry key="project.open.time.1" value="7" />
+          <entry key="project.open.time.1" value="8" />
           <entry key="project.open.time.12" value="2" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.14" value="1" />
@@ -37,7 +29,7 @@
           <entry key="project.open.time.7" value="9" />
           <entry key="project.open.time.8" value="4" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="58" />
+          <entry key="project.opened" value="59" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -50,7 +42,7 @@
           <entry key="json" value="5" />
           <entry key="md" value="1" />
           <entry key="png" value="23" />
-          <entry key="py" value="713" />
+          <entry key="py" value="725" />
           <entry key="stan" value="1" />
           <entry key="txt" value="1" />
           <entry key="yaml" value="2" />
@@ -63,7 +55,7 @@
           <entry key="JSON" value="5" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="38" />
-          <entry key="Python" value="713" />
+          <entry key="Python" value="725" />
           <entry key="YAML" value="2" />
         </counts>
       </usages-collector>
@@ -72,7 +64,7 @@
           <entry key="Python Console" value="48" />
           <entry key="config" value="10" />
           <entry key="dummy" value="40" />
-          <entry key="py" value="71430" />
+          <entry key="py" value="71491" />
           <entry key="yaml" value="75" />
         </counts>
       </usages-collector>
@@ -80,7 +72,7 @@
         <counts>
           <entry key="Erlang Terms" value="10" />
           <entry key="PLAIN_TEXT" value="40" />
-          <entry key="Python" value="71478" />
+          <entry key="Python" value="71539" />
           <entry key="YAML" value="75" />
         </counts>
       </usages-collector>
@@ -94,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/script_demo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="29" lean-forward="true" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+            <state>
+              <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -106,8 +98,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="360" column="19" selection-start-line="360" selection-start-column="19" selection-end-line="360" selection-end-column="19" />
+            <state relative-caret-position="294">
+              <caret line="916" column="22" lean-forward="true" selection-start-line="916" selection-start-column="22" selection-end-line="916" selection-end-column="22" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <marker date="1541531747000" expanded="true" signature="3003:4486" ph="..." />
@@ -121,7 +113,7 @@
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/design_template.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
-              <caret line="10" column="16" lean-forward="true" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
+              <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -143,35 +135,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/experiment/hvac_component.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="92" lean-forward="true" selection-start-line="92" selection-end-line="92" />
+            <state relative-caret-position="258">
+              <caret line="23" column="39" lean-forward="true" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="39" />
               <folding>
                 <marker date="1541640364000" expanded="true" signature="1061:1067" ph="..." />
                 <marker date="1541640364000" expanded="true" signature="2940:3557" ph="..." />
                 <marker date="1541640364000" expanded="true" signature="3600:4851" ph="..." />
-                <marker date="1541640364000" expanded="true" signature="5071:5072" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/discrete_measure_option_template.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="36" column="32" lean-forward="true" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/class_template.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-                <marker date="1541589864000" expanded="true" signature="78:79" ph="..." />
               </folding>
             </state>
           </provider>
@@ -180,7 +149,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="2865">
               <caret line="195" selection-start-line="195" selection-end-line="195" />
             </state>
           </provider>
@@ -235,7 +204,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/BuildSimHubAPI/measures/shade_overhang.py" />
         <option value="$PROJECT_DIR$/test/model_parameter_batch_modification.py" />
         <option value="$PROJECT_DIR$/test/test.py" />
         <option value="$PROJECT_DIR$/workflowexample/baumann_tutorial.py" />
@@ -286,14 +254,15 @@
         <option value="$PROJECT_DIR$/BuildSimHubAPI/experiment/__init__.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/experiment/AHU_builder.py" />
         <option value="$PROJECT_DIR$/BuildSimHubAPI/experiment/hvac_component.py" />
+        <option value="$PROJECT_DIR$/test/html_processor_test.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="54" />
+    <option name="x" value="1491" />
     <option name="y" value="22" />
-    <option name="width" value="1128" />
-    <option name="height" value="725" />
+    <option name="width" value="1541" />
+    <option name="height" value="894" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -326,29 +295,6 @@
             <path>
               <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
               <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-              <item name="BuildSimHubAPI" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-              <item name="BuildSimHubAPI" type="462c0819:PsiDirectoryNode" />
-              <item name="experiment" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-              <item name="BuildSimHubAPI" type="462c0819:PsiDirectoryNode" />
-              <item name="helpers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="buildsimhub_python_api" type="462c0819:PsiDirectoryNode" />
-              <item name="BuildSimHubAPI" type="462c0819:PsiDirectoryNode" />
-              <item name="measures" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="buildsimhub_python_api" type="b2602c69:ProjectViewProjectNode" />
@@ -545,15 +491,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="22" width="1128" height="725" extended-state="0" />
-    <editor active="true" />
+    <frame x="1612" y="50" width="1215" height="707" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4958904" visible="true" weight="0.2728094" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4958904" visible="true" weight="0.25293133" />
       <window_info id="Structure" order="1" sideWeight="0.50410956" side_tool="true" weight="0.21293801" />
       <window_info id="Favorites" order="2" sideWeight="0.50410956" side_tool="true" weight="0.21293801" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.327787" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6968403" visible="true" weight="0.3301738" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6968403" weight="0.3301738" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39939025" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -619,67 +564,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/buildsimcalibration/trace_hist_plots.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimcalibration/plot3.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimcalibration/plot1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bsh_openapi.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-835">
-          <caret line="38" column="80" selection-start-line="38" selection-start-column="80" selection-end-line="38" selection-end-column="80" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimplot/one_zone_load_component.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-141">
-          <caret line="27" column="54" lean-forward="true" selection-start-line="27" selection-start-column="54" selection-end-line="27" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/info.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3810">
-          <caret line="254" lean-forward="true" selection-start-line="254" selection-end-line="254" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimcalibration/DATAFIELD.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimcalibration/calibration_example/eplus_model/simple_example.idf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="2030" column="38" lean-forward="true" selection-start-line="2030" selection-start-column="38" selection-end-line="2030" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimcalibration/stan_calibrator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/water_economizer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="67" column="31" lean-forward="true" selection-start-line="67" selection-start-column="31" selection-end-line="67" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/workflowexample/guideline_param_code.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="232">
@@ -717,13 +601,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/html_processor_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="37" lean-forward="true" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -787,9 +664,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -797,9 +671,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="6" column="41" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -813,9 +684,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/buildsimlearn/sample_tree.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/buildsimlearn/sample_tree.png" />
     <entry file="file://$PROJECT_DIR$/buildsimlearn/draw_tree.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
@@ -834,39 +703,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="104">
           <caret line="28" selection-start-line="28" selection-end-line="28" />
-          <folding>
-            <element signature="e#56#75#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="195" selection-start-line="195" selection-end-line="195" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/script_demo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="29" lean-forward="true" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/experiment/coil_builder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="23" lean-forward="true" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/experiment/air_loop_component.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/experiment/coil_builder.py" />
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/experiment/air_loop_component.py" />
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/model_action.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1875">
@@ -885,9 +726,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="35" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -910,28 +748,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py">
+    <entry file="file://$PROJECT_DIR$/test/script_demo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="360" column="19" selection-start-line="360" selection-start-column="19" selection-end-line="360" selection-end-column="19" />
+        <state>
+          <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <marker date="1541531747000" expanded="true" signature="3003:4486" ph="..." />
-            <marker date="1541531747000" expanded="true" signature="5314:5548" ph="..." />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/design_template.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="16" lean-forward="true" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/class_template.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
+        <state relative-caret-position="870">
           <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
@@ -940,10 +769,77 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/parametric_job.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2865">
+          <caret line="195" selection-start-line="195" selection-end-line="195" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/change_data_by_zone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-137" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/cloud_simulation_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-61" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/compare_models.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/copy_model_to_same_project.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/customized_measure.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="39" lean-forward="true" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/design_day_simulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="26" lean-forward="true" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/download_model_test.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/extract_model_list_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-92" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/extract_one_model_from_parametric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/discrete_measure_option_template.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="359">
-          <caret line="36" column="32" lean-forward="true" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
+          <caret line="36" column="32" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/get_class_in_model.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/hourly_data_retrieve.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-77" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/measures/design_template.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -959,15 +855,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/helpers/energy_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="916" column="22" lean-forward="true" selection-start-line="916" selection-start-column="22" selection-end-line="916" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <marker date="1541531747000" expanded="true" signature="3003:4486" ph="..." />
+            <marker date="1541531747000" expanded="true" signature="5314:5548" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/html_processor_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="54" lean-forward="true" selection-start-line="11" selection-start-column="54" selection-end-line="11" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/BuildSimHubAPI/experiment/hvac_component.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="92" lean-forward="true" selection-start-line="92" selection-end-line="92" />
+        <state relative-caret-position="258">
+          <caret line="23" column="39" lean-forward="true" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="39" />
           <folding>
             <marker date="1541640364000" expanded="true" signature="1061:1067" ph="..." />
             <marker date="1541640364000" expanded="true" signature="2940:3557" ph="..." />
             <marker date="1541640364000" expanded="true" signature="3600:4851" ph="..." />
-            <marker date="1541640364000" expanded="true" signature="5071:5072" ph="..." />
           </folding>
         </state>
       </provider>

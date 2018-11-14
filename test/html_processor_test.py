@@ -18,6 +18,7 @@ column_name = "Total Energy"
 bsh = bshapi.BuildSimHubAPIClient()
 results = bsh.model_results(project_api_key, model_api_key)
 
+# you can also retrieve, err, eso, eio, rdd using the same function
 html = results.get_simulation_results('html')
 
 # to save the html in your local directory
