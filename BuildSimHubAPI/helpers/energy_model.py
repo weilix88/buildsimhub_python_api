@@ -4,6 +4,7 @@ import json
 from .httpurllib import request_get
 from .httpurllib import request_post
 from .httpurllib import make_url
+from .class_template import ClassTemplate
 
 
 class Model(object):
@@ -52,7 +53,7 @@ class Model(object):
             url = self._base_url + 'GetFirstModelOfBranch_API'
             payload = {
                 'project_api_key': self._project_api_key,
-                'folder_api_key': self._track_token,
+                'folder_api_key': self._track_token
             }
             r = request_get(url, params=payload)
             resp_json = r.json()
@@ -152,6 +153,12 @@ class Model(object):
             webbrowser.open(r)
         else:
             return self._log
+
+    def class_template(self, class_label):
+        class_template = ClassTemplate(self._project_api_key, self._track_token,
+                                       class_label, self._base_url, self._logger)
+        data = class_template.get_raw_data()
+        return data
 
     def model_compare(self, target_key):
         """
