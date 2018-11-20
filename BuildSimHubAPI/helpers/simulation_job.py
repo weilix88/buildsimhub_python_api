@@ -278,8 +278,10 @@ class SimulationJob(object):
                     for i in range(1, len(file_dir)):
                         time.sleep(5)
                         print("Submitting the model number: " + str(i + 1))
-                        files = self._decode_model_and_epw(file_dir[i], None)
-                        r = request_post(url, params=payload, files=files)
+                        temp_files = self._decode_model_and_epw(file_dir[i], None)
+                        if 'schedule_csv' in files:
+                            temp_files['schedule_csv'] = files['schedule_csv']
+                        r = request_post(url, params=payload, files=temp_files)
                         if self._http_code_check(r):
                             resp_json = r.json()
                             if resp_json['status'] == 'error':
