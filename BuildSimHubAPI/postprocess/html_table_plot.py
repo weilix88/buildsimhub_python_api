@@ -62,6 +62,21 @@ class HTMLTable(object):
     def pandas_df(self):
         return self._df
 
+    def get_cell_unit(self, col_name=None, row_name=None):
+        if col_name is None and row_name is None:
+            raise Exception("No cell or col or row is specified.")
+
+        if col_name is None and row_name is not None:
+            unit_row_dict = self._unit_dict[row_name]
+            for k, v in unit_row_dict.items():
+                return v
+
+        if row_name is None and col_name is not None:
+            for k, v in self._unit_dict.items():
+                return self._unit_dict[k][col_name]
+
+        return self._unit_dict[row_name][col_name]
+
     def table_bar_chart_plot(self, orientation='column', title='Table bar plot', image_name='bar_table', skip_rows=None,
                              skip_cols=None):
         try:

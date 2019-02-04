@@ -13,7 +13,7 @@ wwr.set_datalist([0.2, 0.6])
 measure_list.append(wwr)
 
 daylit_sensor = bshapi.measures.DaylightingSensor()
-daylit_template = bshapi.measures.DesignTemplate()
+daylit_template = bshapi.helpers.DesignTemplate()
 daylit_template.set_class_label("Daylighting:Controls")
 daylit_template.set_template_field("Lighting Control Type", "Continuous")
 daylit_template.set_template_field("Minimum Input Power Fraction for Continuous Dimming Control", "0.2")

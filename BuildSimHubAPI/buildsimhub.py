@@ -99,7 +99,6 @@ class BuildSimHubAPIClient(object):
         :param model_key: required param.
         :return: a parametric job object
         :rtype: ParametricJob or None
-
         """
         pj = helpers.parametric_job.ParametricJob(project_key, model_key, self._base_url, self._logger)
         return pj

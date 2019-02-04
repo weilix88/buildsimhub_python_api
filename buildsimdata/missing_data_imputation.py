@@ -1,16 +1,13 @@
 # https://github.com/WillKoehrsen/feature-selector/blob/master/Feature%20Selector%20Usage.ipynb
 import pandas as pd
 from datetime import datetime
-from sklearn.neighbors import KNeighborsClassifier
-from .feature_selector import FeatureSelector
-from sklearn.feature_selection import VarianceThreshold
-from sklearn.neighbors import KNeighborsClassifier
+from feature_selector import FeatureSelector
 import math
 from sklearn.neighbors import KNeighborsRegressor
 import numpy as np
 
 
-df = pd.read_csv('../../Bldg101_2014_10m_NA10%.csv')
+df = pd.read_csv('/Users/weilixu/Desktop/Bldg101_2014_10m_NA10.csv')
 # test_missing = pd.read_excel('../missingdata/PI_Bldg101_Webctrl_Points.xlsx')
 
 # Feature Selection - remove single value and high correlation variable

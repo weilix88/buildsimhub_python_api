@@ -42,6 +42,27 @@ class DiscreteMeasureOptionTemplate(object):
         self._template_group.append(template)
         return True
 
+    def add_class_template_add(self, class_label, template):
+        """
+        Add the template for an EnergyPlus class and do add operation
+
+        delete operation means this template removes existing classes that matches
+        class_label (e.g. Lights) or matches class_label (e.g. Lights) and class_name (SPACE1-1 Lights)
+
+        measure_template.add_class_template_delete('ElectricEquipment', 'PLENUM1 Electric')
+        This will deletes the EnergyPlus class: ElectricEquipment with the name of PLENUM1 Electric
+
+        :param class_label: EnergyPlus class label, e.g. ElectricEquipment
+        :param template: dictionary - the full data
+        :return: True if added, False otherwise
+        """
+        add_temp = dict()
+        add_temp['operation'] = 'add'
+        add_temp['class_label'] = class_label
+        add_temp['add_data'] = template
+        self._template_group.append(add_temp)
+        return True
+
     def add_class_template_delete(self, class_label, class_name=None):
         """
         Add the template for an EnergyPlus class and do delete operation
