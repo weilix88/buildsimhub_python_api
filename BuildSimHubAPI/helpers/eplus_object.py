@@ -5,17 +5,15 @@ class EnergyPlusObject(object):
         self._object = dict()
         self._object['class_label'] = class_label
         self._values = list()
-        self._comment = list()
 
-    def add_field(self, field, comment=None):
+    def add_field(self, field):
         self._values.append(str(field))
-        if comment is None:
-            self._comment.append("")
-        else:
-            self._comment.append(comment)
+
+    def add_field_template(self, field, value):
+        self._object[field] = value
 
     def get_object(self):
-        self._object['value_array'] = self._values
-        self._object['comment_array'] = self._comment
+        if self._values:
+            self._object['value_array'] = self._values
         return self._object
 

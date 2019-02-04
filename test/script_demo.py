@@ -5,12 +5,13 @@ import pandas as pd
 # project_key can be found in every project (click the information icon next to project name)
 project_api_key = '921a1f04-0238-4e88-bbc5-e4eb71c352c6'
 # model_key can be found in each model information bar
-model_api_key = 'a42f7373-4011-4f57-9cf4-308d38e8f65a'
+model_api_key = '678f3232-61ed-4347-a19c-8291b18583d7'
 
 # initialize the client
 bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 
-def gen_zone_sizing_object(zone_name, oa_obj_name):
+
+def gen_zone_sizing_object(oa_obj_name):
     """
       Sizing:Zone,
     SPACE1-1,  !- Zone or ZoneList Name
@@ -41,32 +42,69 @@ def gen_zone_sizing_object(zone_name, oa_obj_name):
     :return:
     """
     zone_sizing_obj = bshapi.helpers.EnergyPlusObject("Sizing:Zone")
-    zone_sizing_obj.add_field(zone_name, "Zone or ZoneList Name")
-    zone_sizing_obj.add_field("SupplyAirTemperature", "Zone Cooling Design Supply Air Temperature Input Method")
-    zone_sizing_obj.add_field("14", "Zone Cooling Design Supply Air Temperature {C}")
-    zone_sizing_obj.add_field("", "Zone Cooling Design Supply Air Temperature Difference {deltaC}")
-    zone_sizing_obj.add_field("SupplyAirTemperature", "Zone Heating Design Supply Air Temperature Input Method")
-    zone_sizing_obj.add_field("43", "Zone Heating Design Supply Air Temperature {C}")
-    zone_sizing_obj.add_field("", "Zone Heating Design Supply Air Temperature Difference {deltaC}")
-    zone_sizing_obj.add_field("0.009", "Zone Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}")
-    zone_sizing_obj.add_field("0.004", "Zone Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}")
-    zone_sizing_obj.add_field(oa_obj_name, "Design Specification Outdoor Air Object Name")
-    zone_sizing_obj.add_field("1.25", "Zone Heating Sizing Factor")
-    zone_sizing_obj.add_field("1.15", "Zone Cooling Sizing Factor")
-    zone_sizing_obj.add_field("DesignDay", "Cooling Design Air Flow Method")
-    zone_sizing_obj.add_field("0.0", "Cooling Design Air Flow Rate {m3/s}")
-    zone_sizing_obj.add_field(".000762", "Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}")
-    zone_sizing_obj.add_field("0.0", "Cooling Minimum Air Flow {m3/s}")
-    zone_sizing_obj.add_field("0.2", "Cooling Minimum Air Flow Fraction")
-    zone_sizing_obj.add_field("DesignDay", "Heating Design Air Flow Method")
-    zone_sizing_obj.add_field("0.0", "Heating Design Air Flow Rate {m3/s}")
-    zone_sizing_obj.add_field("0.002032", "Heating Minimum Air Flow {m3/s}")
-    zone_sizing_obj.add_field("0.1415762", "Heating Maximum Air Flow {m3/s}")
-    zone_sizing_obj.add_field("0.3", "Heating Maximum Air Flow Fraction")
+    zone_sizing_obj.add_field("zone")
+    zone_sizing_obj.add_field("SupplyAirTemperature")
+    zone_sizing_obj.add_field("14")
+    zone_sizing_obj.add_field("")
+    zone_sizing_obj.add_field("SupplyAirTemperature")
+    zone_sizing_obj.add_field("43")
+    zone_sizing_obj.add_field("")
+    zone_sizing_obj.add_field("0.0085")
+    zone_sizing_obj.add_field("0.008")
+    zone_sizing_obj.add_field(oa_obj_name)
+    zone_sizing_obj.add_field("1.25")
+    zone_sizing_obj.add_field("1.15")
+    zone_sizing_obj.add_field("DesignDay")
+    zone_sizing_obj.add_field("0.0")
+    zone_sizing_obj.add_field(".000762")
+    zone_sizing_obj.add_field("0.0")
+    zone_sizing_obj.add_field("0.2")
+    zone_sizing_obj.add_field("DesignDay")
+    zone_sizing_obj.add_field("0.0")
+    zone_sizing_obj.add_field("0.002032")
+    zone_sizing_obj.add_field("0.1415762")
+    zone_sizing_obj.add_field("0.3")
     return zone_sizing_obj
 
 
-################# Model preparation #####################
+def gen_ltg_sched():
+    ltg_obj = bshapi.helpers.EnergyPlusObject("Schedule:Compact")
+    ltg_obj.add_field("Office lighting 5 to 20")
+    ltg_obj.add_field("Fraction")
+    ltg_obj.add_field("Through: 12/31")
+    ltg_obj.add_field("For: Weekdays SummerDesignDay")
+    ltg_obj.add_field("Until: 05:00")
+    ltg_obj.add_field("0.05")
+    ltg_obj.add_field("Until: 07:00")
+    ltg_obj.add_field("0.1")
+    ltg_obj.add_field("Until: 08:00")
+    ltg_obj.add_field("0.3")
+    ltg_obj.add_field("Until: 17:00")
+    ltg_obj.add_field("0.9")
+    ltg_obj.add_field("Until: 18:00")
+    ltg_obj.add_field("0.5")
+    ltg_obj.add_field("Until: 20:00")
+    ltg_obj.add_field("0.3")
+    ltg_obj.add_field("Until: 24:00")
+    ltg_obj.add_field("0.05")
+    ltg_obj.add_field("For: Saturday WinterDesignDay")
+    ltg_obj.add_field("Until: 06:00")
+    ltg_obj.add_field("0.05")
+    ltg_obj.add_field("Until: 08:00")
+    ltg_obj.add_field("0.1")
+    ltg_obj.add_field("Until: 12:00")
+    ltg_obj.add_field("0.3")
+    ltg_obj.add_field("Until: 17:00")
+    ltg_obj.add_field("0.1")
+    ltg_obj.add_field("Until: 24:00")
+    ltg_obj.add_field("0.05")
+    ltg_obj.add_field("For: AllOtherDays")
+    ltg_obj.add_field("Until: 24:00")
+    ltg_obj.add_field("0.05")
+    return ltg_obj
+
+
+# ################ Model preparation #####################
 
 # 1. build up the zone map
 # 1.1 get the seed model
@@ -75,24 +113,27 @@ zone_list = model.zone_list()
 zone_map = dict()
 
 # 2. Prepare
-# 2.1 add objects to a model
+# 2.1 add objects to model based on Zone (any object that has zone name or zone list name fields
 zone_sizing_list = list()
 for zone in zone_list:
-    zone_sizing_list.append(gen_zone_sizing_object(zone['zone_name'], zone['zone_name'] + '_OA'))
-new_id = model.add_object(zone_sizing_list)
-# 2.2 add a standard HVAC system
+    zone_sizing_list.append(zone['zone_name'])
+zone_temp = gen_zone_sizing_object('OAT')
+new_id = model.add_modify_zone(zone_sizing_list, [zone_temp])
+
+# 2.2 add an object - there is data limit on this function
+model = bsh.model_results(project_api_key, new_id)
+new_id = model.add_object([gen_ltg_sched()])
+
+# 2.3 add a standard HVAC system
+model = bsh.model_results(project_api_key, new_id)
 zone_group = dict()
 for zone in zone_list:
     zone_group[zone['zone_name']] = dict()
-    zone_group[zone['zone_name']]['ventilation'] = 'testzone'
-    floor = zone['floor']
-    if floor == 2:
-        zone_group[zone['zone_name']]['heating'] = 'test2zone'
-        zone_group[zone['zone_name']]['cooling'] = 'test2zone'
-    else:
-        zone_group[zone['zone_name']]['heating'] = 'test3zone'
-        zone_group[zone['zone_name']]['cooling'] = 'test3zone'
-# new_id = model.hvac_swap(hvac_type=10, zone_group=zone_group)
+    zone_group[zone['zone_name']]['ventilation'] = 'floor_' + str(zone['floor'])
+    zone_group[zone['zone_name']]['heating'] = 'floor_' + str(zone['floor'])
+    zone_group[zone['zone_name']]['cooling'] = 'floor_' + str(zone['floor'])
+
+# new_id = model.hvac_swap(hvac_type=6, zone_group=zone_group)
 
 # 3. Setup parameters for parametric
 # param = bsh.new_parametric_job(project_api_key)

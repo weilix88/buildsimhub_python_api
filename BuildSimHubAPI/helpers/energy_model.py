@@ -482,12 +482,13 @@ class Model(object):
         if zone_group is not None:
             payload['zone_group'] = zone_group
 
+        files = dict()
         if temp_dir is not None:
-            files = dict()
             files['model'] = open(temp_dir, 'rb')
-            r = request_post(url, params=payload, files=files)
         else:
-            r = request_post(url, params=payload)
+            files['model'] = []
+        r = request_post(url, params=payload, files=files)
+
         resp_json = r.json()
         if r.status_code > 200:
             # log action
@@ -895,7 +896,6 @@ class Model(object):
             'object_list': idf_data
         }
 
-        print(payload)
         r = request_post(url, params=payload)
         if r.status_code == 200:
             data = r.json()
@@ -909,7 +909,7 @@ class Model(object):
             return data['tracking']
         else:
             r_json = r.json()
-            # log action
+             # log action
             if self._logger is not None:
                 self._logger.write_in_message('Model', 'AddModifyZone', self._project_api_key,
                                               self._track_token, r.status_code, 'error')
@@ -929,6 +929,15 @@ class Model(object):
         :rtype: string
 
         """
+
+        # check whether template_array contains only EnergyPlus object
+        temp_data = list()
+        for template in template_array:
+            if not isinstance(template, EnergyPlusObject):
+                print("Data in template_array must be an instance of EnergyPlusObject")
+                return -1
+            temp_data.append(template.get_object())
+
         url = self._base_url + 'ModifyZoneDataInModel_API'
         track = "folder_api_key"
         test = self._track_token.split("-")
@@ -942,7 +951,7 @@ class Model(object):
 
         data = dict()
         data['zone_list'] = zone_list
-        data['component_template'] = template_array
+        data['component_template'] = temp_data
         payload['request_content'] = data
         r = request_post(url, params=payload)
         if r.status_code == 200:
