@@ -17,17 +17,16 @@ model = bsh.model_results(project_api_key, model_api_key)
 
 # initialize the parameters
 data = list()
-light = dict()
-equip = dict()
+light = bshapi.helpers.EnergyPlusObject('Lights')
+equip = bshapi.helpers.EnergyPlusObject('ElectricEquipment')
 
 # set-up template for lights and electric equipment
-light['class_label'] = "Lights"
-light['Design Level Calculation Method'] = "LightingLevel"
-light['Lighting Level'] = "100"
+light.add_field_template('Design Level Calculation Method', "LightingLevel")
+light.add_field_template('Lighting Level', "100")
 
-equip['class_label'] = "ElectricEquipment"
-equip['Design Level Calculation Method'] = 'EquipmentLevel'
-equip['Design Level'] = '120'
+equip.add_field_template('Design Level Calculation Method', "EquipmentLevel")
+equip.add_field_template('Design Level', "120")
+
 data.append(light)
 data.append(equip)
 
