@@ -5,6 +5,7 @@ from .httpurllib import request_get
 from .httpurllib import request_post
 from .httpurllib import make_url
 from .class_template import ClassTemplate
+from .eplus_object import EnergyPlusObject
 
 
 class Model(object):
@@ -454,7 +455,7 @@ class Model(object):
         else:
             return -1
 
-    def hvac_swap(self, temp_dir, autosize=True, select_sys=None):
+    def hvac_swap(self, temp_dir=None, hvac_type=1, autosize=True, select_sys=None, zone_group=None):
         """
         Test function - do not use it
         """
@@ -464,13 +465,10 @@ class Model(object):
         if len(test) is 3:
             track = "track_token"
 
-        files = dict()
-        if temp_dir is not None:
-            files['model'] = open(temp_dir, 'rb')
-
         payload = {
             'project_api_key': self._project_api_key,
-            track: self._track_token
+            track: self._track_token,
+            'hvac_type': hvac_type
         }
 
         if autosize is True:
@@ -481,7 +479,15 @@ class Model(object):
         if select_sys is not None:
             payload['select_system'] = select_sys
 
-        r = request_post(url, params=payload, files=files)
+        if zone_group is not None:
+            payload['zone_group'] = zone_group
+
+        if temp_dir is not None:
+            files = dict()
+            files['model'] = open(temp_dir, 'rb')
+            r = request_post(url, params=payload, files=files)
+        else:
+            r = request_post(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             # log action
@@ -504,13 +510,15 @@ class Model(object):
                     print('Name: ' + sys['hvac'] + ', Type: ' + sys['object'])
                     print('Description: ' + sys['description'])
                     print('Supply: ')
-                    supply = sys['supply']
-                    for supply_comp in supply:
-                        print(supply_comp)
+                    if 'supply' in sys:
+                        supply = sys['supply']
+                        for supply_comp in supply:
+                            print(supply_comp)
                     print('Demand: ')
-                    demand = sys['demand']
-                    for demand_comp in demand:
-                        print(demand_comp)
+                    if 'demand' in sys:
+                        demand = sys['demand']
+                        for demand_comp in demand:
+                            print(demand_comp)
                     print('BuildSim choose the first listed system for merge.')
             print(data['message'])
 
@@ -858,6 +866,58 @@ class Model(object):
             return zone_list
         else:
             return -1
+
+    def add_object(self, object_array):
+        """
+        add objects to the energy model
+
+        :param object_array: the array of EnergyPlusObject class
+        :return:
+        """
+        # validation
+        idf_data = list()
+        for template in object_array:
+            if not isinstance(template, EnergyPlusObject):
+                print("The add object must be type of EnergyPlusObject")
+                raise Exception("Type error")
+            else:
+                temp_obj = template.get_object()
+                idf_data.append(temp_obj)
+
+        url = self._base_url + 'AddNewObjects_API'
+        track = "folder_api_key"
+        test = self._track_token.split("-")
+        if len(test) is 3:
+            track = "track_token"
+        payload = {
+            'project_api_key': self._project_api_key,
+            track: self._track_token,
+            'object_list': idf_data
+        }
+
+        print(payload)
+        r = request_post(url, params=payload)
+        if r.status_code == 200:
+            data = r.json()
+            print(data['message'])
+
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'AddNewObjects_API', self._project_api_key,
+                                              self._track_token, r.status_code, data['tracking'])
+
+            return data['tracking']
+        else:
+            r_json = r.json()
+            # log action
+            if self._logger is not None:
+                self._logger.write_in_message('Model', 'AddModifyZone', self._project_api_key,
+                                              self._track_token, r.status_code, 'error')
+            try:
+                print('Code: ' + str(r.status_code) + ' message: ' + r_json['error_msg'])
+            except TypeError:
+                print(r_json)
+            return False
 
     def add_modify_zone(self, zone_list, template_array):
         """

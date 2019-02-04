@@ -80,6 +80,7 @@ def main(model_selector):
         for j in range(len(data_store[i])):
             for z in range(len(data_store[i][j])):
                 clf = model[model_selector]
+                print(data_store[i][j][z])
                 X_train = np.asarray(data_store[i][j][z]).reshape(-1, 1)
                 clf.fit(X_train)
                 y_train_pred = clf.labels_

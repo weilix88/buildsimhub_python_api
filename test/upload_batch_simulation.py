@@ -17,8 +17,8 @@ import BuildSimHubAPI.postprocess as pp
 # project_key can be found in every project (click the information icon next to project name)
 project_key = "9d6b010f-de6f-4f18-9030-411467288b11"
 
-file_dir_1 = "/Users/weilixu/Desktop/data/doasfancoil.idf"
-file_dir_2 = "/Users/weilixu/Desktop/data/mediumoffice.idf"
+file_dir_1 = '/Users/weilixu/Desktop/data/schedule/5ZoneTDV.idf'
+file_dir_2 = '/Users/weilixu/Desktop/data/schedule/5ZoneTDV.idf'
 # initialize the client
 bsh = bsh_api.BuildSimHubAPIClient()
 
@@ -26,5 +26,5 @@ bsh = bsh_api.BuildSimHubAPIClient()
 The most straightforward way to do simulation
 """
 new_sj_run = bsh.new_simulation_job(project_key)
-results = new_sj_run.run([file_dir_1, file_dir_2], track=True)
+results = new_sj_run.run([file_dir_1, file_dir_2], add_files='/Users/weilixu/Desktop/data/schedule/csv', track=True)
 

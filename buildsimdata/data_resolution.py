@@ -60,7 +60,6 @@ def process_data_given_unit(input_file_name, output_file_name, quantity, calcula
         export_df.to_csv(output_file_name)
     
     else:
-        print("here")
         minRange = list()
         for i in range(int(60/quantity)):
             minRange.insert(0, quantity*i)
@@ -127,7 +126,9 @@ def process_data_given_unit(input_file_name, output_file_name, quantity, calcula
     logger.info('Current Resolution %d', 1)
     logger.info('Converted Resolution %d', quantity)
 
+
 def main():
     process_data_given_unit('pow_lighting_raw.csv', 'result.csv', 12, 'sum')
+
 
 main()

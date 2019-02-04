@@ -1,4 +1,4 @@
-from BuildSimHubAPI.measures.design_template import DesignTemplate
+from BuildSimHubAPI.helpers.design_template import DesignTemplate
 
 
 class ModelAction(object):
