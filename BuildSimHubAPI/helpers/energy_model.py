@@ -485,9 +485,9 @@ class Model(object):
         files = dict()
         if temp_dir is not None:
             files['model'] = open(temp_dir, 'rb')
+            r = request_post(url, params=payload, files=files)
         else:
-            files['model'] = []
-        r = request_post(url, params=payload, files=files)
+            r = request_post(url, params=payload)
 
         resp_json = r.json()
         if r.status_code > 200:
