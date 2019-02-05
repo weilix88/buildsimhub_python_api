@@ -5,7 +5,7 @@ import pandas as pd
 # project_key can be found in every project (click the information icon next to project name)
 project_api_key = '921a1f04-0238-4e88-bbc5-e4eb71c352c6'
 # model_key can be found in each model information bar
-model_api_key = '678f3232-61ed-4347-a19c-8291b18583d7'
+model_api_key = '01446b3c-4642-4454-8428-b0c7e0007a52'
 
 # initialize the client
 bsh = bshapi.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
@@ -110,6 +110,7 @@ def gen_ltg_sched():
 # 1.1 get the seed model
 model = bsh.model_results(project_api_key, model_api_key)
 zone_list = model.zone_list()
+
 zone_map = dict()
 
 # 2. Prepare
@@ -133,11 +134,10 @@ for zone in zone_list:
     zone_group[zone['zone_name']]['heating'] = 'floor_' + str(zone['floor'])
     zone_group[zone['zone_name']]['cooling'] = 'floor_' + str(zone['floor'])
 
-# new_id = model.hvac_swap(hvac_type=6, zone_group=zone_group)
+new_id = model.hvac_swap(hvac_type=1, zone_group=zone_group)
 
 # 3. Setup parameters for parametric
-# param = bsh.new_parametric_job(project_api_key)
-
+param = bsh.new_parametric_job(project_api_key)
 measure_list = list()
 # build the parametric values
 
@@ -169,6 +169,7 @@ measure_list.append(lpd)
 custom_measure = bshapi.measures.CustomizedMeasure('customized_air_infiltration', 'si')
 custom_measure.add_continuous_template('ZoneInfiltration:DesignFlowRate',
                                        'Flow per Exterior Surface Area', '0.0001', '0.001')
+measure_list.append(custom_measure)
 
 # discrete custom measure
 # discrete measure
@@ -189,6 +190,13 @@ obj_temp['Cooling Setpoint Temperature Schedule Name'] = "CLGSETP_SCH_OPTIMUM"
 template.add_class_template_modify('ThermostatSetpoint:DualSetpoint', obj_temp, 'Working Space DualSPSched')
 template.set_option_name('Optimum_start')
 custom_measure_2.add_discrete_template_options(template.get_template_group())
+measure_list.append(custom_measure_2)
+
+
+# Start simulation
+param_results = param.submit_parametric_study(unit='si', track=True, model_api_key=new_id, algorithm="montecarlo")
+
+
 
 
 
