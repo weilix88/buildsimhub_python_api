@@ -23,7 +23,6 @@ setuptools.setup(
     include_package_data=True,
     package_Data={'BuildSimHubAPI': ['BuildSimHubAPI/info.config']},
     classifiers=[
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6'
     ]
