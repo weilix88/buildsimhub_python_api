@@ -1,7 +1,7 @@
 # https://github.com/WillKoehrsen/feature-selector/blob/master/Feature%20Selector%20Usage.ipynb
 import pandas as pd
 from datetime import datetime
-from feature_selector import FeatureSelector
+from .feature_selector import FeatureSelector
 import math
 from sklearn.neighbors import KNeighborsRegressor
 import numpy as np
@@ -11,14 +11,14 @@ df = pd.read_csv('/Users/weilixu/Desktop/Bldg101_2014_10m_NA10.csv')
 # test_missing = pd.read_excel('../missingdata/PI_Bldg101_Webctrl_Points.xlsx')
 
 # Feature Selection - remove single value and high correlation variable
-fs = FeatureSelector(data = df)
+fs = FeatureSelector(data=df)
 
 fs.identify_single_unique()
 single_unique = fs.ops['single_unique']
 df = df.drop(columns = single_unique)
 
 
-fs.identify_collinear(correlation_threshold = 0.975)
+fs.identify_collinear(correlation_threshold=0.975)
 correlated_features = fs.ops['collinear']
 df = df.drop(columns = correlated_features)
 

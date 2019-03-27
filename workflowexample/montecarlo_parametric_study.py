@@ -14,12 +14,12 @@ in order to submit the model from local).
 import BuildSimHubAPI as bsh_api
 
 # 1. set your folder key
-project_key = '6e764740-cb49-40ed-8a1a-1331b1d87ed2'
-model_api_key = '05cdd1a5-f96a-45f5-9ba5-3c80d657d474'
+project_key = '00787f31-1655-4653-b624-82656e9fed95'
+model_api_key = None
 local_file_dir = "/Users/weilixu/Desktop/data/UnitTest/5ZoneAirCooled.idf"
 number_of_simulation = 10
 
-bsh = bsh_api.BuildSimHubAPIClient()
+bsh = bsh_api.BuildSimHubAPIClient(base_url='http://develop.buildsim.io:8080/IDFVersionControl/')
 # if the seed model is on the buildsim cloud - add model_api_key to the new_parametric_job function
 new_pj = bsh.new_parametric_job(project_key)
 
@@ -72,8 +72,8 @@ heatEff.set_max(0.95)
 measure_list.append(heatEff)
 
 hvac = bsh_api.measures.HVACTemplate()
-hvac.set_min(0.73)
-hvac.set_max(3.13)
+hvac.set_min(0)
+hvac.set_max(2)
 measure_list.append(hvac)
 
 # Add EEMs to parametric job

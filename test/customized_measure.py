@@ -30,6 +30,11 @@ template.add_class_template_modify('Lights', light_temp, 'SPACE1-1 Lights 1')
 template.set_option_name('LED')
 custom_measure_2.add_discrete_template_options(template.get_template_group())
 
+template.clear()
+template.add_class_template_delete('Lights', 'SPACE2-1 Lights 2')
+template.set_option_name('NoSPACE2Lit')
+custom_measure_2.add_discrete_template_options(template.get_template_group())
+
 bsh = bsh_api.BuildSimHubAPIClient()
 param = bsh.new_parametric_job('f98aadb3-254f-428d-a321-82a6e4b9424c')
 # param.add_model_measure(custom_measure)
