@@ -32,11 +32,21 @@ class HVACComponent(object):
         for comp in self._available_list:
             print(comp)
 
+    def required_heating_water(self):
+        return self._heating_water
+
+    def required_cooling_water(self):
+        return self._cooling_water
+
     def get_component_name(self):
         return self._component_name
 
     def get_component_in_json(self):
-        pass
+        comp_js = dict()
+        if self._component_template is not None:
+            for key in self._component_template:
+                comp_js[key] = self._component_template[key]
+            return comp_js
 
     def get_component_type(self):
         return self._function
@@ -64,6 +74,14 @@ class AHUCoilComponent(HVACComponent):
 
             coil_json['coil_func'] = comp_function
             coil_json['coil_source'] = comp_source
+
+            if comp_function == 'Heating':
+                if comp_source == 'Water':
+                    self._heating_water = True
+            elif comp_function == 'Cooling':
+                if comp_source == 'Water':
+                    self._cooling_water = True
+
             for key in self._component_template:
                 coil_json[key] = self._component_template[key]
             return coil_json

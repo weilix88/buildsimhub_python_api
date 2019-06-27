@@ -92,9 +92,9 @@ class Model(object):
         :param browser: whether to open the browser automaticallly or not
         :return:
         """
-        if data is None:
-            self.bldg_threed(browser)
-            return
+        # if data is None:
+        #     self.bldg_threed(browser)
+        #     return
 
         url = self._base_url + 'Viewer3DData_API'
         track = 'model_api_key'
