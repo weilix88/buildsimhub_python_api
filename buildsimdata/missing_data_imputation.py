@@ -1,7 +1,7 @@
 # https://github.com/WillKoehrsen/feature-selector/blob/master/Feature%20Selector%20Usage.ipynb
 import pandas as pd
 from datetime import datetime
-from .feature_selector import FeatureSelector
+from buildsimdata.feature_selector import FeatureSelector
 import math
 from sklearn.neighbors import KNeighborsRegressor
 import numpy as np

@@ -93,8 +93,7 @@ class Model(object):
         :return:
         """
         if data is None:
-            self.bldg_threed(browser)
-            return
+            data = ""
 
         url = self._base_url + 'Viewer3DData_API'
         track = 'model_api_key'
@@ -106,7 +105,7 @@ class Model(object):
             track: self._track_token,
             'json': data
         }
-        r = request_post(url, params=payload)
+        r = request_get(url, params=payload)
         resp_json = r.json()
         if r.status_code > 200:
             try:
@@ -122,9 +121,9 @@ class Model(object):
             if self._logger is not None:
                 self._logger.write_in_message('Model', 'IDF3DViewer', self._project_api_key, self._track_token, '200',
                                               resp_json['link'])
-            if browser:
-                webbrowser.open(resp_json['link'])
-                return resp_json['status']
+            # if browser:
+            # webbrowser.open(resp_json['link'])
+                return resp_json['link']
             else:
                 return resp_json['link']
 
