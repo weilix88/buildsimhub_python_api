@@ -170,11 +170,14 @@ def __encode_multipart_formdata(params, files):
         if isinstance(l, bytes):
             body += l + b'\r\n'
         else:
-            body += bytes(str(l), encoding='utf8') + b'\r\n'
+            try:
+                body += bytes(str(l), encoding='utf8') + b'\r\n'
+            except:
+                body += bytes(l) + b'\r\n'
 
     headers = {'Content-Type' : 'multipart/form-data; boundary=' + boundry}
 
-    return headers, body
+    return headers, str(body)
 
 
 def request_large_data(path, params):
